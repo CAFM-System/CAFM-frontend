@@ -1,11 +1,7 @@
-import { useState } from 'react'
+import LoginPage from './pages/loginPage'
 
 function App() {
-  return (
-    <>
-      <h1>Welcome to CAFM Frontend</h1>
-    </>
-  )
+  return <LoginPage />
 }
 
 export default App
