@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import Test from './components/admin/Test'
 
 function App() {
   return (
     <>
-      <h1>Welcome to CAFM Frontend</h1>
+      <div className='bg-white'>
+        <h1>Welcome to CAFM Frontend</h1>
+        <Test />
+      </div>
     </>
   )
 }
