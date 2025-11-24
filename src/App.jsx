@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import Test from './components/admin/Test'
+
 import { Header } from './components/resident/header'
+import { TestResidentDialog } from './components/resident/testResidentDialog'
+
 
 function App() {
   
@@ -8,9 +9,9 @@ function App() {
     <>
       
       <Header/>
-      <div className='bg-white'>
+      <div className='bg-white mt-[150px]'>
         <h1>Welcome to CAFM Frontend</h1>
-        <Test />
+        <TestResidentDialog/>
       </div>
     </>
   )
