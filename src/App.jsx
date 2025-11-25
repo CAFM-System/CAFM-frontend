@@ -1,20 +1,23 @@
-
-
-import { TestResidentDialog } from './components/resident/testResidentDialog'
-
+// import { useState } from 'react'
+import Test from './components/admin/Test'
+import { Header } from './components/resident/header'
 
 function App() {
   
   return (
     <>
       
-      
-      <div className='bg-white mt-[150px]'>
-        <h1>Welcome to CAFM Frontend</h1>
-        <TestResidentDialog/>
+      <Header/>
+      <div className='bg-white'>
+        {/* <h1>Welcome to CAFM Frontend</h1> */}
+       <Header />
+       <TopBanner />
+       <Stats />
+       <RequestList />
+       <Footer />
       </div>
     </>
-  )
+  );
 }
 
 export default App
