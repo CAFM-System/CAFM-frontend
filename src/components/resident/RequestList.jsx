@@ -1,32 +1,33 @@
-import React from 'react'
-export default function RequestList(){
-return (
-<section className="mt-10">
-<div className="flex gap-6 text-sm border-b pb-2">
-<button className="font-medium border-b-2 border-indigo-600 pb-2">All Requests (1)</button>
-<button className="text-gray-500">Active (1)</button>
-<button className="text-gray-500">Resolved (0)</button>
-</div>
+import { TicketIcon, Clock, CheckCircle2 } from "lucide-react";
 
+export default function RequestList() {
+  const requests = [
+    { id: 1, title: "AC not cooling", status: "active", date: "Today" },
+    { id: 2, title: "Water leak in bathroom", status: "resolved", date: "2 days ago" },
+  ];
 
-<div className="bg-white mt-4 p-6 rounded-xl shadow border">
-<div className="flex items-center gap-3 text-sm">
-<span className="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs">in progress</span>
-<span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">high</span>
-</div>
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 mb-10">
+      <h2 className="text-lg font-semibold mb-4">Your Requests</h2>
 
+      {requests.map((req) => (
+        <div
+          key={req.id}
+          className="p-4 rounded-xl bg-gray-50 hover:bg-gray-100 mb-3 flex items-center justify-between"
+        >
+          <div>
+            <p className="font-medium">{req.title}</p>
+            <p className="text-xs text-gray-500">{req.date}</p>
+          </div>
 
-<h3 className="mt-3 font-semibold text-lg">Leaking faucet in kitchen</h3>
-<p className="mt-2 text-sm text-gray-600 max-w-2xl">The kitchen faucet has been dripping continuously for the past two days. Water is being wasted.</p>
-
-
-<div className="grid md:grid-cols-4 gap-4 mt-6 text-sm text-gray-700">
-<div>A-101 - Kitchen</div>
-<div>Plumbing</div>
-<div>Lisa Brown</div>
-<div>Nov 21, 2025, 12:20 AM</div>
-</div>
-</div>
-</section>
-)
+          {req.status === "active" && (
+            <Clock className="h-5 w-5 text-orange-500" />
+          )}
+          {req.status === "resolved" && (
+            <CheckCircle2 className="h-5 w-5 text-green-500" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
 }
