@@ -1,4 +1,4 @@
-
+import { Circle } from "lucide-react";
 
 const StatusHistory = ({ data }) => {
     const getStatusColor = (status) => {
@@ -13,10 +13,10 @@ const StatusHistory = ({ data }) => {
 
     const getStatusDotColor = (status) => {
         const colors = {
-            open: 'bg-blue-500',
-            assigned: 'bg-purple-500',
-            'in progress': 'bg-yellow-500',
-            resolved: 'bg-blue-500'
+            open: 'text-blue-500',
+            assigned: 'text-purple-500',
+            'in progress': 'text-yellow-500',
+            resolved: 'text-green-500'
         };
         return colors[status] || 'bg-gray-400';
     };
@@ -27,7 +27,7 @@ const StatusHistory = ({ data }) => {
                 {data.map((item, index) => (
                     <div key={index} className="flex gap-3">
                         <div className="flex flex-col items-center">
-                            <div className={`w-3 h-3 rounded-full ${getStatusDotColor(item.status)}`}></div>
+                            <Circle size={16} strokeWidth={5} className={getStatusDotColor(item.status)} />
                             {index < data.length - 1 && (
                                 <div className="w-0-5 h-full bg-gray-200 mt-1"></div>
                             )}

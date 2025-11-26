@@ -1,17 +1,14 @@
 import { useState } from 'react'
-import Test from './components/admin/Test'
+import Test from './components/technician/Test'
 import { Header } from './components/resident/header'
 
+import LoginPage from './pages/loginPage'
+
 function App() {
-  
+
   return (
     <>
-      
-      <Header/>
-      <div className='bg-white'>
-        <h1>Welcome to CAFM Frontend</h1>
-        <Test />
-      </div>
+      <Test />
     </>
   )
 }
