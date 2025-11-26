@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X, ChevronDown } from 'lucide-react';
-import StatusHistory from '../admin/StatusHistory';
+import StatusHistory from '../common/StatusHistory';
+
 
 
 
@@ -104,19 +105,20 @@ export function ResidentTicketDialog(props){
                                 </div>
                             </div>
                             
-                            <div>
-                                <p className="text-sm text-gray-500 mb-2">Created</p>
-                                <div className="flex items-center gap-2">
-                                    <Clock size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.createdDate}</span>
-                                </div>
-                            </div>
+                            
                             
                             <div>
                                 <p className="text-sm text-gray-500 mb-2">Assigned To</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className="text-gray-400" />
                                     <span className="text-gray-700">{data.assignTo}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500 mb-2">Created</p>
+                                <div className="flex items-center gap-2">
+                                    <Clock size={18} className="text-gray-400" />
+                                    <span className="text-gray-700">{data.createdDate}</span>
                                 </div>
                             </div>
                         </div>

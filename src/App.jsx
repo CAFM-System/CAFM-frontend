@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import Test from './components/technician/Test'
-import { Header } from './components/resident/header'
 
 import LoginPage from './pages/loginPage'
+import { TestResidentDialog } from './components/resident/testResidentDialog';
 
 function App() {
 
   return (
     <>
-      <Test />
+      
+      <TestResidentDialog/>
     </>
   );
 }

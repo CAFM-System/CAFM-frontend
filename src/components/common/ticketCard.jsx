@@ -19,7 +19,7 @@ export default function Ticketcard(props){
                 <div className="flex gap-50 text-gray-600">
                     <div className="flex flex-col">
                         <span className="flex gap-2 items-center"><GrLocation/>{ticket.location}</span>
-                        <span className="flex gap-2 items-center"><FiUser/>{ticket.tenant_name}</span>
+                        <span className="flex gap-2 items-center"><FiUser/>{ticket.resident}</span>
                     </div>
                     <div className="flex flex-col ">
                         <span className="flex gap-2 items-center"><BsExclamationCircle/>{ticket.category}</span>
