@@ -1,22 +1,12 @@
 import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
-import AdminActions from './AdminActions';
+import TechnicianActions from './TechnicianActions';
 
 const TicketDetails = ({ data, onClose }) => {
-    const [activeTab, setActiveTab] = useState('actions');
-    const [assignedTech, setAssignedTech] = useState(data.assignTo || '');
-    const [selectedPriority, setSelectedPriority] = useState(data.priority || '');
-    const [closingComment, setClosingComment] = useState('');
-
-    const adminActions = {
-        assignedTech: assignedTech,
-        selectedPriority: selectedPriority,
-        closingComment: closingComment,
-        setAssignedTech: setAssignedTech,
-        setSelectedPriority: setSelectedPriority,
-        setClosingComment: setClosingComment,
-    };
+    // Local state copied from props so UI updates immediately when technician changes status.
+    const [status, setStatus] = useState(data?.status || 'open');
+    const [updates, setUpdates] = useState(data?.ticket_updates || []);
 
     // Close on Escape key
     useEffect(() => {
@@ -27,9 +17,17 @@ const TicketDetails = ({ data, onClose }) => {
         return () => window.removeEventListener('keydown', handleKey);
     }, [onClose]);
 
-    useEffect(() => {
-        console.log({ assignedTech, selectedPriority, closingComment });
-    }, [assignedTech, selectedPriority, closingComment]);
+    // changeStatus updates 
+    const changeStatus = async (newStatus, description) => {
+        setStatus(newStatus);
+        const newUpdate = {
+            status: newStatus,
+            timestamp: new Date().toLocaleString(),
+            message: description,
+            author: data.assignTo || 'Technician'
+        };
+        setUpdates((prev) => [...prev, newUpdate]);
+    };
 
     return (
         <>
@@ -46,25 +44,25 @@ const TicketDetails = ({ data, onClose }) => {
                         <div className="flex items-center gap-2">
 
                             {/* status badge */}
-                            {data.status === "open" ? (
+                            {status === "open" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700">
-                                    {data.status}
+                                    {status}
                                 </span>
                             ) : data.status === "assigned" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-purple-100 text-purple-700">
-                                    {data.status}
+                                    {status}
                                 </span>
                             ) : data.status === "in progress" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
-                                    {data.status}
+                                    {status}
                                 </span>
                             ) : data.status === "resolved" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700">
-                                    {data.status}
+                                    {status}
                                 </span>
                             ) : data.status === "closed" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700">
-                                    {data.status}
+                                    {status}
                                 </span>
                             ) : null}
 
@@ -132,39 +130,18 @@ const TicketDetails = ({ data, onClose }) => {
                             </div>
                         </div>
 
+                        {/* Status History */}
                         <div className="border-t pt-6 border-gray-300">
-                            <div className="flex gap-4 mb-6">
-                                <button
-                                    onClick={() => setActiveTab('actions')}
-                                    className={`pb-2 px-1 font-semibold border-b-2 transition-colors ${activeTab === 'actions' ?
-                                        'border-black text-black' :
-                                        'border-transparent text-gray-400'
-                                        }`}
-                                >Admin Actions</button>
-
-                                <button
-                                    onClick={() => setActiveTab('history')}
-                                    className={`pb-2 px-1 font-semibold border-b-2 transition-colors ${activeTab === 'history' ?
-                                        'border-black text-black' :
-                                        'border-transparent text-gray-400'
-                                        }`}
-                                >Status History</button>
-                            </div>
-
-                            {/* Admin Actions Tab */}
-                            {activeTab === 'actions' && (
-                                <AdminActions data={adminActions} />
-                            )}
-
-                            {/* Status History Tab */}
-                            {activeTab === 'history' && (
-                                <StatusHistory data={data.ticket_updates} />
-                            )}
+                            <h2 className="font-semibold mb-4">Status History</h2>
+                            <StatusHistory data={updates} />
                         </div>
+
+                        {/* Techinician actions */}
+                        <TechnicianActions status={status} changeStatus={changeStatus} />
 
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };
