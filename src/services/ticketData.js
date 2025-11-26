@@ -7,8 +7,8 @@ export const tickets = [
     "location": "A-101 - Kitchen",
     "resident": "Lisa Brown",
     "createdDate": "2025-11-14T18:50:00",
-    "status": "In Progress",
-    "priority": "High",
+    "status": "in_progress",
+    "priority": "high",
     "assignTo": "",
     "isSparePartUsed": false
   },
@@ -20,8 +20,8 @@ export const tickets = [
     "location": "B-203 - Bedroom",
     "resident": "Johan Perera",
     "createdDate": "2025-11-15T09:20:00",
-    "status": "Pending",
-    "priority": "Medium",
+    "status": "in_progress",
+    "priority": "medium",
     "assignTo": "",
     "isSparePartUsed": false
   },
@@ -33,8 +33,8 @@ export const tickets = [
     "location": "C-310 - Corridor",
     "resident": "Amaya Fernando",
     "createdDate": "2025-11-13T16:10:00",
-    "status": "Completed",
-    "priority": "Low",
+    "status": "resolved",
+    "priority": "low",
     "assignTo": "",
     "isSparePartUsed": false
   },
@@ -46,8 +46,8 @@ export const tickets = [
     "location": "D-112 - Kitchen",
     "resident": "Ravi Jayasinghe",
     "createdDate": "2025-11-14T07:45:00",
-    "status": "In Progress",
-    "priority": "Urgent",
+    "status": "in_progress",
+    "priority": "urgent",
     "assignTo": "",
     "isSparePartUsed": false
   },
@@ -59,8 +59,8 @@ export const tickets = [
     "location": "A-205 - Balcony",
     "resident": "Meenuka Silva",
     "createdDate": "2025-11-10T11:30:00",
-    "status": "Closed",
-    "priority": "Medium",
+    "status": "closed",
+    "priority": "medium",
     "assignTo": "",
     "isSparePartUsed": false
   }
