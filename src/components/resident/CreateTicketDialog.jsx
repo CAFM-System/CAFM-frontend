@@ -55,7 +55,7 @@ export function CreateTicketDialog(props) {
 
             <div className="space-y-1">
               <label className="font-medium text-gray-700">Priority *</label>
-              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"
+              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
                 value={priority}
                 onChange={(e)=>{setpriority(e.target.value)}}
                 placeholder="Select priority"
@@ -124,7 +124,7 @@ export function CreateTicketDialog(props) {
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+              className="px-4 py-2 rounded-lg border border-gray-300 text-black hover:bg-black hover:text-white transition"
               onClick={()=>{close()}}
             >
               Cancel

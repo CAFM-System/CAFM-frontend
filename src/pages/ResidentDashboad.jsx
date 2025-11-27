@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CreateTicketDialog } from "./CreateTicketDialog";
-import TopBanner from "./TopBanner";
+import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
+import TopBanner from "../components/resident/TopBanner";
 
 export function ResidentDashboad() {
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
