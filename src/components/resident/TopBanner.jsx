@@ -1,6 +1,8 @@
 import { Sparkles } from "lucide-react";
 
-export default function TopBanner() {
+export default function TopBanner(props) {
+  const openTicket = props.openTicket;
+  
   return (
     <div className="relative overflow-hidden rounded-3xl mb-10">
       <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600"></div>
@@ -19,7 +21,7 @@ export default function TopBanner() {
             </p>
           </div>
 
-          <button className="bg-white text-purple-600 rounded-xl px-6 py-4 hover:bg-purple-50 shadow-xl transition">
+          <button className="bg-white text-purple-600 rounded-xl px-6 py-4 hover:bg-purple-50 shadow-xl transition" onClick={() => openTicket(true)}>
             + Create Request
           </button>
         </div>
