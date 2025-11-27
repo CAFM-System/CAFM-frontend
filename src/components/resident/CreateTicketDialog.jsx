@@ -1,13 +1,15 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
 
-export function CreateTicketDialog() {
+export function CreateTicketDialog(props) {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("Cleaning");
     const [priority, setpriority] = useState("low");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
     const [attachments, setAttachments] = useState(null);
+
+    const close = props.close;
     return(
         <div className="fixed inset-0 bg-black/50 z-[100] flex justify-center items-center p-4">
       
