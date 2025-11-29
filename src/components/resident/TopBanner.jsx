@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react";
 
 export default function TopBanner(props) {
   const openTicket = props.openTicket;
-  
+
   return (
     <div className="relative overflow-hidden rounded-3xl mb-10">
       <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600"></div>

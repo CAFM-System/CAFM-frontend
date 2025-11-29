@@ -6,13 +6,13 @@ const TechnicianActions = ({ status, changeStatus }) => {
 
     return (
         <div className="border-t pt-6 border-gray-300">
-            {status !== 'in progress' ? (
+            {status === "assigned" ? (
                 <>
                     <h2 className="font-semibold mb-4">Action Required</h2>
                     <div className="w-full flex gap-4 justify-center">
                         <button
                             className="px-6 py-3 w-1/2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                            onClick={() => changeStatus('in progress', 'Accepted and started work')}
+                            onClick={() => changeStatus('in_progress', 'Accepted and started work')}
                         >
                             Accept & Start Work
                         </button>
@@ -30,9 +30,10 @@ const TechnicianActions = ({ status, changeStatus }) => {
                         />
                     </div>
                 </>
-            ) : (
+            ) : status === "in_progress" ? (
                 <>
-                    <div className="w-full">
+                    {/*Client ask to remove status update in in_progress */}
+                    {/* <div className="w-full">
                         <h2 className="font-semibold mb-4">Update Progress</h2>
                         <textarea
                             value={updateComment}
@@ -41,11 +42,11 @@ const TechnicianActions = ({ status, changeStatus }) => {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                             rows={3}
                         />
-                        <button className="px-6 py-3 w-1/2 border border-gray-400 rounded-lg hover:bg-black hover:text-white transition-colors" onClick={() => changeStatus('in progress', updateComment)}>
+                        <button className="px-6 py-3 w-1/2 border border-gray-400 rounded-lg hover:bg-black hover:text-white transition-colors" onClick={() => changeStatus('in_progress', updateComment)}>
                             Add progress Update
                         </button>
-                    </div>
-                    <div className="border-t mt-6 pt-6 border-gray-300">
+                    </div> */}
+                    <div>
                         <h2 className="font-semibold mb-2">Mark as Resolved</h2>
                         <textarea
                             value={resolutionComment}
@@ -64,6 +65,9 @@ const TechnicianActions = ({ status, changeStatus }) => {
                             Mark as Resolved
                         </button>
                     </div>
+                </>
+            ) : (
+                <>
                 </>
             )}
         </div>

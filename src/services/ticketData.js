@@ -7,7 +7,7 @@ export const tickets = [
     "location": "A-101 - Kitchen",
     "resident": "Lisa Brown",
     "createdDate": "2025-11-14T18:50:00",
-    "status": "in_progress",
+    "status": "assigned",
     "priority": "high",
     "assignTo": "",
     "isSparePartUsed": false
