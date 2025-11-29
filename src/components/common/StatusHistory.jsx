@@ -21,6 +21,16 @@ const StatusHistory = ({ data }) => {
         return colors[status] || 'text-gray-400';
     };
 
+    const getProgressString = (string) => {
+        string = string.split('_');
+        let newString = "";
+        string.map((word, index) => {
+            newString += word.substring(0, 1).toUpperCase() + word.substring(1) + ' ';
+        })
+
+        return newString;
+    }
+
     return (
         <>
             <div className="space-y-4">
@@ -35,7 +45,7 @@ const StatusHistory = ({ data }) => {
                         <div className="flex-1 pb-6">
                             <div className="flex items-center gap-2 mb-1">
                                 <span className={`px-2 py-1 text-xs rounded ${getStatusColor(item.status)}`}>
-                                    {item.status}
+                                    {getProgressString(item.status)}
                                 </span>
                                 <span className="text-sm text-gray-500">{item.timestamp}</span>
                             </div>
