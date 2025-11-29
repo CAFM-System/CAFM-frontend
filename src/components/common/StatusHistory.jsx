@@ -5,8 +5,8 @@ const StatusHistory = ({ data }) => {
         const colors = {
             open: 'bg-blue-100 text-blue-700',
             assigned: 'bg-purple-100 text-purple-700',
-            'in progress': 'bg-yellow-100 text-yellow-700',
-            resolved: 'bg-green-100 text-green-700'
+            in_progress: 'bg-yellow-100 text-yellow-700',
+            resolved: 'bg-green-100 text-green-700',
         };
         return colors[status] || 'bg-gray-100 text-gray-700';
     };
@@ -15,10 +15,10 @@ const StatusHistory = ({ data }) => {
         const colors = {
             open: 'text-blue-500',
             assigned: 'text-purple-500',
-            'in progress': 'text-yellow-500',
+            in_progress: 'text-yellow-500',
             resolved: 'text-green-500'
         };
-        return colors[status] || 'bg-gray-400';
+        return colors[status] || 'text-gray-400';
     };
 
     return (
