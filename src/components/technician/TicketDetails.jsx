@@ -23,7 +23,7 @@ const TicketDetails = ({ data, onClose }) => {
             status: newStatus,
             timestamp: new Date().toLocaleString(),
             message: description,
-            author: data.assignTo || 'Technician'
+            author: data.complaintRecievdBy || 'Technician'
         };
         setUpdates((prev) => [...prev, newUpdate]);
     };

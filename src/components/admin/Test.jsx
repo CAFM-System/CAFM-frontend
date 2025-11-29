@@ -1,47 +1,15 @@
 import { useState } from 'react';
 
-import TicketDetails from './TicketDetails'
+import TicketDetails from './TicketDetails';
+import { tickets } from '../../services/newTicketData.js';
+import { ticketsUpdates } from '../../services/ticketUpdatesData';
 
 const Test = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const ticketData = {
-        ticketId: "TKT-003",
-        title: "Electrical outlet not working",
-        description: "The power outlet in the bedroom is not functioning. Need urgent repair.",
-        category: "Electrical",
-        location: "B-205 - Master Bedroom",
-        resident: "Sarah Johnson",
-        createdDate: "Nov 21, 2025, 11:19 PM",
-        status: "assigned",
-        priority: "high",
-        assignTo: null,
-        ticket_updates: [
-            {
-                status: "open",
-                timestamp: "Nov 22, 2025, 01:50 AM",
-                message: "Ticket created",
-                author: "Sarah Johnson"
-            },
-            {
-                status: "assigned",
-                timestamp: "Nov 22, 2025, 06:38 AM",
-                message: "Assigned to Mike Wilson",
-                author: "Admin Manager"
-            },
-            {
-                status: "in progress",
-                timestamp: "Nov 22, 2025, 01:58 PM",
-                message: "Ticket accepted and work started",
-                author: "Mike Wilson"
-            },
-            {
-                status: "resolved",
-                timestamp: "Nov 22, 2025, 01:59 PM",
-                message: "htrhrt",
-                author: "Mike Wilson"
-            }
-        ],
+        ...tickets[0],
+        ticket_updates: ticketsUpdates
     }
 
     if (!isOpen) {

@@ -7,8 +7,6 @@ import TicketDetails from './TicketDetails'
 const Test = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    console.log(tickets);
-
     const ticketData = {
         ...tickets[0],
         ticket_updates: ticketsUpdates,

@@ -32,7 +32,8 @@ const TechnicianActions = ({ status, changeStatus }) => {
                 </>
             ) : status === "in_progress" ? (
                 <>
-                    <div className="w-full">
+                    {/*Client ask to remove status update in in_progress */}
+                    {/* <div className="w-full">
                         <h2 className="font-semibold mb-4">Update Progress</h2>
                         <textarea
                             value={updateComment}
@@ -44,8 +45,8 @@ const TechnicianActions = ({ status, changeStatus }) => {
                         <button className="px-6 py-3 w-1/2 border border-gray-400 rounded-lg hover:bg-black hover:text-white transition-colors" onClick={() => changeStatus('in_progress', updateComment)}>
                             Add progress Update
                         </button>
-                    </div>
-                    <div className="border-t mt-6 pt-6 border-gray-300">
+                    </div> */}
+                    <div>
                         <h2 className="font-semibold mb-2">Mark as Resolved</h2>
                         <textarea
                             value={resolutionComment}

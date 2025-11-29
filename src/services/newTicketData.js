@@ -11,7 +11,8 @@ export const tickets = [
         "complaintRecievdBy": "Kasun Bandara",
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": "2025-11-16T14:30:00",
-        "status": "resolved",
+        "status": "assigned",
+        "priority": "high",
         "remarks": "Faucet washer replaced. Issue resolved.",
         "csat": 5
     },
@@ -28,6 +29,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": null,
         "status": "in_progress",
+        "priority": "medium",
         "remarks": "Technician assigned. Refrigerant level being checked.",
         "csat": null
     },
@@ -44,6 +46,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": "2025-11-14T10:15:00",
         "status": "closed",
+        "priority": "low",
         "remarks": "Loose wiring fixed. Light working normally.",
         "csat": 4
     },
@@ -60,6 +63,7 @@ export const tickets = [
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": null,
         "status": "in_progress",
+        "priority": "urgent",
         "remarks": "Emergency team dispatched. Gas pipe inspection underway.",
         "csat": null
     },
@@ -76,6 +80,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": "2025-11-12T16:00:00",
         "status": "resolved",
+        "priority": "medium",
         "remarks": "Lock mechanism replaced. Door functioning properly.",
         "csat": 5
     },
@@ -92,6 +97,7 @@ export const tickets = [
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": null,
         "status": "open",
+        "priority": "medium",
         "remarks": "Awaiting plumber availability.",
         "csat": null
     },
@@ -108,6 +114,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": "2025-11-13T09:45:00",
         "status": "closed",
+        "priority": "low",
         "remarks": "Door handle tightened and secured.",
         "csat": 4
     },
@@ -124,6 +131,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": "2025-11-17T11:20:00",
         "status": "resolved",
+        "priority": "high",
         "remarks": "Fan blades balanced and mounting bracket tightened.",
         "csat": 3
     },
@@ -140,6 +148,7 @@ export const tickets = [
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": "2025-11-14T15:10:00",
         "status": "closed",
+        "priority": "high",
         "remarks": "Flush valve replaced. Working normally now.",
         "csat": 5
     },
@@ -156,6 +165,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": null,
         "status": "assigned",
+        "priority": "low",
         "remarks": "Inspection scheduled for next week.",
         "csat": null
     },
@@ -172,6 +182,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": "2025-11-11T12:00:00",
         "status": "resolved",
+        "priority": "medium",
         "remarks": "Motor replaced. Fan working efficiently.",
         "csat": 5
     },
@@ -188,6 +199,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": null,
         "status": "open",
+        "priority": "high",
         "remarks": "Glass measurements taken. Ordering replacement.",
         "csat": null
     },
@@ -204,6 +216,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": "2025-11-15T14:30:00",
         "status": "closed",
+        "priority": "high",
         "remarks": "Heating element replaced. Working properly.",
         "csat": 4
     },
@@ -220,6 +233,7 @@ export const tickets = [
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": "2025-11-10T10:15:00",
         "status": "resolved",
+        "priority": "high",
         "remarks": "Pipe cleaned and blockage removed. Draining properly.",
         "csat": 5
     },
@@ -236,6 +250,7 @@ export const tickets = [
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": null,
         "status": "assigned",
+        "priority": "medium",
         "remarks": "Technician will visit tomorrow morning.",
         "csat": null
     },
@@ -252,6 +267,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": "2025-11-11T08:30:00",
         "status": "closed",
+        "priority": "medium",
         "remarks": "Cleaning schedule revised. Issue resolved.",
         "csat": 3
     },
@@ -268,6 +284,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": null,
         "status": "in_progress",
+        "priority": "urgent",
         "remarks": "Maintenance company contacted. Inspection scheduled.",
         "csat": null
     },
@@ -284,6 +301,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": "2025-11-13T10:30:00",
         "status": "resolved",
+        "priority": "high",
         "remarks": "Card reader replaced. System working properly.",
         "csat": 4
     },
@@ -300,6 +318,7 @@ export const tickets = [
         "reportedTo": "Pradeep Samaraweera",
         "completedDate": null,
         "status": "open",
+        "priority": "urgent",
         "remarks": "Structural engineer consultation required.",
         "csat": null
     },
@@ -316,6 +335,7 @@ export const tickets = [
         "reportedTo": "Rohan Gunasekara",
         "completedDate": "2025-11-16T16:45:00",
         "status": "closed",
+        "priority": "medium",
         "remarks": "Network cable replaced. Connection stable now.",
         "csat": 5
     }
