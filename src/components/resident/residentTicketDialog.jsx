@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X, ChevronDown } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
+import { ticketsUpdates } from '../../services/ticketUpdatesData';
 
 
 
@@ -9,6 +10,7 @@ export function ResidentTicketDialog(props){
     
     const data = props.data;
     const onClose = props.onClose;
+    const updateData = ticketsUpdates
    
 
     // Close on Escape key
@@ -24,7 +26,7 @@ export function ResidentTicketDialog(props){
     return (
         <>
             <div
-                className="fixed inset-0 bg-opacity-50 flex items-center justify-center p-4 z-50"
+                className="fixed inset-0 bg-opacity-50 flex items-center justify-center p-4 z-100"
                 style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
                 onClick={() => onClose?.()}
             >
@@ -124,7 +126,7 @@ export function ResidentTicketDialog(props){
                         </div>
 
                         <div className="border-t pt-6 border-gray-300">
-                            <StatusHistory data={data.ticket_updates} />
+                            <StatusHistory data={updateData} />
                         </div>
 
                     </div>

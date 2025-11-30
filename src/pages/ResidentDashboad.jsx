@@ -4,15 +4,30 @@ import TopBanner from "../components/resident/TopBanner";
 import { Header } from "../components/resident/Header";
 import { tickets} from "../services/ticketData";
 import Ticketcard from "../components/common/ticketCard";
+import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
 
 export function ResidentDashboad() {
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
-    const ticket = tickets
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState(null);
+
+    const ticket = tickets;
+    
+    
     return(
         <div className=" w-full h-full flex flex-col gap-4 px-[100px]">
             {
                 openCreateTicketDialog && <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} />
             }
+            {
+                isOpen && selectedTicket && (
+                    <ResidentTicketDialog
+                        onClose={() => setIsOpen(false)}
+                        data={selectedTicket}
+                    />
+                )
+            }
+
             <Header/>
             <TopBanner openTicket={setOpenCreateTicketDialog}  />
             <div  className="w-full rounded-2xl border border-gray-500/50 shadow-lg bg-white/50 backdrop-blur-lg p-4 flex flex-col gap-4">
@@ -24,7 +39,10 @@ export function ResidentDashboad() {
                         ticket.map((data)=>{
                             return(
                                
-                                <Ticketcard key={data.ticketId} ticket={data} className=""/>
+                                <Ticketcard key={data.ticketId} ticket={data} onClick={() => {
+                                    setSelectedTicket(data);
+                                    setIsOpen(true);
+                                }}/>
                                 
                             )
                         })
