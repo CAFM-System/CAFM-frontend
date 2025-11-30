@@ -9,7 +9,7 @@ export const tickets = [
     "createdDate": "2025-11-14T18:50:00",
     "status": "assigned",
     "priority": "high",
-    "assignTo": "",
+    "assignTo": "Kamal",
     "isSparePartUsed": false
   },
   {
@@ -22,7 +22,7 @@ export const tickets = [
     "createdDate": "2025-11-15T09:20:00",
     "status": "in_progress",
     "priority": "medium",
-    "assignTo": "",
+    "assignTo": "Jehan",
     "isSparePartUsed": false
   },
   {

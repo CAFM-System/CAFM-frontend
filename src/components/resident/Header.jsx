@@ -1,13 +1,13 @@
 import { Home, Bell, User as UserIcon, LogOut, MapPin } from "lucide-react";
 
-export default function Header() {
+export function Header() {
   const userName = "Sasindu";
   const apartment = "A-12";
   const openTickets = 2;
   const activeNav = "dashboard";
 
   return (
-    <header className="sticky top-0 z-50 overflow-hidden">
+    <header className="sticky top-0 z-50 overflow-hidden ">
       <div className="absolute inset-0 bg-white/70 backdrop-blur-2xl"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5"></div>
 
