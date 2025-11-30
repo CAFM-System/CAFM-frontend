@@ -46,7 +46,7 @@ export function ResidentTicketDialog(props){
                                 <span className="px-3 py-1 text-sm rounded-full bg-purple-100 text-purple-700">
                                     {data.status}
                                 </span>
-                            ) : data.status === "in progress" ? (
+                            ) : data.status === "in_progress" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
                                     {data.status}
                                 </span>
