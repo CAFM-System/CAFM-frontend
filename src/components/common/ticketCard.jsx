@@ -23,7 +23,8 @@ export default function Ticketcard(props){
     };
 
     return(
-        <div className="w-full h-[250px] cursor-pointer hover:shadow-md transition-shadow border border-gray-300 p-6 rounded-2xl space-y-2 relative">
+        
+        <div className="w-full h-[250px] cursor-pointer hover:shadow-md transition-shadow border border-gray-300 p-6 rounded-2xl space-y-2 relative" onClick={props.onClick}>
             <div className="flex gap-4 items-center">
                 <span>{ticket.ticketId}</span>
                 <span className={"p-1 px-2 rounded-lg text-sm " + statusColors[ticket.status]}>{ticket.status}</span>
