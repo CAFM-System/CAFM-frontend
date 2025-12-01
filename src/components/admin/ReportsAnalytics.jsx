@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import DashboardCard from "../common/DashboardCard";
 import { Clock, TrendingUp, CircleAlert, Download } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { tickets } from "../../services/newTicketData.js";
 
@@ -18,6 +18,8 @@ const ReportsAnalytics = () => {
         { status: 'Resolved', count: 0 },
         { status: 'Closed', count: 0 },
     ]);
+
+    const [pieChartByJobTypeData, setPieChartByJobTypeData] = useState([]);
 
     // Calculate the summary data
     useEffect(() => {
@@ -94,6 +96,27 @@ const ReportsAnalytics = () => {
         setBarGraphByStatusData(barData);
     }, []);
 
+    useEffect(() => {
+        const jobTypeCounts = {};
+        tickets.forEach(ticket => {
+            const jobType = ticket.jobType || 'Other';
+            if (jobTypeCounts[jobType]) {
+                jobTypeCounts[jobType]++;
+            } else {
+                jobTypeCounts[jobType] = 1;
+            }
+        });
+
+        const totalTickets = tickets.length;
+        const pieData = Object.keys(jobTypeCounts).map(jobType => ({
+            jobType: jobType,
+            percentage: parseFloat(((jobTypeCounts[jobType] / totalTickets) * 100).toFixed(2)),
+        }));
+
+        setPieChartByJobTypeData(pieData);
+    }, []);
+
+
     const BarChartToolTip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
@@ -101,6 +124,19 @@ const ReportsAnalytics = () => {
                     <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
                         <p className="font-semibold text-gray-800">{payload[0].payload.status}</p>
                         <p className="text-gray-600">Count: {payload[0].value}</p>
+                    </div>
+                </>
+            );
+        }
+    };
+
+    const PieChartToolTip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+            return (
+                <>
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
+                        <p className="font-semibold text-gray-800">{payload[0].payload.jobType}</p>
+                        <p className="text-gray-600">{payload[0].value}%</p>
                     </div>
                 </>
             );
@@ -181,6 +217,32 @@ const ReportsAnalytics = () => {
                             <Tooltip content={<BarChartToolTip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
                             <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
                         </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* Pie Charts */}
+                <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6">Tickets by Job Type</h2>
+
+                    <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                            <Pie
+                                data={pieChartByJobTypeData}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={false}
+                                label={({ jobType, percentage }) => `${jobType}: ${percentage}%`}
+                                outerRadius={100}
+                                fill="#3B82F6"
+                                dataKey="percentage"
+                                nameKey="jobType"
+                            >
+                                {pieChartByJobTypeData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={`hsl(${(index / pieChartByJobTypeData.length) * 360}, 70%, 50%)`} />
+                                ))}
+                            </Pie>
+                            <Tooltip content={<PieChartToolTip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
+                        </PieChart>
                     </ResponsiveContainer>
                 </div>
             </div>
