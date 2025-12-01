@@ -3,6 +3,7 @@ import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
 import DashboardCard from "../../components/common/DashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
+import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
 
 
 
@@ -255,6 +256,10 @@ export default function AdminDashboard() {
 
                     </div>
                 </>
+            )}
+
+            {activeTab === "reports" && (
+                <ReportsAnalytics />
             )}
         </>
     );
