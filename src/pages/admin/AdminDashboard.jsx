@@ -3,6 +3,7 @@ import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
 import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
+import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
 import TicketDetails from "../../components/admin/TicketDetails";
 import { tickets as ticketData } from "../../services/newTicketData";
 
@@ -88,7 +89,7 @@ export default function AdminDashboard() {
                             title="Total Tickets"
                             value={totalTickets}
                             icon={<Ticket />}
-                            description= "All tickets"
+                            description="All tickets"
                             onClick={() => console.log("Clicked Completed Tasks")}
                         />
                         <AdminDashboardCard
@@ -103,7 +104,7 @@ export default function AdminDashboard() {
                             title="Resolved"
                             value={resolvedTickets.length}
                             icon={<CheckCircle className="text-green-500" />}
-                            description= "Awaiting closure"
+                            description="Awaiting closure"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
@@ -111,7 +112,7 @@ export default function AdminDashboard() {
                             title="Urgent"
                             value={urgentTickets.length}
                             icon={<AlertTriangle className="text-red-500" />}
-                            description= "Needs attention"
+                            description="Needs attention"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
@@ -273,6 +274,9 @@ export default function AdminDashboard() {
                 </>
             )}
 
+            {activeTab === "reports" && (
+                <ReportsAnalytics />
+            )}
             {/* Ticket Details Popup*/}
             {isTicketOpen && (
                 <TicketDetails
