@@ -1,24 +1,16 @@
 import { useState } from "react";
 import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
-import DashboardCard from "../../components/common/DashboardCard";
+import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
+import TicketDetails from "../../components/admin/TicketDetails";
+import { tickets as ticketData } from "../../services/newTicketData";
 
 
-
-// Sample tickets data
-const sampleTickets = [
-    { ticketId: "T001", title: "Leaking Pipe", status: "open", priority: "high", description: "Water leaking", location: "12B", resident: "John", category: "Plumbing", createdDate: "2025-11-28" },
-    { ticketId: "T002", title: "AC Not Cooling", status: "resolved", priority: "urgent", description: "AC not working", location: "7A", resident: "Jane", category: "Electrical", createdDate: "2025-11-27" },
-    { ticketId: "T003", title: "Internet Issue", status: "in_progress", priority: "urgent", description: "No internet", location: "15C", resident: "Mike", category: "Network", createdDate: "2025-11-26" },
-    { ticketId: "T004", title: "Light Bulb Replacement", status: "closed", priority: "low", description: "Bulb broken", location: "3D", resident: "Anna", category: "Electrical", createdDate: "2025-11-25" },
-
-
-];
 
 export default function AdminDashboard() {
     // Tickets state
-    const [tickets] = useState(sampleTickets);
+    const [ticketList] = useState(ticketData);
     // UI state
     const [activeTab, setActiveTab] = useState("overview");
     const [searchText, setSearchText] = useState("");
@@ -26,22 +18,32 @@ export default function AdminDashboard() {
     const [priorityFilter, setPriorityFilter] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
 
+    // For opening TicketDetails
+    const [selectedTicket, setSelectedTicket] = useState(null);
+    const [isTicketOpen, setIsTicketOpen] = useState(false);
+
+    const openTicketDetails = (ticket) => {
+        setSelectedTicket(ticket);
+        setIsTicketOpen(true);
+    };
+
+
     // Derived lists (computed from `tickets` state)
-    const urgentTickets = tickets.filter(t => (t.priority || "").toLowerCase() === "urgent");
-    const activeTickets = tickets.filter(t => {
+    const urgentTickets = ticketList.filter(t => (t.priority || "").toLowerCase() === "urgent");
+    const activeTickets = ticketList.filter(t => {
         const s = (t.status || "").toLowerCase();
         return s === "open" || s === "in_progress" || s === "in progress";
     });
-    const resolvedTickets = tickets.filter(t => (t.status || "").toLowerCase() === "resolved");
-    const unassignedTickets = tickets.filter(t => !t.resident || t.resident === "");
-    const totalTickets = tickets.length;
+    const resolvedTickets = ticketList.filter(t => (t.status || "").toLowerCase() === "resolved");
+    const unassignedTickets = ticketList.filter(t => !t.name || t.name === "");
+    const totalTickets = ticketList.length;
 
-    const filteredTickets = tickets.filter(ticket => {
+    const filteredTickets = ticketList.filter(ticket => {
         const q = searchText.toLowerCase();
         const searchMatch =
             (ticket.ticketId || "").toLowerCase().includes(q) ||
             (ticket.title || "").toLowerCase().includes(q) ||
-            (ticket.resident || "").toLowerCase().includes(q) ||
+            (ticket.name || "").toLowerCase().includes(q) ||
             (ticket.location || "").toLowerCase().includes(q);
 
         const statusMatch = statusFilter === "" || (ticket.status || "").toLowerCase() === statusFilter.toLowerCase();
@@ -82,30 +84,34 @@ export default function AdminDashboard() {
             {activeTab === "overview" && (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-4 sm:px-6">
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Total Tickets"
                             value={totalTickets}
                             icon={<Ticket />}
+                            description= "All tickets"
                             onClick={() => console.log("Clicked Completed Tasks")}
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Active Tickets"
                             value={activeTickets.length}
                             icon={<Clock4 className="text-red-500" />}
+                            description="In progress"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Resolved"
                             value={resolvedTickets.length}
                             icon={<CheckCircle className="text-green-500" />}
+                            description= "Awaiting closure"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Urgent"
                             value={urgentTickets.length}
                             icon={<AlertTriangle className="text-red-500" />}
+                            description= "Needs attention"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
@@ -121,7 +127,11 @@ export default function AdminDashboard() {
                             {/* Vertical list: one ticket per row */}
                             <div className="flex flex-col gap-6">
                                 {urgentTickets.map(ticket => (
-                                    <TicketCard key={ticket.ticketId} ticket={ticket} />
+                                    <TicketCard
+                                        key={ticket.ticketId}
+                                        ticket={ticket}
+                                        onClick={() => openTicketDetails(ticket)}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -221,7 +231,7 @@ export default function AdminDashboard() {
                             <div className="flex items-center mt-4 ml-4 gap-2">
                                 <span className="text-gray-600">
                                     <Funnel className="inline-block mr-2" size={18} />
-                                    Showing {filteredTickets.length} of {tickets.length} tickets
+                                    Showing {filteredTickets.length} of {ticketList.length} tickets
                                 </span>
                                 <button
                                     className="font-semibold hover:underline"
@@ -241,7 +251,13 @@ export default function AdminDashboard() {
                         {/* Tickets */}
                         <div className="flex flex-col gap-6 mt-6 ml-4">
                             {filteredTickets.length > 0 ? (
-                                filteredTickets.map(ticket => <TicketCard key={ticket.ticketId} ticket={ticket} />)
+                                filteredTickets.map(ticket => (
+                                    <TicketCard
+                                        key={ticket.ticketId}
+                                        ticket={ticket}
+                                        onClick={() => openTicketDetails(ticket)}
+                                    />
+                                ))
                             ) : (
                                 <div className="text-gray-300 p-6 border border-gray-200 rounded-xl flex flex-col items-center justify-center">
                                     <Ticket className="mb-4" size={60} />
@@ -256,6 +272,15 @@ export default function AdminDashboard() {
                     </div>
                 </>
             )}
+
+            {/* Ticket Details Popup*/}
+            {isTicketOpen && (
+                <TicketDetails
+                    data={selectedTicket}
+                    onClose={() => setIsTicketOpen(false)}
+                />
+            )}
+
         </>
     );
 }
