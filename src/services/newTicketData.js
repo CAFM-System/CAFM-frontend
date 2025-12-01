@@ -11,10 +11,36 @@ export const tickets = [
         "complaintRecievdBy": "Kasun Bandara",
         "reportedTo": "Sunil Wickramasinghe",
         "completedDate": "2025-11-16T14:30:00",
-        "status": "assigned",
+        "status": "resolved",
         "priority": "high",
         "remarks": "Faucet washer replaced. Issue resolved.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 14, 2025, 06:50 PM",
+                "message": "Ticket created",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 14, 2025, 07:15 PM",
+                "message": "Assigned to Sunil Wickramasinghe",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 15, 2025, 09:30 AM",
+                "message": "Work started on faucet repair",
+                "author": "Sunil Wickramasinghe"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 16, 2025, 02:30 PM",
+                "message": "Faucet washer replaced. Issue resolved.",
+                "author": "Sunil Wickramasinghe"
+            }
+        ]
     },
     {
         "ticketId": "TKT-002",
@@ -31,7 +57,27 @@ export const tickets = [
         "status": "in_progress",
         "priority": "medium",
         "remarks": "Technician assigned. Refrigerant level being checked.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 15, 2025, 09:20 AM",
+                "message": "Ticket created",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 15, 2025, 10:00 AM",
+                "message": "Assigned to Rohan Gunasekara",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 15, 2025, 02:45 PM",
+                "message": "Technician dispatched. Checking refrigerant levels.",
+                "author": "Rohan Gunasekara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-003",
@@ -48,7 +94,39 @@ export const tickets = [
         "status": "closed",
         "priority": "low",
         "remarks": "Loose wiring fixed. Light working normally.",
-        "csat": 4
+        "csat": 4,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 13, 2025, 04:10 PM",
+                "message": "Ticket created",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 13, 2025, 05:00 PM",
+                "message": "Assigned to Rohan Gunasekara",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 14, 2025, 08:30 AM",
+                "message": "Electrician inspecting the wiring",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 14, 2025, 10:15 AM",
+                "message": "Loose wiring fixed. Light working normally.",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 14, 2025, 11:00 AM",
+                "message": "Resident confirmed resolution. Ticket closed.",
+                "author": "Nuwan Silva"
+            }
+        ]
     },
     {
         "ticketId": "TKT-004",
@@ -65,7 +143,27 @@ export const tickets = [
         "status": "in_progress",
         "priority": "urgent",
         "remarks": "Emergency team dispatched. Gas pipe inspection underway.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 14, 2025, 07:45 AM",
+                "message": "Emergency ticket created - Gas leak reported",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 14, 2025, 07:50 AM",
+                "message": "Emergency assignment to Sunil Wickramasinghe",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 14, 2025, 08:15 AM",
+                "message": "Emergency team on site. Gas pipe inspection underway.",
+                "author": "Sunil Wickramasinghe"
+            }
+        ]
     },
     {
         "ticketId": "TKT-005",
@@ -82,7 +180,33 @@ export const tickets = [
         "status": "resolved",
         "priority": "medium",
         "remarks": "Lock mechanism replaced. Door functioning properly.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 10, 2025, 11:30 AM",
+                "message": "Ticket created",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 10, 2025, 02:00 PM",
+                "message": "Assigned to Pradeep Samaraweera",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 11, 2025, 10:00 AM",
+                "message": "Lock inspection completed. Ordering replacement parts.",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 12, 2025, 04:00 PM",
+                "message": "Lock mechanism replaced. Door functioning properly.",
+                "author": "Pradeep Samaraweera"
+            }
+        ]
     },
     {
         "ticketId": "TKT-006",
@@ -99,7 +223,15 @@ export const tickets = [
         "status": "open",
         "priority": "medium",
         "remarks": "Awaiting plumber availability.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 16, 2025, 08:15 AM",
+                "message": "Ticket created - Low water pressure complaint",
+                "author": "Nuwan Silva"
+            }
+        ]
     },
     {
         "ticketId": "TKT-007",
@@ -116,7 +248,39 @@ export const tickets = [
         "status": "closed",
         "priority": "low",
         "remarks": "Door handle tightened and secured.",
-        "csat": 4
+        "csat": 4,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 11, 2025, 02:20 PM",
+                "message": "Ticket created",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 11, 2025, 03:00 PM",
+                "message": "Assigned to Pradeep Samaraweera",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 12, 2025, 09:00 AM",
+                "message": "Technician scheduled for handle repair",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 13, 2025, 09:45 AM",
+                "message": "Door handle tightened and secured.",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 13, 2025, 10:30 AM",
+                "message": "Work verified and ticket closed.",
+                "author": "Kasun Bandara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-008",
@@ -133,7 +297,33 @@ export const tickets = [
         "status": "resolved",
         "priority": "high",
         "remarks": "Fan blades balanced and mounting bracket tightened.",
-        "csat": 3
+        "csat": 3,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 15, 2025, 05:30 PM",
+                "message": "Ticket created - Ceiling fan safety concern",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 15, 2025, 06:00 PM",
+                "message": "Urgent assignment to Rohan Gunasekara",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 16, 2025, 09:00 AM",
+                "message": "Electrician inspecting ceiling fan",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 17, 2025, 11:20 AM",
+                "message": "Fan blades balanced and mounting bracket tightened.",
+                "author": "Rohan Gunasekara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-009",
@@ -150,7 +340,39 @@ export const tickets = [
         "status": "closed",
         "priority": "high",
         "remarks": "Flush valve replaced. Working normally now.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 12, 2025, 10:00 AM",
+                "message": "Ticket created",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 12, 2025, 11:00 AM",
+                "message": "Assigned to Sunil Wickramasinghe",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 13, 2025, 09:00 AM",
+                "message": "Plumber diagnosing flush mechanism",
+                "author": "Sunil Wickramasinghe"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 14, 2025, 03:10 PM",
+                "message": "Flush valve replaced. Working normally now.",
+                "author": "Sunil Wickramasinghe"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 14, 2025, 04:00 PM",
+                "message": "Resident satisfied. Ticket closed.",
+                "author": "Nuwan Silva"
+            }
+        ]
     },
     {
         "ticketId": "TKT-010",
@@ -167,7 +389,21 @@ export const tickets = [
         "status": "assigned",
         "priority": "low",
         "remarks": "Inspection scheduled for next week.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 16, 2025, 01:45 PM",
+                "message": "Ticket created",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 16, 2025, 03:00 PM",
+                "message": "Assigned to Pradeep Samaraweera. Inspection scheduled.",
+                "author": "Kasun Bandara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-011",
@@ -184,7 +420,33 @@ export const tickets = [
         "status": "resolved",
         "priority": "medium",
         "remarks": "Motor replaced. Fan working efficiently.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 09, 2025, 07:30 AM",
+                "message": "Ticket created",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 09, 2025, 09:00 AM",
+                "message": "Assigned to Rohan Gunasekara",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 10, 2025, 10:00 AM",
+                "message": "Motor diagnosis completed. Ordering replacement.",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 11, 2025, 12:00 PM",
+                "message": "Motor replaced. Fan working efficiently.",
+                "author": "Rohan Gunasekara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-012",
@@ -201,7 +463,15 @@ export const tickets = [
         "status": "open",
         "priority": "high",
         "remarks": "Glass measurements taken. Ordering replacement.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 17, 2025, 09:00 AM",
+                "message": "Ticket created - Cracked window glass safety concern",
+                "author": "Nuwan Silva"
+            }
+        ]
     },
     {
         "ticketId": "TKT-013",
@@ -218,7 +488,39 @@ export const tickets = [
         "status": "closed",
         "priority": "high",
         "remarks": "Heating element replaced. Working properly.",
-        "csat": 4
+        "csat": 4,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 13, 2025, 12:40 PM",
+                "message": "Ticket created",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 13, 2025, 02:00 PM",
+                "message": "Assigned to Rohan Gunasekara",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 14, 2025, 09:30 AM",
+                "message": "Electrician testing heating element",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 15, 2025, 02:30 PM",
+                "message": "Heating element replaced. Working properly.",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 15, 2025, 03:15 PM",
+                "message": "Verified by resident. Ticket closed.",
+                "author": "Kasun Bandara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-014",
@@ -235,7 +537,33 @@ export const tickets = [
         "status": "resolved",
         "priority": "high",
         "remarks": "Pipe cleaned and blockage removed. Draining properly.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 08, 2025, 03:20 PM",
+                "message": "Ticket created",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 08, 2025, 04:00 PM",
+                "message": "Assigned to Sunil Wickramasinghe",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 09, 2025, 09:00 AM",
+                "message": "Plumber working on drainage blockage",
+                "author": "Sunil Wickramasinghe"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 10, 2025, 10:15 AM",
+                "message": "Pipe cleaned and blockage removed. Draining properly.",
+                "author": "Sunil Wickramasinghe"
+            }
+        ]
     },
     {
         "ticketId": "TKT-015",
@@ -252,7 +580,21 @@ export const tickets = [
         "status": "assigned",
         "priority": "medium",
         "remarks": "Technician will visit tomorrow morning.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 17, 2025, 04:00 PM",
+                "message": "Ticket created",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 17, 2025, 04:30 PM",
+                "message": "Assigned to Sunil Wickramasinghe. Scheduled for tomorrow.",
+                "author": "Nuwan Silva"
+            }
+        ]
     },
     {
         "ticketId": "TKT-016",
@@ -269,7 +611,39 @@ export const tickets = [
         "status": "closed",
         "priority": "medium",
         "remarks": "Cleaning schedule revised. Issue resolved.",
-        "csat": 3
+        "csat": 3,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 10, 2025, 11:00 AM",
+                "message": "Ticket created - Garbage collection complaint",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 10, 2025, 12:00 PM",
+                "message": "Assigned to Pradeep Samaraweera",
+                "author": "Dilshan Rajapaksa"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 10, 2025, 03:00 PM",
+                "message": "Reviewing cleaning schedule with housekeeping team",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 11, 2025, 08:30 AM",
+                "message": "Cleaning schedule revised. Issue resolved.",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 11, 2025, 09:00 AM",
+                "message": "Ticket closed after verification.",
+                "author": "Dilshan Rajapaksa"
+            }
+        ]
     },
     {
         "ticketId": "TKT-017",
@@ -286,7 +660,27 @@ export const tickets = [
         "status": "in_progress",
         "priority": "urgent",
         "remarks": "Maintenance company contacted. Inspection scheduled.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 14, 2025, 01:15 PM",
+                "message": "Urgent ticket created - Elevator safety concern",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 14, 2025, 01:30 PM",
+                "message": "Emergency assignment to Rohan Gunasekara",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 14, 2025, 02:00 PM",
+                "message": "Elevator maintenance company contacted. Inspection scheduled.",
+                "author": "Rohan Gunasekara"
+            }
+        ]
     },
     {
         "ticketId": "TKT-018",
@@ -303,7 +697,33 @@ export const tickets = [
         "status": "resolved",
         "priority": "high",
         "remarks": "Card reader replaced. System working properly.",
-        "csat": 4
+        "csat": 4,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 12, 2025, 04:45 PM",
+                "message": "Ticket created - Parking access issue",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 12, 2025, 05:00 PM",
+                "message": "Assigned to Pradeep Samaraweera",
+                "author": "Nuwan Silva"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 13, 2025, 08:00 AM",
+                "message": "Technician diagnosing card reader malfunction",
+                "author": "Pradeep Samaraweera"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 13, 2025, 10:30 AM",
+                "message": "Card reader replaced. System working properly.",
+                "author": "Pradeep Samaraweera"
+            }
+        ]
     },
     {
         "ticketId": "TKT-019",
@@ -320,7 +740,15 @@ export const tickets = [
         "status": "open",
         "priority": "urgent",
         "remarks": "Structural engineer consultation required.",
-        "csat": null
+        "csat": null,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 16, 2025, 10:20 AM",
+                "message": "Urgent ticket created - Structural concern with ceiling cracks",
+                "author": "Dilshan Rajapaksa"
+            }
+        ]
     },
     {
         "ticketId": "TKT-020",
@@ -337,6 +765,38 @@ export const tickets = [
         "status": "closed",
         "priority": "medium",
         "remarks": "Network cable replaced. Connection stable now.",
-        "csat": 5
+        "csat": 5,
+        "ticket_updates": [
+            {
+                "status": "open",
+                "timestamp": "Nov 15, 2025, 02:00 PM",
+                "message": "Ticket created",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "assigned",
+                "timestamp": "Nov 15, 2025, 03:00 PM",
+                "message": "Assigned to Rohan Gunasekara",
+                "author": "Kasun Bandara"
+            },
+            {
+                "status": "in_progress",
+                "timestamp": "Nov 16, 2025, 09:00 AM",
+                "message": "Technician testing network connection",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "resolved",
+                "timestamp": "Nov 16, 2025, 04:45 PM",
+                "message": "Network cable replaced. Connection stable now.",
+                "author": "Rohan Gunasekara"
+            },
+            {
+                "status": "closed",
+                "timestamp": "Nov 16, 2025, 05:30 PM",
+                "message": "Resident confirmed stable connection. Ticket closed.",
+                "author": "Kasun Bandara"
+            }
+        ]
     }
 ];
