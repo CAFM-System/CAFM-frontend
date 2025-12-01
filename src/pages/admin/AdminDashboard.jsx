@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
-import DashboardCard from "../../components/common/DashboardCard";
+import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
 import TicketDetails from "../../components/admin/TicketDetails";
@@ -84,30 +84,34 @@ export default function AdminDashboard() {
             {activeTab === "overview" && (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-4 sm:px-6">
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Total Tickets"
                             value={totalTickets}
                             icon={<Ticket />}
+                            description= "All tickets"
                             onClick={() => console.log("Clicked Completed Tasks")}
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Active Tickets"
                             value={activeTickets.length}
                             icon={<Clock4 className="text-red-500" />}
+                            description="In progress"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Resolved"
                             value={resolvedTickets.length}
                             icon={<CheckCircle className="text-green-500" />}
+                            description= "Awaiting closure"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
-                        <DashboardCard
+                        <AdminDashboardCard
                             title="Urgent"
                             value={urgentTickets.length}
                             icon={<AlertTriangle className="text-red-500" />}
+                            description= "Needs attention"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
