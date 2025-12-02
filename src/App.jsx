@@ -8,6 +8,7 @@ import { ResidentDashboad } from './pages/ResidentDashboad';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { TechnicianDashboard } from './components/technician/TechnicianDashboard';
+import { HomePage } from './pages/HomePage';
 
 
 function App() {
@@ -15,9 +16,9 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div className='w-full h-[100vh] '>
-          <Routes path="/">
-            <Route path='/' element={<h1>Home page</h1>} />
+        <div className='w-full h-screen'>
+          <Routes>
+            <Route path='/*' element={<HomePage />} />
             <Route path='/login' element = {<LoginPage/>}/>
             <Route path='/technician' element ={<TechnicianDashboard/>}/>
             <Route path='/admin' element ={<AdminDashboard/>}/>
