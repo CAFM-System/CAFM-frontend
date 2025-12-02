@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
 import TopBanner from "../components/resident/TopBanner";
 import { Header } from "../components/resident/Header";
-import { tickets} from "../services/ticketData";
+import { tickets} from "../services/newTicketData";
 import Ticketcard from "../components/common/ticketCard";
 import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
 
