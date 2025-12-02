@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 // ---------------- SAMPLE TICKETS ----------------
-import tickets from "../../services/ticketData";
+import {tickets} from "../../services/ticketData";
 
-export default function TechnicianDashboard() {
+export  function TechnicianDashboard() {
   const [activeTab, setActiveTab] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
 
