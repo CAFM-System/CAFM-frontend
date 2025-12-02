@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import DashboardCard from "../common/DashboardCard";
+import DashboardCard from "../admin/AdminDashboardCard.jsx";
 import { Clock, TrendingUp, CircleAlert, Download } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { tickets } from "../../services/newTicketData.js";
+import exportTicketsToCSV from "../../services/ExportCSV.js";
 
 const ReportsAnalytics = () => {
     const [totalTickets, setTotalTickets] = useState(0);
     const [resolutionRate, setResolutionRate] = useState("0 %");
     const [avgResolutionTime, setAvgResolutionTime] = useState(0);
     const [avgCSATRating, setAvgCSATRating] = useState("0.0/5.0");
+    const [resolvedTickets, setResolvedTickets] = useState(0);
 
     const [barGraphByStatusData, setBarGraphByStatusData] = useState([
         { status: 'Open', count: 0 },
@@ -61,6 +63,7 @@ const ReportsAnalytics = () => {
         setResolutionRate(resolutionRateCalc);
         setAvgResolutionTime(avgResolution);
         setAvgCSATRating(avgCSAT);
+        setResolvedTickets(resolvedTickets);
     }, []);
 
     const getProgressString = (string) => {
@@ -151,28 +154,25 @@ const ReportsAnalytics = () => {
                     title="Total Tickets"
                     value={totalTickets}
                     icon={<TrendingUp />}
-                    onClick={() => console.log("Clicked Completed Tasks")}
+                    description="All time"
                 />
                 <DashboardCard
                     title="Resolution Rate"
                     value={resolutionRate}
                     icon={<CircleAlert className="text-green-500" />}
-                    onClick={() => console.log("Clicked Pending Issues")}
-                    className="bg-blue-50"
+                    description={resolvedTickets + " resolved"}
                 />
                 <DashboardCard
                     title="Avg Resolution Time"
                     value={avgResolutionTime}
                     icon={<Clock className="text-orange-500" />}
-                    onClick={() => console.log("Clicked Pending Issues")}
-                    className="bg-blue-50"
+                    description="hours"
                 />
                 <DashboardCard
                     title="Avg CSAT Rating"
                     value={avgCSATRating}
                     icon={<TrendingUp className="text-yellow-500" />}
-                    onClick={() => console.log("Clicked Pending Issues")}
-                    className="bg-blue-50"
+                    description="Customer Satisfaction"
                 />
             </div>
 
@@ -183,6 +183,7 @@ const ReportsAnalytics = () => {
 
                 <div className="flex flex-wrap gap-3">
                     <button
+                        onClick={() => exportTicketsToCSV(tickets)}
                         className="shadow-sm inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <Download size={16} />
                         Export as CSV
