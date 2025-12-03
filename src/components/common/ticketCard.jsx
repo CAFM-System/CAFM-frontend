@@ -32,14 +32,14 @@ export default function Ticketcard(props){
             </div>
             <h1 className="text-lg">{ticket.title}</h1>
             <div className="absolute bottom-4 mt-4 gap-4 flex flex-col">
-                <span className="text-gray-600">{ticket.description}</span>
+                <span className="text-gray-600">{ticket.complaintRequest}</span>
                 <div className="flex gap-50 text-gray-600">
                     <div className="flex flex-col">
                         <span className="flex gap-2 items-center"><GrLocation/>{ticket.location}</span>
-                        <span className="flex gap-2 items-center"><FiUser/>{ticket.resident}</span>
+                        <span className="flex gap-2 items-center"><FiUser/>{ticket.name}</span>
                     </div>
                     <div className="flex flex-col ">
-                        <span className="flex gap-2 items-center"><BsExclamationCircle/>{ticket.category}</span>
+                        <span className="flex gap-2 items-center"><BsExclamationCircle/>{ticket.complaintCategory}</span>
                         <span className="flex gap-2 items-center"><GoClock/>{ticket.createdDate}</span>
                     </div>
                 </div>

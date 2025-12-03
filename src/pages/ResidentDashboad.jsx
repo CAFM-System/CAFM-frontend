@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
 import TopBanner from "../components/resident/TopBanner";
 import { Header } from "../components/resident/Header";
-import { tickets} from "../services/ticketData";
+import { tickets} from "../services/newTicketData";
 import Ticketcard from "../components/common/ticketCard";
 import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
 
@@ -20,7 +20,7 @@ export function ResidentDashboad() {
     });
 
     return (
-        <div className="w-full h-full flex flex-col gap-4 px-[100px]">
+        <div className="w-full min-h-full flex flex-col gap-4 px-[100px] overflow-y-auto">
             
             {openCreateTicketDialog && (
                 <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} />
