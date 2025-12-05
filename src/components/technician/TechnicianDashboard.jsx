@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TechnicianHeader from "./TechnicianHeader";
-import TechnicianTicketCard from "./TechnicianTicketCard";
+import TicketCard from "../common/ticketCard.jsx";
 
 import {
   ClipboardList,
@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 // ---------------- SAMPLE TICKETS ----------------
-import {tickets} from "../../services/ticketData";
+import { tickets } from "../../services/ticketData";
 
-export  function TechnicianDashboard() {
+export function TechnicianDashboard() {
   const [activeTab, setActiveTab] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
 
@@ -159,7 +159,7 @@ export  function TechnicianDashboard() {
 
         </div>
 
-        {/* FILTER BAR */}
+        {/* ACTIVE FILTER BAR */}
         {priorityFilter !== "all" && (
           <div className="mt-4 bg-blue-50 border border-blue-100 px-4 py-3 rounded-xl flex items-center justify-between">
             <div className="flex items-center gap-2 text-blue-700">
@@ -183,19 +183,15 @@ export  function TechnicianDashboard() {
       {/* ---------------- TICKET LIST ---------------- */}
       <div className="mt-6">
 
-        {/* ALL */}
         {activeTab === "all" &&
           renderList(filteredTickets, ClipboardList, "No tickets found.")}
 
-        {/* ASSIGNED */}
         {activeTab === "assigned" &&
           renderList(assignedTickets, AlertCircle, "No assigned tickets.")}
 
-        {/* IN PROGRESS */}
         {activeTab === "in_progress" &&
           renderList(inProgressTickets, Clock4, "No tickets in progress.")}
 
-        {/* COMPLETED */}
         {activeTab === "completed" &&
           renderList(completedTickets, CheckCircle, "No completed tickets.")}
 
@@ -215,7 +211,7 @@ function renderList(list, Icon, emptyMessage) {
   ) : (
     <div className="grid grid-cols-1 gap-4">
       {list.map((ticket) => (
-        <TechnicianTicketCard key={ticket.id} ticket={ticket} />
+        <TicketCard key={ticket.ticketId} ticket={ticket} />
       ))}
     </div>
   );
