@@ -95,7 +95,7 @@ export function ResidentTicketDialog(props){
                                 <p className="text-sm text-gray-500 mb-2">Category</p>
                                 <div className="flex items-center gap-2">
                                     <CircleAlert size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.category}</span>
+                                    <span className="text-gray-700">{data.complaintCategory}</span>
                                 </div>
                             </div>
 
@@ -113,7 +113,7 @@ export function ResidentTicketDialog(props){
                                 <p className="text-sm text-gray-500 mb-2">Assigned To</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.assignTo}</span>
+                                    <span className="text-gray-700">{data.complaintRecievdBy}</span>
                                 </div>
                             </div>
                             <div>
