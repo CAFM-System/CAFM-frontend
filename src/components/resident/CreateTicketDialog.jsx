@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export function CreateTicketDialog(props) {
     const [title, setTitle] = useState("");
-    const [category, setCategory] = useState("Cleaning");
-    const [priority, setpriority] = useState("low");
+    const [category, setCategory] = useState("");
+    const [specialNote, setSpecialNote] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
     const [attachments, setAttachments] = useState(null);
@@ -45,25 +45,12 @@ export function CreateTicketDialog(props) {
                 onChange={(e)=>{setCategory(e.target.value)}}
                 placeholder="Select category"
               >
+                <option value="" disabled>Select category</option>
                 <option>Cleaning</option>
                 <option>Security</option>
                 <option>Electrical</option>
                 <option>Plumbing</option>
                 <option>HVAC</option>
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="font-medium text-gray-700">Priority *</label>
-              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-                value={priority}
-                onChange={(e)=>{setpriority(e.target.value)}}
-                placeholder="Select priority"
-              >
-                <option>low</option>
-                <option>medium</option>
-                <option>high</option>
-                <option>urgent</option>
               </select>
             </div>
           </div>
@@ -98,6 +85,21 @@ export function CreateTicketDialog(props) {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {/* Special Note */}
+          <div className="space-y-1">
+            <label htmlFor="specialNote" className="font-medium text-gray-700">
+              Special Note *
+            </label>
+            <textarea
+              id="specialNote"
+              placeholder="Provide special notes"
+              rows={4}
+              value={specialNote}
+              onChange={(e)=>{setSpecialNote(e.target.value)}}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
 
           {/* Attachments */}
           <div className="space-y-1">
