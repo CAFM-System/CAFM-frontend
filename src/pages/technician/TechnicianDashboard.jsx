@@ -1,7 +1,7 @@
 import { useState } from "react";
-import TechnicianHeader from "./TechnicianHeader";
-import TicketCard from "../common/ticketCard";
-import TicketDetails from "./TicketDetails";
+import TechnicianHeader from "../../components/technician/TechnicianHeader";
+import TicketCard from "../../components/common/ticketCard";
+import TicketDetails from "../../components/technician/TicketDetails";
 
 import {
   ClipboardList,
