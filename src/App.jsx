@@ -1,15 +1,9 @@
-import { useState } from 'react'
-
-import Test from './components/admin/Test'
-import LoginPage from './pages/loginPage'
-import { TestResidentDialog } from './components/resident/testResidentDialog';
-import { CreateTicketDialog } from './components/resident/CreateTicketDialog';
-import { ResidentDashboad } from './pages/ResidentDashboad';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { TechnicianDashboard } from './components/technician/TechnicianDashboard';
+import { TechnicianDashboard } from './pages/technician/TechnicianDashboard';
 import { HomePage } from './pages/HomePage';
-
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPg from './pages/auth/RegisterPg';
 
 function App() {
 
@@ -19,9 +13,10 @@ function App() {
         <div className='w-full h-screen'>
           <Routes>
             <Route path='/*' element={<HomePage />} />
-            <Route path='/login' element = {<LoginPage/>}/>
-            <Route path='/technician' element ={<TechnicianDashboard/>}/>
-            <Route path='/admin' element ={<AdminDashboard/>}/>
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/technician' element={<TechnicianDashboard />} />
+            <Route path='/admin' element={<AdminDashboard />} />
+            <Route path='/register' element={<RegisterPg />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -126,7 +126,7 @@ export function ResidentTicketDialog(props){
                         </div>
 
                         <div className="border-t pt-6 border-gray-300">
-                            <StatusHistory data={updateData} />
+                            <StatusHistory data={data.ticket_updates} />
                         </div>
 
                     </div>
