@@ -2,17 +2,38 @@ import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X, ChevronDown } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
 import { ticketsUpdates } from '../../services/ticketUpdatesData';
+import { ResidentAction } from './ResidentAction';
 
 
 
 
 export function ResidentTicketDialog(props){
-    
+    const [rating, setRating] = useState(0);
+    const [showRating, setShowRating] = useState(false);
+    const [feedback, setFeedback] = useState("");
+    const [closeComment, setCloseComment] = useState("");
     const data = props.data;
     const onClose = props.onClose;
     const updateData = ticketsUpdates
+    const canRate = data.status === 'resolved' ;
+    const canReopen = data.status === 'resolved' || data.status === 'closed';
+    const canClose = data.status === 'resolved';
    
-
+    const residentAction = {
+        rating: rating,
+        showRating: showRating,
+        feedback: feedback,
+        canRate: canRate,
+        canReopen: canReopen,
+        canClose: canClose,
+        status: data.status,
+        closeComment: closeComment,
+        
+        setCloseComment: setCloseComment,
+        setFeedback: setFeedback,
+        setShowRating: setShowRating,
+        setRating: setRating,
+    }
     // Close on Escape key
     useEffect(() => {
         const handleKey = (e) => {
@@ -126,8 +147,12 @@ export function ResidentTicketDialog(props){
                         </div>
 
                         <div className="border-t pt-6 border-gray-300">
-                            <StatusHistory data={updateData} />
+                            <StatusHistory data={data.ticket_updates} />
                         </div>
+                        <div className="border-t pt-6 border-gray-300">
+                        <ResidentAction data={residentAction} />
+                        </div>
+
 
                     </div>
                 </div>

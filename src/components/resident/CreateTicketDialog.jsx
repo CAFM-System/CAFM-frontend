@@ -101,26 +101,8 @@ export function CreateTicketDialog(props) {
           </div>
 
 
-          {/* Attachments */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-700">
-              Attachments (Optional)
-            </label>
-
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
-              <input id="attachments" type="file" className="hidden" multiple onChange={(e)=>{setAttachments(e.target.files)}} />
-
-              <label htmlFor="attachments" className="cursor-pointer block">
-                <Upload className="mx-auto h-10 w-10 text-gray-400 mb-3" />
-                <p className="text-sm text-gray-600">
-                  Click to upload images or videos
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  PNG, JPG, MP4 up to 10MB
-                </p>
-              </label>
-            </div>
-          </div>
+        
+          
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-2">
