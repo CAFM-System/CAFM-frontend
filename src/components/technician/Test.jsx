@@ -1,15 +1,15 @@
 import { useState } from 'react';
-
-import TicketDetails from './TicketDetails';
 import { tickets } from '../../services/newTicketData.js';
 import { ticketsUpdates } from '../../services/ticketUpdatesData';
+
+import TicketDetails from './TicketDetails'
 
 const Test = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const ticketData = {
         ...tickets[0],
-        ticket_updates: ticketsUpdates
+        ticket_updates: ticketsUpdates,
     }
 
     if (!isOpen) {

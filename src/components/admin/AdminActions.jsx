@@ -12,7 +12,7 @@ const AdminActions = ({ data }) => {
                             <select
                                 value={data.assignedTech}
                                 onChange={(e) => data.setAssignedTech(e.target.value)}
-                                className="w-full border border-gray-300 rounded-md px-4 py-3 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full border border-gray-300 px-4 py-3 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="" disabled>Select Technician</option>
                                 <option value="Mike Wilson">Mike Wilson</option>

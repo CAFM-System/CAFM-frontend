@@ -1,23 +1,39 @@
 import { useEffect, useState } from 'react';
-import { CircleAlert, Clock, MapPin, User, X } from 'lucide-react';
+import { CircleAlert, Clock, MapPin, User, X, ChevronDown } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
-import AdminActions from './AdminActions';
+import { ticketsUpdates } from '../../services/ticketUpdatesData';
+import { ResidentAction } from './ResidentAction';
 
-const TicketDetails = ({ data, onClose }) => {
-    const [activeTab, setActiveTab] = useState('actions');
-    const [assignedTech, setAssignedTech] = useState(data.assignTo || '');
-    const [selectedPriority, setSelectedPriority] = useState(data.priority || '');
-    const [closingComment, setClosingComment] = useState('');
 
-    const adminActions = {
-        assignedTech: assignedTech,
-        selectedPriority: selectedPriority,
-        closingComment: closingComment,
-        setAssignedTech: setAssignedTech,
-        setSelectedPriority: setSelectedPriority,
-        setClosingComment: setClosingComment,
-    };
 
+
+export function ResidentTicketDialog(props){
+    const [rating, setRating] = useState(0);
+    const [showRating, setShowRating] = useState(false);
+    const [feedback, setFeedback] = useState("");
+    const [closeComment, setCloseComment] = useState("");
+    const data = props.data;
+    const onClose = props.onClose;
+    const updateData = ticketsUpdates
+    const canRate = data.status === 'resolved' ;
+    const canReopen = data.status === 'resolved' || data.status === 'closed';
+    const canClose = data.status === 'resolved';
+   
+    const residentAction = {
+        rating: rating,
+        showRating: showRating,
+        feedback: feedback,
+        canRate: canRate,
+        canReopen: canReopen,
+        canClose: canClose,
+        status: data.status,
+        closeComment: closeComment,
+        
+        setCloseComment: setCloseComment,
+        setFeedback: setFeedback,
+        setShowRating: setShowRating,
+        setRating: setRating,
+    }
     // Close on Escape key
     useEffect(() => {
         const handleKey = (e) => {
@@ -27,14 +43,11 @@ const TicketDetails = ({ data, onClose }) => {
         return () => window.removeEventListener('keydown', handleKey);
     }, [onClose]);
 
-    useEffect(() => {
-        console.log({ assignedTech, selectedPriority, closingComment });
-    }, [assignedTech, selectedPriority, closingComment]);
-
+    
     return (
         <>
             <div
-                className="fixed inset-0 bg-opacity-50 flex items-center justify-center p-4 z-50"
+                className="fixed inset-0 bg-opacity-50 flex items-center justify-center p-4 z-100"
                 style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
                 onClick={() => onClose?.()}
             >
@@ -42,29 +55,29 @@ const TicketDetails = ({ data, onClose }) => {
                 <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh]">
                     {/* Header */}
                     <div className="flex items-center justify-between p-6 border-b border-gray-300">
-                        <h2 className="text-xl font-semibold">Ticket Management</h2>
+                        <h2 className="text-xl font-semibold">Ticket Details</h2>
                         <div className="flex items-center gap-2">
 
                             {/* status badge */}
                             {data.status === "open" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700">
-                                    Open
+                                    {data.status}
                                 </span>
                             ) : data.status === "assigned" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-purple-100 text-purple-700">
-                                    Assigned
+                                    {data.status}
                                 </span>
                             ) : data.status === "in_progress" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
-                                    In Progress
+                                    {data.status}
                                 </span>
                             ) : data.status === "resolved" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700">
-                                    Resolved
+                                    {data.status}
                                 </span>
                             ) : data.status === "closed" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700">
-                                    Closed
+                                    {data.status}
                                 </span>
                             ) : null}
 
@@ -72,19 +85,19 @@ const TicketDetails = ({ data, onClose }) => {
                             {/* priority badge */}
                             {data.priority === "urgent" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-700">
-                                    Urgent
+                                    {data.priority}
                                 </span>
                             ) : data.priority === "high" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
-                                    High
+                                    {data.priority}
                                 </span>
                             ) : data.priority === "medium" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700">
-                                    Medium
+                                    {data.priority}
                                 </span>
                             ) : data.priority === "low" ? (
                                 <span className="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700">
-                                    Low
+                                    {data.priority}
                                 </span>
                             ) : null}
 
@@ -96,14 +109,14 @@ const TicketDetails = ({ data, onClose }) => {
                     <div className="p-6 overflow-y-scroll max-h-[75vh]">
                         <h3 className="text-sm text-gray-500 mb-2">{data.ticketId}</h3>
                         <h2 className="text-2xl font-semibold mb-3">{data.title}</h2>
-                        <p className="text-gray-600 mb-6">{data.complaintRequest}</p>
+                        <p className="text-gray-600 mb-6">{data.description}</p>
 
                         <div className="grid grid-cols-2 gap-6 pb-3 mb-6">
                             <div>
                                 <p className="text-sm text-gray-500 mb-2">Category</p>
                                 <div className="flex items-center gap-2">
                                     <CircleAlert size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.jobType}</span>
+                                    <span className="text-gray-700">{data.complaintCategory}</span>
                                 </div>
                             </div>
 
@@ -114,15 +127,16 @@ const TicketDetails = ({ data, onClose }) => {
                                     <span className="text-gray-700">{data.location}</span>
                                 </div>
                             </div>
-
+                            
+                            
+                            
                             <div>
-                                <p className="text-sm text-gray-500 mb-2">Resident</p>
+                                <p className="text-sm text-gray-500 mb-2">Assigned To</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.name}</span>
+                                    <span className="text-gray-700">{data.complaintRecievdBy}</span>
                                 </div>
                             </div>
-
                             <div>
                                 <p className="text-sm text-gray-500 mb-2">Created</p>
                                 <div className="flex items-center gap-2">
@@ -133,34 +147,12 @@ const TicketDetails = ({ data, onClose }) => {
                         </div>
 
                         <div className="border-t pt-6 border-gray-300">
-                            <div className="flex gap-4 mb-6">
-                                <button
-                                    onClick={() => setActiveTab('actions')}
-                                    className={`pb-2 px-1 font-semibold border-b-2 transition-colors ${activeTab === 'actions' ?
-                                        'border-black text-black' :
-                                        'border-transparent text-gray-400'
-                                        }`}
-                                >Admin Actions</button>
-
-                                <button
-                                    onClick={() => setActiveTab('history')}
-                                    className={`pb-2 px-1 font-semibold border-b-2 transition-colors ${activeTab === 'history' ?
-                                        'border-black text-black' :
-                                        'border-transparent text-gray-400'
-                                        }`}
-                                >Status History</button>
-                            </div>
-
-                            {/* Admin Actions Tab */}
-                            {activeTab === 'actions' && (
-                                <AdminActions data={adminActions} />
-                            )}
-
-                            {/* Status History Tab */}
-                            {activeTab === 'history' && (
-                                <StatusHistory data={data.ticket_updates} />
-                            )}
+                            <StatusHistory data={data.ticket_updates} />
                         </div>
+                        <div className="border-t pt-6 border-gray-300">
+                        <ResidentAction data={residentAction} />
+                        </div>
+
 
                     </div>
                 </div>
@@ -169,4 +161,3 @@ const TicketDetails = ({ data, onClose }) => {
     );
 };
 
-export default TicketDetails;
