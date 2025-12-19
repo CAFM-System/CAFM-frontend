@@ -1,60 +1,107 @@
-import { Home, Mail, Phone, Shield, FileText, HelpCircle } from "lucide-react";
+import { Home, Mail, Phone, MapPin } from "lucide-react";
 
-export default function Footer() {
+export default function Footer({
+  onNavigateToDashboard,
+  onNavigateToNotifications,
+  onNavigateToProfile,
+}) {
   return (
-    <footer className="mt-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900"></div>
+    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#1687A7]/5 via-[#D3E0EA]/30 to-[#F6F5F5]/50 backdrop-blur-xl border-t border-[#D3E0EA]/50">
+      <div className="max-w-7xl mx-auto">
 
-      <div className="relative max-w-7xl mx-auto px-6 py-16 text-white">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid md:grid-cols-4 gap-8 mb-8">
 
           {/* Brand */}
-          <div>
+          <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl">
-                <Home className="h-7 w-7 text-white" />
+              <div className="bg-gradient-to-br from-[#1687A7] to-[#126b8a] p-2 rounded-xl shadow-lg">
+                <Home className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-2xl font-bold">CAFM System</h3>
+              <h3 className="text-xl text-[#1687A7]">CAFM Portal</h3>
             </div>
-            <p className="text-gray-300 text-sm max-w-sm">
-              Revolutionizing apartment maintenance with modern technology.
+
+            <p className="text-gray-700 mb-4">
+              Professional apartment facilities management and maintenance services.
             </p>
+
+            <div className="flex gap-3">
+              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
+                <Mail className="h-5 w-5" />
+              </button>
+
+              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
+                <Phone className="h-5 w-5" />
+              </button>
+
+              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
+                <MapPin className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-gray-300 text-sm">
-              <li>Dashboard</li>
-              <li>Create Request</li>
-              <li>My Profile</li>
-              <li>Help Center</li>
+          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-2xl p-6 shadow-lg">
+            <h4 className="text-[#1687A7] mb-4">Quick Links</h4>
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={onNavigateToDashboard}
+                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                >
+                  Dashboard
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={onNavigateToNotifications}
+                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                >
+                  Notifications
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={onNavigateToProfile}
+                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                >
+                  Profile
+                </button>
+              </li>
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="font-semibold mb-4">Contact Us</h4>
-            <div className="space-y-3 text-gray-300 text-sm">
-              <p className="flex items-center gap-2">
-                <Mail className="h-4 w-4" /> support@cafm.com
-              </p>
-              <p className="flex items-center gap-2">
-                <Phone className="h-4 w-4" /> +1 555 123 4567
-              </p>
-            </div>
+          {/* Support */}
+          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-2xl p-6 shadow-lg">
+            <h4 className="text-[#1687A7] mb-4">Support</h4>
+            <ul className="space-y-2">
+              <li className="text-gray-700">Help Center</li>
+              <li className="text-gray-700">Contact Us</li>
+              <li className="text-gray-700">FAQs</li>
+            </ul>
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/20 pt-5 text-sm text-gray-400 flex justify-between">
-          <span>© 2024 CAFM. All rights reserved.</span>
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-[#D3E0EA]/50 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-6 py-3 shadow-sm">
+            <p className="text-gray-700 text-sm">
+              © 2024 CAFM Portal. All rights reserved.
+            </p>
+          </div>
 
-          <div className="flex gap-6">
-            <span className="flex items-center gap-1"><Shield className="h-4 w-4" /> Privacy</span>
-            <span className="flex items-center gap-1"><FileText className="h-4 w-4" /> Terms</span>
-            <span className="flex items-center gap-1"><HelpCircle className="h-4 w-4" /> Support</span>
+          <div className="flex gap-3">
+            <button className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-5 py-2.5 text-sm text-gray-700 hover:text-[#1687A7] hover:bg-white/60 transition-all shadow-sm">
+              Privacy Policy
+            </button>
+
+            <button className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-5 py-2.5 text-sm text-gray-700 hover:text-[#1687A7] hover:bg-white/60 transition-all shadow-sm">
+              Terms of Service
+            </button>
           </div>
         </div>
+
       </div>
     </footer>
   );
