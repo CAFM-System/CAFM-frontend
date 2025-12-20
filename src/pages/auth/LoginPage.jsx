@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Building2, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/auth.service.js";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -8,15 +10,42 @@ export default function LoginPage() {
   const [focusedField, setFocusedField] = useState(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleLogin = async () => {
+    if (!email || !password) return;
 
-  const handleLogin = () => {
-    setIsLoggingIn(true);
-    setTimeout(() => {
+    try {
+      setIsLoggingIn(true);
+
+      const res = await AuthService.login({
+        email,
+        password,
+      });
+
       setIsLoggingIn(false);
       setLoginSuccess(true);
-      setTimeout(() => setLoginSuccess(false), 3000);
-    }, 1500);
+
+      // 🔁 Hide success animation after 2s
+      setTimeout(() => setLoginSuccess(false), 2000);
+
+      // 🔀 Redirect by role
+      const role = res.data.user.role;
+      console.log("User role:", role);
+
+      setTimeout(() => {
+        if (role === "admin") navigate("/admin");
+        else if (role === "technician") navigate("/technician");
+        else navigate("/resident");
+      }, 800);
+
+    } catch (error) {
+      setIsLoggingIn(false);
+      console.error("Login failed", error);
+      alert("Invalid email or password");
+    }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden relative">
