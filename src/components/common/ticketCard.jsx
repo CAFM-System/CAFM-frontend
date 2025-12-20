@@ -36,11 +36,11 @@ export default function Ticketcard({ ticket, onClick }) {
   };
 
   // Normalize and support both formats (technician + resident)
-  const id = ticket.ticketId || ticket.ticket_number;
-  const desc = ticket.complaintRequest || ticket.description;
-  const name = ticket.name || ticket.tenant_name;
-  const category = ticket.complaintCategory || ticket.category;
-  const createdDate = ticket.createdDate || ticket.created_at;
+  const id = ticket.ticket_id || ticket.ticket_number;
+  const desc = ticket.complaint || ticket.description;
+  const name = ticket.resident_name || ticket.tenant_name;
+  const category = ticket.complaint_category || ticket.category;
+  const createdDate = ticket.created_at || ticket.created_at;
 
   // Normalize values
   const normalizedStatus =
