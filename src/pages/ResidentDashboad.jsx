@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
 import TopBanner from "../components/resident/TopBanner";
-import { Header } from "../components/resident/Header";
 import { tickets} from "../services/newTicketData";
 import Ticketcard from "../components/common/ticketCard";
 import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
+import apiClient from "../services/apiclient";
 
 export function ResidentDashboad() {
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [filter, setFilter] = useState("All");
+    const [tickets,setTickets] = useState([]);
+    const [isLoading,setIsLoading] = useState(true);
+
+    useEffect(()=>{
+        try {
+            if(isLoading){
+                apiClient.get("/tickets").then(
+                    (response)=>{
+                        console.log(response.data)
+                        setTickets(response.data.tickets);
+                        setIsLoading(false);
+                    }
+                )
+            }
+        } catch (error) {
+            (error)=>{
+                console.log("Error fetching tickets:", error);
+                setIsLoading(false);
+                window.alert("Failed to load tickets.");
+            }
+        }
+    },[isLoading]);
 
     const filteredTickets = tickets.filter(ticket => {
         if (filter === "All") return true;
@@ -33,7 +55,7 @@ export function ResidentDashboad() {
                 />
             )}
 
-            <Header />
+            
             <TopBanner openTicket={setOpenCreateTicketDialog} />
 
             <div className="w-full rounded-2xl border border-gray-500/50 shadow-lg bg-white/50 backdrop-blur-lg flex flex-col gap-4">
@@ -60,9 +82,11 @@ export function ResidentDashboad() {
 
                 
                 <div className="w-full p-4 space-y-4">
-                    {filteredTickets.map(ticket => (
+                    {isLoading && <p>Loading tickets...</p>}
+
+                    {!isLoading && filteredTickets.map(ticket => (
                         <Ticketcard
-                            key={ticket.ticketId}
+                            key={ticket.id}
                             ticket={ticket}
                             onClick={() => {
                                 setSelectedTicket(ticket);
