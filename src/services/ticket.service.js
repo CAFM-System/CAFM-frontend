@@ -9,6 +9,11 @@ const TicketService = {
     async createTicket(payload){
         const response = await apiClient.post("/tickets", payload);
         return response;
+    },
+
+    async updateStatusHistory(payload){
+        const response = await apiClient.get("/progress-history"+payload);
+        return response;
     }
 }
 
