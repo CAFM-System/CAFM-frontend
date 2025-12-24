@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
 import AdminActions from './AdminActions';
+import TicketService from '../../services/ticket.service';
 
 const TicketDetails = ({ data, onClose }) => {
     const [activeTab, setActiveTab] = useState('actions');
     const [assignedTech, setAssignedTech] = useState(data.assignTo || '');
     const [selectedPriority, setSelectedPriority] = useState(data.priority || '');
     const [closingComment, setClosingComment] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [statusHistory, setStatusHistory] = useState([]);
 
     const adminActions = {
         assignedTech: assignedTech,
@@ -30,6 +33,18 @@ const TicketDetails = ({ data, onClose }) => {
     useEffect(() => {
         console.log({ assignedTech, selectedPriority, closingComment });
     }, [assignedTech, selectedPriority, closingComment]);
+
+    useEffect(()=>{
+        if(isLoading){
+            TicketService.updateStatusHistory(`/${data.id}`).then(
+                (response)=>{
+                    console.log(response.data);
+                    setStatusHistory(response.data);
+                    setIsLoading(false);
+                }
+            )
+        }
+    },[isLoading])
 
     return (
         <>
@@ -94,7 +109,7 @@ const TicketDetails = ({ data, onClose }) => {
 
                     {/* Description */}
                     <div className="p-6 overflow-y-scroll max-h-[75vh]">
-                        <h3 className="text-sm text-gray-500 mb-2">{data.ticketId}</h3>
+                        <h3 className="text-sm text-gray-500 mb-2">{data.ticket_Id}</h3>
                         <h2 className="text-2xl font-semibold mb-3">{data.title}</h2>
                         <p className="text-gray-600 mb-6">{data.complaintRequest}</p>
 
@@ -119,7 +134,7 @@ const TicketDetails = ({ data, onClose }) => {
                                 <p className="text-sm text-gray-500 mb-2">Resident</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.name}</span>
+                                    <span className="text-gray-700">{data.resident_name}</span>
                                 </div>
                             </div>
 
@@ -127,7 +142,7 @@ const TicketDetails = ({ data, onClose }) => {
                                 <p className="text-sm text-gray-500 mb-2">Created</p>
                                 <div className="flex items-center gap-2">
                                     <Clock size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.createdDate}</span>
+                                    <span className="text-gray-700">{data.created_at}</span>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +173,7 @@ const TicketDetails = ({ data, onClose }) => {
 
                             {/* Status History Tab */}
                             {activeTab === 'history' && (
-                                <StatusHistory data={data.ticket_updates} />
+                                <StatusHistory data={statusHistory}  refresh={() => setIsLoading(true)}/>
                             )}
                         </div>
 

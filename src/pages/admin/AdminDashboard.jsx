@@ -1,27 +1,45 @@
-import { useState } from "react";
+import {  useEffect, useState } from "react";
 import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
 import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
 import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
 import TicketDetails from "../../components/admin/TicketDetails";
-import { tickets as ticketData } from "../../services/newTicketData";
+import TicketService from "../../services/ticket.service";
 
 
 
 export default function AdminDashboard() {
     // Tickets state
-    const [ticketList] = useState(ticketData);
+    const [ticketList,setTicketList] = useState([]);
     // UI state
     const [activeTab, setActiveTab] = useState("overview");
     const [searchText, setSearchText] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     // For opening TicketDetails
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isTicketOpen, setIsTicketOpen] = useState(false);
+
+    useEffect(
+        ()=>{
+            try {
+                if(isLoading){
+                    TicketService.getTicket().then(
+                        (response)=>{
+                            console.log(response.data.tickets);
+                            setTicketList(response.data.tickets);
+                            setIsLoading(false);
+                        }
+                    )
+                }
+            } catch (error) {
+                
+            }
+        },[]);
 
     const openTicketDetails = (ticket) => {
         setSelectedTicket(ticket);
@@ -146,7 +164,11 @@ export default function AdminDashboard() {
                         <div className="flex flex-col gap-6 mb-4">
                             {unassignedTickets.length > 0
                                 ? unassignedTickets.map(ticket => (
-                                    <TicketCard key={ticket.ticketId} ticket={ticket} />
+                                    <TicketCard 
+                                        key={ticket.ticket_Id} 
+                                        ticket={ticket}
+                                        onClick={() => openTicketDetails(ticket)}
+                                     />
                                 ))
                                 : (
                                     // Placeholder empty ticket

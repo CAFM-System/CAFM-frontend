@@ -3,6 +3,8 @@ import { CircleAlert, Clock, MapPin, User, X, ChevronDown } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
 import { ticketsUpdates } from '../../services/ticketUpdatesData';
 import { ResidentAction } from './ResidentAction';
+import { tickets } from '../../services/newTicketData';
+import TicketService from '../../services/ticket.service';
 
 
 
@@ -12,6 +14,8 @@ export function ResidentTicketDialog(props){
     const [showRating, setShowRating] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [closeComment, setCloseComment] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [statusHistory, setStatusHistory] = useState([]);
     const data = props.data;
     const onClose = props.onClose;
     const updateData = ticketsUpdates
@@ -42,6 +46,18 @@ export function ResidentTicketDialog(props){
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
     }, [onClose]);
+
+    useEffect(()=>{
+        if(isLoading){
+            TicketService.updateStatusHistory(`/${data.id}`).then(
+                (response)=>{
+                    console.log(response.data);
+                    setStatusHistory(response.data);
+                    setIsLoading(false);
+                }
+            )
+        }
+    },[isLoading])
 
     
     return (
@@ -107,16 +123,16 @@ export function ResidentTicketDialog(props){
 
                     {/* Description */}
                     <div className="p-6 overflow-y-scroll max-h-[75vh]">
-                        <h3 className="text-sm text-gray-500 mb-2">{data.ticketId}</h3>
+                        <h3 className="text-sm text-gray-500 mb-2">{data.ticket_id}</h3>
                         <h2 className="text-2xl font-semibold mb-3">{data.title}</h2>
-                        <p className="text-gray-600 mb-6">{data.description}</p>
+                        <p className="text-gray-600 mb-6">{data.complaint}</p>
 
                         <div className="grid grid-cols-2 gap-6 pb-3 mb-6">
                             <div>
                                 <p className="text-sm text-gray-500 mb-2">Category</p>
                                 <div className="flex items-center gap-2">
                                     <CircleAlert size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.complaintCategory}</span>
+                                    <span className="text-gray-700">{data.complaint_Category}</span>
                                 </div>
                             </div>
 
@@ -141,13 +157,16 @@ export function ResidentTicketDialog(props){
                                 <p className="text-sm text-gray-500 mb-2">Created</p>
                                 <div className="flex items-center gap-2">
                                     <Clock size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.createdDate}</span>
+                                    <span className="text-gray-700">{data.created_at}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="border-t pt-6 border-gray-300">
-                            <StatusHistory data={data.ticket_updates} />
+                            {
+                                isLoading ? <p>Loading status history...</p> :
+                                <StatusHistory data={statusHistory} refresh={() => setIsLoading(true)} />
+                            }
                         </div>
                         <div className="border-t pt-6 border-gray-300">
                         <ResidentAction data={residentAction} />

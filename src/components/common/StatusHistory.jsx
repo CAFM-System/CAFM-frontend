@@ -47,10 +47,10 @@ const StatusHistory = ({ data }) => {
                                 <span className={`px-2 py-1 text-xs rounded ${getStatusColor(item.status)}`}>
                                     {getProgressString(item.status)}
                                 </span>
-                                <span className="text-sm text-gray-500">{item.timestamp}</span>
+                                <span className="text-sm text-gray-500">{item.created_at}</span>
                             </div>
                             <p className="text-gray-900 mb-1">{item.message}</p>
-                            <p className="text-sm text-gray-500">by {item.author}</p>
+                            <p className="text-sm text-gray-500">by {item.updated_by}</p>
                         </div>
                     </div>
                 ))}
