@@ -45,7 +45,7 @@ export function ResidentDashboad() {
         <div className="w-full min-h-full flex flex-col gap-4 px-[100px] overflow-y-auto">
             
             {openCreateTicketDialog && (
-                <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} />
+                <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} refresh={()=>setIsLoading(true)} />
             )}
 
             {isOpen && selectedTicket && (
