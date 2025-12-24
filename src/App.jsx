@@ -4,6 +4,7 @@ import { TechnicianDashboard } from './pages/technician/TechnicianDashboard';
 import { HomePage } from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPg from './pages/auth/RegisterPg';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
     <>
       <BrowserRouter>
         <div className='w-full h-screen'>
+          <Toaster position='bottom-right'/>
           <Routes>
             <Route path='/*' element={<HomePage />} />
             <Route path='/login' element={<LoginPage />} />

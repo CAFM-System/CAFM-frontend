@@ -1,5 +1,7 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
+import TicketService from "../../services/ticket.service";
+import toast from "react-hot-toast";
 
 export function CreateTicketDialog(props) {
     const [title, setTitle] = useState("");
@@ -7,7 +9,26 @@ export function CreateTicketDialog(props) {
     const [specialNote, setSpecialNote] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
-    const [attachments, setAttachments] = useState(null);
+    
+    async function handleSubmit(){
+      try {
+        const payload = {
+          title,
+          job_type: category,
+          location,
+          complaint: description,
+          special_note: specialNote
+        }
+
+        await TicketService.createTicket(payload);
+        props.refresh();
+        props.close();
+        toast.success("Ticket created successfully!");
+      } catch (error) {
+        toast.error("Failed to create ticket.");
+        console.log("Error creating ticket:", error);
+      }
+    }
 
     const close = props.close;
     return(
@@ -117,7 +138,7 @@ export function CreateTicketDialog(props) {
             <button
               
               className="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800 transition"
-              onClick={()=>{}}
+              onClick={()=>{handleSubmit()}}
             >
               Create Ticket
             </button>
