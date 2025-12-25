@@ -1,9 +1,11 @@
 import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboardHeader({ title, name, department }) {
-
+  const navigate = useNavigate();
   const onLogout = () => {
-    alert("User logged out");
+    localStorage.removeItem("access_token");
+    navigate("/login");
   };
 
   return (

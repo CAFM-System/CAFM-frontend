@@ -1,6 +1,37 @@
 import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import UserSevervice from "../../services/user.service";
 
-const AdminActions = ({ data }) => {
+
+
+const AdminActions = ({ data , onAssign }) => {
+    
+    const [technicians, setTechnicians] = useState([]);
+    const [loadingTechnicians, setLoadingTechnicians] = useState(true);
+
+    
+
+useEffect(()=>{
+       const fetchTechnicians = async () => {
+        try {
+            setLoadingTechnicians(true);
+            const response = await UserSevervice.getAllTechnicians();
+            console.log("Fetched technicians:", response.data);
+            setTechnicians(response.data  || []);
+        } catch (error) {
+            console.error("Error fetching technicians:", error);
+        } finally {
+            setLoadingTechnicians(false);
+        }
+       }
+       fetchTechnicians();
+    },[])
+
+    
+    const formattedTechnicians = technicians?.map(t => ({
+        user_id: t.user_id,
+        full_name: `${t.first_name} ${t.last_name}`
+    })) || [];
 
     return (
         <>
@@ -14,14 +45,21 @@ const AdminActions = ({ data }) => {
                                 onChange={(e) => data.setAssignedTech(e.target.value)}
                                 className="w-full border border-gray-300 px-4 py-3 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="" disabled>Select Technician</option>
-                                <option value="Mike Wilson">Mike Wilson</option>
-                                <option value="Emily Davis">Emily Davis</option>
-                                <option value="John Smith">John Smith</option>
+                                <option value="">Select Technician</option>
+                                {
+                                    
+                                    formattedTechnicians.map(tech => (
+                                        
+                                        <option key={tech.user_id} value={tech.user_id}>
+                                            {tech.full_name}
+                                        </option>
+                                    ))
+                                }
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
                         </div>
-                        <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
+                        <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                            onClick={onAssign}>
                             Assign
                         </button>
                     </div>
@@ -35,6 +73,7 @@ const AdminActions = ({ data }) => {
                                 onChange={(e) => data.setSelectedPriority(e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
+                                <option value="">Select Priority</option>
                                 <option>Low</option>
                                 <option>Medium</option>
                                 <option>High</option>

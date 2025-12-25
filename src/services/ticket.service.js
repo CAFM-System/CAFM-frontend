@@ -14,6 +14,14 @@ const TicketService = {
     async updateStatusHistory(payload){
         const response = await apiClient.get("/progress-history"+payload);
         return response;
+    },
+
+    async assignTechnician(ticketId, technicianId,priority){
+        const response = await apiClient.put("/tickets/assign-technician/"+ticketId, { 
+            technician_id :technicianId,
+            priority 
+        });
+        return response;
     }
 }
 
