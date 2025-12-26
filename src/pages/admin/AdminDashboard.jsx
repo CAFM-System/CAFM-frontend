@@ -39,7 +39,7 @@ export default function AdminDashboard() {
             } catch (error) {
                 
             }
-        },[]);
+        },[isLoading]);
 
     const openTicketDetails = (ticket) => {
         setSelectedTicket(ticket);
@@ -304,6 +304,7 @@ export default function AdminDashboard() {
                 <TicketDetails
                     data={selectedTicket}
                     onClose={() => setIsTicketOpen(false)}
+                    refreshTickets={()=>setIsLoading(true)}
                 />
             )}
 

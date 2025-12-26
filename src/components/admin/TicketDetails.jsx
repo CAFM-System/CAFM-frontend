@@ -3,13 +3,17 @@ import { CircleAlert, Clock, MapPin, User, X } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
 import AdminActions from './AdminActions';
 import TicketService from '../../services/ticket.service';
+import UserSevervice from '../../services/user.service';
+import toast from 'react-hot-toast';
 
-const TicketDetails = ({ data, onClose }) => {
+const TicketDetails = ({ data, onClose , refreshTickets }) => {
     const [activeTab, setActiveTab] = useState('actions');
-    const [assignedTech, setAssignedTech] = useState(data.assignTo || '');
+    const [assignedTech, setAssignedTech] = useState(data.technician_id || '');
     const [selectedPriority, setSelectedPriority] = useState(data.priority || '');
     const [closingComment, setClosingComment] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [loadingHistory, setLoadingHistory] = useState(true);
+    const [loadingTechnicians, setLoadingTechnicians] = useState(true);
     const [statusHistory, setStatusHistory] = useState([]);
 
     const adminActions = {
@@ -20,6 +24,8 @@ const TicketDetails = ({ data, onClose }) => {
         setSelectedPriority: setSelectedPriority,
         setClosingComment: setClosingComment,
     };
+
+    console.log(adminActions)
 
     // Close on Escape key
     useEffect(() => {
@@ -35,16 +41,39 @@ const TicketDetails = ({ data, onClose }) => {
     }, [assignedTech, selectedPriority, closingComment]);
 
     useEffect(()=>{
-        if(isLoading){
+        if(loadingHistory){
             TicketService.updateStatusHistory(`/${data.id}`).then(
                 (response)=>{
                     console.log(response.data);
                     setStatusHistory(response.data);
-                    setIsLoading(false);
+                    setLoadingHistory(false);
+                }
+            ).catch(
+                (error)=>{
+                    console.error("Error fetching status history:", error);
+                    setLoadingHistory(false);
                 }
             )
         }
-    },[isLoading])
+    },[loadingHistory])
+
+    
+
+    const handelAssignTechnician = async () => {
+        if(!assignedTech || !selectedPriority){
+            alert("Please select both technician and priority.");
+            return;
+        }
+        try {
+            const respone = await TicketService.assignTechnician(data.id, assignedTech, selectedPriority.toLowerCase());
+            toast.success("Technician assigned successfully");
+            refreshTickets();
+            onClose?.();
+        } catch (error) {
+            toast.error("Failed to assign technician");
+            console.error("Error assigning technician:", error);
+        }
+    }
 
     return (
         <>
@@ -168,7 +197,7 @@ const TicketDetails = ({ data, onClose }) => {
 
                             {/* Admin Actions Tab */}
                             {activeTab === 'actions' && (
-                                <AdminActions data={adminActions} />
+                                <AdminActions data={adminActions} onAssign={handelAssignTechnician}  refresh={() => setIsLoading(true)} />
                             )}
 
                             {/* Status History Tab */}
