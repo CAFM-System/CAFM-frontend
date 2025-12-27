@@ -202,7 +202,7 @@ const TicketDetails = ({ data, onClose , refreshTickets }) => {
 
                             {/* Status History Tab */}
                             {activeTab === 'history' && (
-                                <StatusHistory data={statusHistory}  refresh={() => setIsLoading(true)}/>
+                                <StatusHistory data={statusHistory}  refresh={() => setLoadingHistory(true)}/>
                             )}
                         </div>
 

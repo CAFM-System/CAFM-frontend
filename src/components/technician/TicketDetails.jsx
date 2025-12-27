@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import { CircleAlert, Clock, MapPin, User, X } from 'lucide-react';
 import StatusHistory from '../common/StatusHistory';
 import TechnicianActions from './TechnicianActions';
+import TicketService from '../../services/ticket.service';
+import toast from 'react-hot-toast';
+import TechnicianService from '../../services/technician.service';
 
-const TicketDetails = ({ data, onClose }) => {
-    const [updates, setUpdates] = useState(data?.ticket_updates || []);
+const TicketDetails = ({ data, onClose ,refresh}) => {
+    const [updates, setUpdates] = useState([]);
+    const [loadingHistory, setLoadingHistory] = useState(true);
 
     // Close on Escape key
     useEffect(() => {
@@ -15,8 +19,38 @@ const TicketDetails = ({ data, onClose }) => {
         return () => window.removeEventListener('keydown', handleKey);
     }, [onClose]);
 
+    useEffect(()=>{
+        if(loadingHistory){
+            TicketService.updateStatusHistory(`/${data.id}`).then(
+                (response)=>{
+                    console.log(response.data);
+                    setUpdates(response.data);
+                    setLoadingHistory(false);
+                }
+            ).catch(
+                (error)=>{
+                    console.error("Error fetching status history:", error);
+                    setLoadingHistory(false);
+                }
+            )
+        }
+    },[loadingHistory])
+
+    const handleStartWork = async () => {
+        try {
+            await TechnicianService.startWork(data.id);
+            toast.success("Work started successfully");
+            refresh();
+            onClose();
+            
+        } catch (error) {
+            toast.error("Failed to start work");
+            console.log("Error starting work:", error);
+        }
+    }
+
     // changeStatus updates 
-    const changeStatus = async (newStatus, description) => {
+    /*const changeStatus = async (newStatus, description) => {
         //setStatus(newStatus);
         data.status = newStatus;
         const newUpdate = {
@@ -26,7 +60,7 @@ const TicketDetails = ({ data, onClose }) => {
             author: data.complaintRecievdBy || 'Technician'
         };
         setUpdates((prev) => [...prev, newUpdate]);
-    };
+    };*/
 
     return (
         <>
@@ -91,7 +125,7 @@ const TicketDetails = ({ data, onClose }) => {
 
                     {/* Description */}
                     <div className="p-6 overflow-y-scroll max-h-[75vh]">
-                        <h3 className="text-sm text-gray-500 mb-2">{data.ticketId}</h3>
+                        <h3 className="text-sm text-gray-500 mb-2">{data.ticket_id}</h3>
                         <h2 className="text-2xl font-semibold mb-3">{data.title}</h2>
                         <p className="text-gray-600 mb-6">{data.complaintRequest}</p>
 
@@ -116,7 +150,7 @@ const TicketDetails = ({ data, onClose }) => {
                                 <p className="text-sm text-gray-500 mb-2">Resident</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.name}</span>
+                                    <span className="text-gray-700">{data.resident_name}</span>
                                 </div>
                             </div>
 
@@ -124,7 +158,7 @@ const TicketDetails = ({ data, onClose }) => {
                                 <p className="text-sm text-gray-500 mb-2">Created</p>
                                 <div className="flex items-center gap-2">
                                     <Clock size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.createdDate}</span>
+                                    <span className="text-gray-700">{data.created_at}</span>
                                 </div>
                             </div>
                         </div>
@@ -132,11 +166,13 @@ const TicketDetails = ({ data, onClose }) => {
                         {/* Status History */}
                         <div className="border-t pt-6 border-gray-300">
                             <h2 className="font-semibold mb-4">Status History</h2>
-                            <StatusHistory data={updates} />
+                            
+                                <StatusHistory data={updates} refresh={() => setLoadingHistory(true)} />
+                            
                         </div>
 
                         {/* Techinician actions */}
-                        <TechnicianActions status={data.status} changeStatus={changeStatus} />
+                        <TechnicianActions status={data.status}   workStart={handleStartWork} />
 
                     </div>
                 </div>

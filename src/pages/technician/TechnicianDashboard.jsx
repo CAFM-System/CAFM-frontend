@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TechnicianHeader from "../../components/technician/TechnicianHeader";
 import TicketCard from "../../components/common/ticketCard";
 import TicketDetails from "../../components/technician/TicketDetails";
@@ -12,13 +12,33 @@ import {
 } from "lucide-react";
 
 // sample tickets
-import { tickets } from "../../services/newTicketData";
+//import { tickets } from "../../services/newTicketData";
+import TicketService from "../../services/ticket.service";
 
 export function TechnicianDashboard() {
   const [activeTab, setActiveTab] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [selectedTicket, setSelectedTicket] = useState(null);
+  const [tickets,setTickets] = useState([]);
+  const [isLoading,setIsLoading] = useState(true);
 
+  useEffect(()=>{
+    if(isLoading){
+      TicketService.getTicket().then(
+        (response)=>{
+          setTickets(response.data.tickets);
+          setIsLoading(false);
+        }
+      ).catch(
+        (error)=>{
+          console.log("Error fetching tickets:",error);
+          setIsLoading(false);
+        }
+      )
+  }
+  },[isLoading])
+
+  
   // ⭐ PRIORITY FILTER
   const filteredTickets =
     priorityFilter === "all"
@@ -161,6 +181,7 @@ export function TechnicianDashboard() {
         <TicketDetails
           data={selectedTicket}
           onClose={() => setSelectedTicket(null)}
+          refresh = {() => setIsLoading(true)}
         />
       )}
 
@@ -202,7 +223,7 @@ function renderList(list, Icon, emptyMessage, setSelectedTicket) {
     <div className="grid grid-cols-1 gap-4">
       {list.map((ticket) => (
         <TicketCard
-          key={ticket.ticketId}
+          key={ticket.ticket_id}
           ticket={ticket}
           onClick={() => setSelectedTicket(ticket)}
         />
