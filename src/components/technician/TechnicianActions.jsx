@@ -1,8 +1,12 @@
 import { useState } from "react";
+import TechnicianService from "../../services/technician.service";
+import toast from "react-hot-toast";
 
-const TechnicianActions = ({ status, changeStatus }) => {
+const TechnicianActions = ({ status, workStart }) => {
     const [updateComment, setUpdateComment] = useState("");
     const [resolutionComment, setResolutionComment] = useState("");
+
+    
 
     return (
         <div className="border-t pt-6 border-gray-300">
@@ -12,7 +16,7 @@ const TechnicianActions = ({ status, changeStatus }) => {
                     <div className="w-full flex gap-4 justify-center">
                         <button
                             className="px-6 py-3 w-1/2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                            onClick={() => changeStatus('in_progress', 'Accepted and started work')}
+                            onClick={() => workStart()}
                         >
                             Accept & Start Work
                         </button>
