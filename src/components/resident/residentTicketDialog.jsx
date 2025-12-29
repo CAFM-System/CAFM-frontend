@@ -5,13 +5,15 @@ import { ticketsUpdates } from '../../services/ticketUpdatesData';
 import { ResidentAction } from './ResidentAction';
 import { tickets } from '../../services/newTicketData';
 import TicketService from '../../services/ticket.service';
+import ResidentService from '../../services/resident.service';
+import toast from 'react-hot-toast';
 
 
 
 
 export function ResidentTicketDialog(props){
     const [rating, setRating] = useState(0);
-    const [showRating, setShowRating] = useState(false);
+    const [showRatingTab, setShowRatingTab] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [closeComment, setCloseComment] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +27,7 @@ export function ResidentTicketDialog(props){
    
     const residentAction = {
         rating: rating,
-        showRating: showRating,
+        showRatingTab: showRatingTab,
         feedback: feedback,
         canRate: canRate,
         canReopen: canReopen,
@@ -35,7 +37,7 @@ export function ResidentTicketDialog(props){
         
         setCloseComment: setCloseComment,
         setFeedback: setFeedback,
-        setShowRating: setShowRating,
+        setShowRatingTab: setShowRatingTab,
         setRating: setRating,
     }
     // Close on Escape key
@@ -58,6 +60,21 @@ export function ResidentTicketDialog(props){
             )
         }
     },[isLoading])
+
+    const handleRatingWithFeedback = async ()=>{
+        try {
+            await ResidentService.addRatingWithFeedback(data.id,{
+                rating: rating,
+                review: feedback
+            })
+            toast.success("Rating submitted successfully");
+            setShowRatingTab(false);
+            setIsLoading(true);
+        } catch (error) {
+            toast.error("Failed to submit rating");
+            console.log("Error submitting rating:", error);
+        }
+    }
 
     
     return (
@@ -169,7 +186,7 @@ export function ResidentTicketDialog(props){
                             }
                         </div>
                         <div className="border-t pt-6 border-gray-300">
-                        <ResidentAction data={residentAction} />
+                        <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId = {data.id} refresh={() => setIsLoading(true)} />
                         </div>
 
 
