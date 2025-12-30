@@ -1,11 +1,52 @@
 import { Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import ResidentService from "../../services/resident.service";
 
-export function ResidentAction({ data }) {
+export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
+    const [showRatings, setShowRatings] =  useState(null);
+    const [showFeedback, setShowFeedback] = useState();
+    const [reloadkey, setReloadKey] = useState(0);
+    
+    useEffect(() =>{
+        const fetchRatingWithFeedback = async () => {
+            try{
+                const response = await ResidentService.getRatingWithFeedback(ticketId);
+                console.log("Fetched rating and feedback:", response.data);
+                setShowRatings(response.data.rating);
+                setShowFeedback(response.data.review);
+            } catch (error){
+                console.error("Error fetching rating and feedback:", error);
+            }
+        }
+        fetchRatingWithFeedback();
+    }, [reloadkey, ticketId]);
+
+    
+
     return (
         <div className="space-y-6">
 
+            {
+                 showRatings !== null && showRatings !== undefined && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 className="text-sm mb-2">Your Feedback</h4>
+                    <div className="flex items-center gap-1 mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                            key={star}
+                            className={`h-5 w-5 ${star <= showRatings ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                        />
+                        ))}
+                    </div>
+                    {showFeedback && (
+                        <p className="text-sm text-gray-600">{showFeedback}</p>
+                    )}
+                </div>
+                )
+            }
+
             {/* ⭐ Rating UI */}
-            {data.canRate && data.showRating && (
+            {data.canRate && data.showRatingTab && (
                 <div className="space-y-4 bg-gray-50 p-4 rounded-xl border">
                     <h4 className="text-sm font-medium">Rate this service</h4>
 
@@ -40,12 +81,21 @@ export function ResidentAction({ data }) {
                     />
 
                     <div className="flex gap-3">
-                        <button className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800">
+                        <button 
+                            className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800"
+                            onClick={async () => {
+                                await sendFeedback();
+                                setShowRatings(data.rating);
+                                setShowFeedback(data.feedback);
+                                data.setShowRatingTab(false);
+                                setReloadKey(prev => prev + 1);
+                            }}
+                        >
                             Submit Rating
                         </button>
 
                         <button
-                            onClick={() => data.setShowRating(false)}
+                            onClick={() => data.setShowRatingTab(false)}
                             className="flex-1 border border-gray-400 py-2 rounded-lg hover:bg-gray-100"
                         >
                             Cancel
@@ -54,16 +104,17 @@ export function ResidentAction({ data }) {
                 </div>
             )}
 
-            {data.status === "resolved" && !data.showRating && (
+            {data.status === "resolved" && !data.showRatingTab &&  (
                 <div className="space-y-6">
 
                     {/* Rate Button */}
+                    {showRatings === null &&
                     <button
-                        onClick={() => data.setShowRating(true)}
+                        onClick={() => data.setShowRatingTab(true)}
                         className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800"
                     >
                         Rate This Service
-                    </button>
+                    </button>}
 
                     {/* Close Ticket */}
                     <div className="space-y-3 bg-green-50 p-4 rounded-xl border border-green-200">
@@ -111,7 +162,7 @@ export function ResidentAction({ data }) {
             )}
 
             {/* ⭐ CLOSED VIEW — ONLY REOPEN */}
-            {data.status === "closed" && !data.showRating && (
+            {data.status === "closed" && !data.showRatingTab && (
                 <div className="space-y-3 p-4 rounded-xl border bg-gray-50">
                     <h4 className="text-sm font-medium">Issue not resolved?</h4>
 
