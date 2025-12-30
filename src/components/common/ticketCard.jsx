@@ -4,8 +4,6 @@ import { GoClock } from "react-icons/go";
 import { BsExclamationCircle } from "react-icons/bs";
 
 export default function Ticketcard({ ticket, onClick }) {
-
-  // Colors for status
   const statusColors = {
     open: "bg-blue-100 text-blue-800",
     assigned: "bg-purple-100 text-purple-800",
@@ -15,7 +13,6 @@ export default function Ticketcard({ ticket, onClick }) {
     reopened: "bg-orange-100 text-orange-800",
   };
 
-  // Colors for priority
   const priorityColors = {
     low: "bg-gray-100 text-gray-800",
     medium: "bg-blue-100 text-blue-800",
@@ -23,7 +20,6 @@ export default function Ticketcard({ ticket, onClick }) {
     urgent: "bg-red-100 text-red-800",
   };
 
-  // Category label mapping
   const categoryLabels = {
     cleaning: "Cleaning",
     security: "Security",
@@ -35,14 +31,12 @@ export default function Ticketcard({ ticket, onClick }) {
     other: "Other",
   };
 
-  // Normalize and support both formats (technician + resident)
   const id = ticket.ticket_id || ticket.ticket_number;
   const desc = ticket.complaint || ticket.description;
   const name = ticket.resident_name || ticket.tenant_name;
   const category = ticket.complaint_category || ticket.category;
   const createdDate = ticket.created_at || ticket.created_at;
 
-  // Normalize values
   const normalizedStatus =
     ticket.status?.toLowerCase().replace(" ", "_") || "open";
 
@@ -53,50 +47,65 @@ export default function Ticketcard({ ticket, onClick }) {
 
   return (
     <div
-      className="w-full h-[250px] cursor-pointer hover:shadow-md transition-shadow border border-gray-300 p-6 rounded-2xl space-y-2 relative"
       onClick={onClick}
+      className="
+        w-full
+        min-h-[220px]
+        cursor-pointer
+        border border-gray-300
+        rounded-2xl
+        p-4 sm:p-6
+        hover:shadow-md
+        transition-shadow
+        flex flex-col justify-between
+      "
     >
-      <div className="flex gap-4 items-center">
-        <span>{id}</span>
+      {/* Header */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <span className="font-medium">{id}</span>
 
         <span
-          className={`p-1 px-2 rounded-lg text-sm ${statusColors[normalizedStatus]}`}
+          className={`px-2 py-1 rounded-lg text-xs sm:text-sm ${statusColors[normalizedStatus]}`}
         >
           {ticket.status}
         </span>
 
         <span
-          className={`p-1 px-2 rounded-lg text-sm ${priorityColors[normalizedPriority]}`}
+          className={`px-2 py-1 rounded-lg text-xs sm:text-sm ${priorityColors[normalizedPriority]}`}
         >
           {ticket.priority}
         </span>
       </div>
 
-      <h1 className="text-lg">{ticket.title}</h1>
+      {/* Title */}
+      <h1 className="text-base sm:text-lg font-semibold mt-2">
+        {ticket.title}
+      </h1>
 
-      <div className="absolute bottom-4 mt-4 gap-4 flex flex-col">
-        <span className="text-gray-600">{desc}</span>
+      {/* Description */}
+      <span className="text-gray-600 text-sm line-clamp-2 mt-1">
+        {desc}
+      </span>
 
-        <div className="flex gap-50 text-gray-600">
-          <div className="flex flex-col">
-            <span className="flex gap-2 items-center">
-              <GrLocation /> {ticket.location}
-            </span>
-            <span className="flex gap-2 items-center">
-              <FiUser /> {name}
-            </span>
-          </div>
+      {/* Footer */}
+      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between gap-4 text-gray-600 text-sm">
+        <div className="flex flex-col gap-1">
+          <span className="flex gap-2 items-center">
+            <GrLocation /> {ticket.location}
+          </span>
+          <span className="flex gap-2 items-center">
+            <FiUser /> {name}
+          </span>
+        </div>
 
-          <div className="flex flex-col">
-            <span className="flex gap-2 items-center">
-              <BsExclamationCircle />
-              {categoryLabels[normalizedCategory] || category}
-            </span>
-
-            <span className="flex gap-2 items-center">
-              <GoClock /> {createdDate}
-            </span>
-          </div>
+        <div className="flex flex-col gap-1">
+          <span className="flex gap-2 items-center">
+            <BsExclamationCircle />
+            {categoryLabels[normalizedCategory] || category}
+          </span>
+          <span className="flex gap-2 items-center">
+            <GoClock /> {createdDate}
+          </span>
         </div>
       </div>
     </div>
