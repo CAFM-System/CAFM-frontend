@@ -18,6 +18,7 @@ const TicketDetails = ({ data, onClose , refreshTickets }) => {
 
     const adminActions = {
         assignedTech: assignedTech,
+        jobType: data.job_type,
         selectedPriority: selectedPriority,
         closingComment: closingComment,
         setAssignedTech: setAssignedTech,

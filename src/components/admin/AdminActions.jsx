@@ -12,10 +12,12 @@ const AdminActions = ({ data , onAssign }) => {
     
 
 useEffect(()=>{
+        console.log("JOB TYPE FROM TICKET:", data.jobType);
+        if(!data.jobType) return;
        const fetchTechnicians = async () => {
         try {
             setLoadingTechnicians(true);
-            const response = await UserSevervice.getAllTechnicians();
+            const response = await UserSevervice.getAllTechnicians(data.jobType);
             console.log("Fetched technicians:", response.data);
             setTechnicians(response.data  || []);
         } catch (error) {
@@ -25,7 +27,7 @@ useEffect(()=>{
         }
        }
        fetchTechnicians();
-    },[])
+    },[data.jobType]);
 
     
     const formattedTechnicians = technicians?.map(t => ({
@@ -62,6 +64,7 @@ useEffect(()=>{
                             onClick={onAssign}>
                             Assign
                         </button>
+                        
                     </div>
 
                     {/* Change Priority */}
