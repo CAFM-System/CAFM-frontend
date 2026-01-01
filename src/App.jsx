@@ -5,9 +5,11 @@ import { HomePage } from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPg from './pages/auth/RegisterPg';
 import { Toaster } from 'react-hot-toast';
+import ForgotPasswordPage from './pages/auth/Forget-Password'; 
+import ResetPasswordPage from './pages/auth/Reset-Password';
+ // Note: matches your filename
 
 function App() {
-
   return (
     <>
       <BrowserRouter>
@@ -19,6 +21,8 @@ function App() {
             <Route path='/technician' element={<TechnicianDashboard />} />
             <Route path='/admin' element={<AdminDashboard />} />
             <Route path='/register' element={<RegisterPg />} />
+            <Route path='/forgot-password' element={<ForgotPasswordPage />} />
+            <Route path='/reset-password' element={<ResetPasswordPage />} />
           </Routes>
         </div>
       </BrowserRouter>
@@ -26,4 +30,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
