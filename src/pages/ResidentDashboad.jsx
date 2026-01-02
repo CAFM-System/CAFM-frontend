@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
 import TopBanner from "../components/resident/TopBanner";
-import { tickets} from "../services/newTicketData";
+//import { tickets} from "../services/newTicketData";
 import Ticketcard from "../components/common/ticketCard";
 import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
 import apiClient from "../services/apiclient";
+import { Header } from "../components/resident/Header";
+import Footer  from "../components/resident/Footer";
 
 export function ResidentDashboad() {
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
@@ -43,7 +45,8 @@ export function ResidentDashboad() {
 
     return (
         <div className="w-full min-h-full flex flex-col gap-4 px-[100px] overflow-y-auto">
-            
+            <Header/>
+
             {openCreateTicketDialog && (
                 <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} refresh={()=>setIsLoading(true)} />
             )}
@@ -96,6 +99,7 @@ export function ResidentDashboad() {
                     ))}
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }
