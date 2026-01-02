@@ -86,20 +86,8 @@ useEffect(()=>{
                         </div>
                     </div>
 
-                    {/* Close Ticket */}
-                    <div>
-                        <h4 className="font-semibold mb-3 mt-3">Close Ticket</h4>
-                        <textarea
-                            value={data.closingComment}
-                            onChange={(e) => data.setClosingComment(e.target.value)}
-                            placeholder="Add closing comment (optional)..."
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows={3}
-                        />
-                        <button className="w-full mt-3 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
-                            Close Ticket
-                        </button>
-                    </div>
+                
+                    
                 </div>
             </div>
         </>
