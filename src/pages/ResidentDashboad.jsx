@@ -7,6 +7,8 @@ import { ResidentTicketDialog } from "../components/resident/residentTicketDialo
 import apiClient from "../services/apiclient";
 import { Header } from "../components/resident/Header";
 import Footer  from "../components/resident/Footer";
+import ResidentCard from "../components/resident/ResidentCard";
+import { Ticket, Clock, CheckCircle, TrendingUp, Award  } from "lucide-react";
 
 export function ResidentDashboad() {
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
@@ -36,6 +38,17 @@ export function ResidentDashboad() {
         }
     },[isLoading]);
 
+    const totalRequests = tickets.length;
+    const activeRequests = tickets.filter(ticket => 
+        ticket.status === "in_progress" || 
+        ticket.status === "open" || 
+        ticket.status === "assigned"
+    ).length;
+    const resolvedRequests = tickets.filter(ticket => 
+        ticket.status === "resolved"
+    ).length;
+
+
     const filteredTickets = tickets.filter(ticket => {
         if (filter === "All") return true;
         if (filter === "active") return ticket.status === "in_progress" || ticket.status === "open" || ticket.status === "assigned";
@@ -61,9 +74,39 @@ export function ResidentDashboad() {
             
             <TopBanner openTicket={setOpenCreateTicketDialog} />
 
-            <div className="w-full rounded-2xl border border-gray-500/50 shadow-lg bg-white/50 backdrop-blur-lg flex flex-col gap-4">
-                
-                
+            <div className="py-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full">
+                    <ResidentCard
+                        title="Total Requests"
+                        value={totalRequests}
+                        icon ={<TrendingUp className="w-6 h-6" />}
+                        description="All time submissions"
+                        headericon={<Ticket className="w-6 h-6" />}
+                        onClick={() => console.log("Clicked Total Requests")}
+                    />
+
+                    <ResidentCard
+                        title="Active Requests"
+                        value={activeRequests}
+                        icon ={<Clock className="w-6 h-6" />}
+                        description="In progress now"
+                        headericon={<Clock className="w-6 h-6" />}
+                        onClick={() => console.log("Clicked Active Requests")}
+                    />
+
+                    <ResidentCard
+                        title="Resolved"
+                        value={resolvedRequests}
+                        icon ={<Award className="w-6 h-6" />}
+                        description="Successfully completed"
+                        headericon={<CheckCircle className="w-6 h-6" />}
+                        onClick={() => console.log("Clicked Resolved")}
+                    />
+                </div>
+            </div>
+
+
+            <div className="w-full rounded-2xl border border-gray-500/50 shadow-lg bg-white/50 backdrop-blur-lg flex flex-col gap-4">  
                 <div className="w-full h-[80px] border-b border-gray-300 flex items-center px-4 gap-4">
                     {["All", "active", "resolved"].map(type => (
                         <button key={type}>
