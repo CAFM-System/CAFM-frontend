@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Footer from "../../components/resident/Footer";
+import { Header } from "../../components/resident/Header";
 
 export default function UserProfileCard() {
   const [userData, setUserData] = useState(null);
@@ -93,6 +94,7 @@ export default function UserProfileCard() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 p-4 md:p-8 flex flex-col">
+      <Header/>
       <div className="flex-1 p-4 md:p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6 md:p-8">
           {/* Header Section */}
