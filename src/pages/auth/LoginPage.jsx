@@ -36,7 +36,7 @@ export default function LoginPage() {
       setTimeout(() => {
         if (role === "admin") navigate("/admin");
         else if (role === "technician") navigate("/technician");
-        else navigate("/resident");
+        else navigate("/resident/dashboard");
       }, 800);
 
     } catch (error) {
