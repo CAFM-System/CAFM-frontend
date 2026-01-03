@@ -9,6 +9,15 @@ const ResidentService = {
     async getRatingWithFeedback (ticketId) {
         const response = await apiClient.get("/ticket-reviews/"+ticketId);
         return response;
+    },
+
+    async closeTicket(ticketId, payload){
+        const response = await apiClient.put("/residents/close-ticket/"+ticketId, payload);
+        return response;
+    },
+    async reopenTicket(ticketId, payload){
+        const response = await apiClient.put("/residents/reopen-ticket/"+ticketId, payload);
+        return response;
     }
 }
 

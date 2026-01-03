@@ -16,6 +16,7 @@ export function ResidentTicketDialog(props){
     const [showRatingTab, setShowRatingTab] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [closeComment, setCloseComment] = useState("");
+    const [reOpenComment, setReopenComment] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [statusHistory, setStatusHistory] = useState([]);
     const data = props.data;
@@ -34,8 +35,10 @@ export function ResidentTicketDialog(props){
         canClose: canClose,
         status: data.status,
         closeComment: closeComment,
+        reOpenComment: reOpenComment,
         
         setCloseComment: setCloseComment,
+        setReopenComment: setReopenComment,
         setFeedback: setFeedback,
         setShowRatingTab: setShowRatingTab,
         setRating: setRating,
@@ -186,7 +189,7 @@ export function ResidentTicketDialog(props){
                             }
                         </div>
                         <div className="border-t pt-6 border-gray-300">
-                        <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId = {data.id} refresh={() => setIsLoading(true)} />
+                        <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId = {data.id} refresh={() => {setIsLoading(true);props.refresh();}} onClose={onClose} />
                         </div>
 
 
