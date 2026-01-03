@@ -8,7 +8,7 @@ export function HomePage() {
         <div className="w-full h-full">
             <Routes>
                 <Route index element={<ResidentLandingPage />} />
-                <Route path="resident" element={<ResidentDashboad />} />
+                <Route path="resident/dashboard" element={<ResidentDashboad />} />
                 <Route path="notifications" element={<h1>Notifications Page</h1>} />
                 <Route path="profile" element={<UserProfileCard />} />
             </Routes>
