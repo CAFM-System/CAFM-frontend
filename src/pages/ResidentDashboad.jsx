@@ -68,6 +68,7 @@ export function ResidentDashboad() {
                 <ResidentTicketDialog
                     onClose={() => setIsOpen(false)}
                     data={selectedTicket}
+                    refresh={()=>setIsLoading(true)}
                 />
             )}
 
