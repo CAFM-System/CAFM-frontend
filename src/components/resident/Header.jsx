@@ -10,10 +10,7 @@ import {
     ChartColumn,
 } from "lucide-react";
 
-export function Header() {
-    const userName = "John Smith";
-    const apartment = "A-101";
-    const notificationCount = 1;
+export function Header({ userName = "John Smith", apartment = "A-101", notificationCount = 0 }) {
 
     const navClass = ({ isActive }) =>
         `flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition
