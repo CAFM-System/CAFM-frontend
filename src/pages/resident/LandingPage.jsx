@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { 
   Home, 
   Bell, 
@@ -22,12 +23,13 @@ import {
 
 export default function ResidentLandingPage() {
   const [activeNav, setActiveNav] = useState('home');
+  const navigate = useNavigate();
   
   // Mock handlers
-  const handleNavigateToDashboard = () => alert('Navigate to Dashboard');
-  const handleNavigateToProfile = () => alert('Navigate to Profile');
-  const handleNavigateToNotifications = () => alert('Navigate to Notifications');
-  const handleLogout = () => alert('Logout');
+  const handleNavigateToDashboard = () => navigate("/resident/dashboard");
+  const handleNavigateToProfile = () => navigate("/profile");
+  const handleNavigateToNotifications = () => navigate("/notifications");
+  const handleLogout = () => navigate("/login");
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
