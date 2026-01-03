@@ -26,8 +26,8 @@ export default function ResidentLandingPage() {
   const navigate = useNavigate();
 
   // Mock handlers
-  const handleNavigateToDashboard = () => navigate("/resident/dashboard");
-
+  const handleNavigateToLogin = () => navigate("/login");
+  const handleNavigateToSignUp = () => navigate("/register");
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -269,11 +269,11 @@ export default function ResidentLandingPage() {
             {/* User Menu */}
             <div className="flex items-center gap-3">
               <div className="flex gap-3 pt-3">
-                <button className="w-full px-6 py-2 border-2 border-[#1687A7] text-[#1687A7] rounded-lg hover:bg-[#1687A7] hover:text-white duration-200">
+                <button onClick={handleNavigateToLogin} className="w-full px-6 py-2 border-2 border-[#1687A7] text-[#1687A7] rounded-lg hover:bg-[#1687A7] hover:text-white duration-200">
                   Login
                 </button>
 
-                <button className="px-6 py-2 bg-[#1687A7] text-white rounded-lg font-medium whitespace-nowrap hover:bg-[#0f6c87] hover:shadow-md transition duration-200">
+                <button onClick={handleNavigateToSignUp} className="px-6 py-2 bg-[#1687A7] text-white rounded-lg font-medium whitespace-nowrap hover:bg-[#0f6c87] hover:shadow-md transition duration-200">
                   Sign Up
                 </button>
 
@@ -307,7 +307,7 @@ export default function ResidentLandingPage() {
 
               <div className="flex flex-wrap gap-4 mb-12">
                 <Button
-                  onClick={handleNavigateToDashboard}
+                  onClick={handleNavigateToLogin}
                   className="px-8 py-6 group"
                 >
                   <span className="flex items-center gap-2">
@@ -534,7 +534,7 @@ export default function ResidentLandingPage() {
                 </div>
               </div>
               <Button
-                onClick={handleNavigateToDashboard}
+                onClick={handleNavigateToLogin}
                 className="px-8 py-6 group"
               >
                 <span className="flex items-center gap-2">
