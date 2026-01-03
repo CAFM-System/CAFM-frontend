@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { 
-  Home, 
-  Bell, 
-  User as UserIcon, 
+import {
+  Home,
+  Bell,
+  User as UserIcon,
   LogOut,
   ArrowRight,
   Wrench,
@@ -24,12 +24,9 @@ import {
 export default function ResidentLandingPage() {
   const [activeNav, setActiveNav] = useState('home');
   const navigate = useNavigate();
-  
+
   // Mock handlers
   const handleNavigateToDashboard = () => navigate("/resident/dashboard");
-  const handleNavigateToProfile = () => navigate("/profile");
-  const handleNavigateToNotifications = () => navigate("/notifications");
-  const handleLogout = () => navigate("/login");
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -38,111 +35,108 @@ export default function ResidentLandingPage() {
     }
   };
 
-// Mock User Data
-const mockUser = {
-  name: "John Doe",
-  email: "john.doe@example.com"
-};
-
-// Mock open tickets count
-const mockOpenTicketsCount = 3;
-
-// Button Component
-const Button = ({ children, onClick, variant = "default", className = "" }) => {
-  const baseStyles = "px-6 py-3 rounded-xl font-medium transition-all";
-  const variants = {
-    default: "bg-[#1687A7] hover:bg-[#1687A7]/90 text-white",
-    outline: "border-2 border-[#D3E0EA] text-[#1687A7] hover:bg-[#D3E0EA] bg-white"
+  // Mock User Data
+  const mockUser = {
+    name: "John Doe",
+    email: "john.doe@example.com"
   };
-  
-  return (
-    <button 
-      onClick={onClick} 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
-    >
-      {children}
-    </button>
-  );
-};
 
-// Simple Carousel Component
-const Carousel = ({ children, autoplay = false, autoplaySpeed = 3000, slidesToShow = 1 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const childrenArray = Array.isArray(children) ? children : [children];
-  
-  useState(() => {
-    if (autoplay) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % childrenArray.length);
-      }, autoplaySpeed);
-      return () => clearInterval(interval);
-    }
-  }, [autoplay, autoplaySpeed, childrenArray.length]);
+  // Mock open tickets count
+  const mockOpenTicketsCount = 3;
 
-  return (
-    <div className="relative overflow-hidden">
-      <div className="flex gap-4">
-        {childrenArray.slice(currentIndex, currentIndex + slidesToShow).map((child, idx) => (
-          <div key={idx} className="flex-1">
+  // Button Component
+  const Button = ({ children, onClick, variant = "default", className = "" }) => {
+    const baseStyles = "px-6 py-3 rounded-xl font-medium transition-all";
+    const variants = {
+      default: "bg-[#1687A7] hover:bg-[#1687A7]/90 text-white",
+      outline: "border-2 border-[#D3E0EA] text-[#1687A7] hover:bg-[#D3E0EA] bg-white"
+    };
+
+    return (
+      <button
+        onClick={onClick}
+        className={`${baseStyles} ${variants[variant]} ${className}`}
+      >
+        {children}
+      </button>
+    );
+  };
+
+  // Simple Carousel Component
+  const Carousel = ({ children, autoplay = false, autoplaySpeed = 3000, slidesToShow = 1 }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const childrenArray = Array.isArray(children) ? children : [children];
+
+    useState(() => {
+      if (autoplay) {
+        const interval = setInterval(() => {
+          setCurrentIndex((prev) => (prev + 1) % childrenArray.length);
+        }, autoplaySpeed);
+        return () => clearInterval(interval);
+      }
+    }, [autoplay, autoplaySpeed, childrenArray.length]);
+
+    return (
+      <div className="relative overflow-hidden">
+        <div className="flex gap-4">
+          {childrenArray.slice(currentIndex, currentIndex + slidesToShow).map((child, idx) => (
+            <div key={idx} className="flex-1">
+              {child}
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-center gap-2 mt-6">
+          {childrenArray.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-8' : 'bg-white/50'
+                }`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Fade Carousel Component
+  const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const childrenArray = Array.isArray(children) ? children : [children];
+
+    useState(() => {
+      if (autoplay) {
+        const interval = setInterval(() => {
+          setCurrentIndex((prev) => (prev + 1) % childrenArray.length);
+        }, autoplaySpeed);
+        return () => clearInterval(interval);
+      }
+    }, [autoplay, autoplaySpeed, childrenArray.length]);
+
+    return (
+      <div className="relative">
+        {childrenArray.map((child, idx) => (
+          <div
+            key={idx}
+            className={`transition-opacity duration-1000 ${idx === currentIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+              }`}
+          >
             {child}
           </div>
         ))}
-      </div>
-      <div className="flex justify-center gap-2 mt-6">
-        {childrenArray.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentIndex(idx)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              idx === currentIndex ? 'bg-white w-8' : 'bg-white/50'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Fade Carousel Component
-const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const childrenArray = Array.isArray(children) ? children : [children];
-  
-  useState(() => {
-    if (autoplay) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % childrenArray.length);
-      }, autoplaySpeed);
-      return () => clearInterval(interval);
-    }
-  }, [autoplay, autoplaySpeed, childrenArray.length]);
-
-  return (
-    <div className="relative">
-      {childrenArray.map((child, idx) => (
-        <div
-          key={idx}
-          className={`transition-opacity duration-1000 ${
-            idx === currentIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
-          }`}
-        >
-          {child}
+        <div className="flex justify-center gap-2 mt-6">
+          {childrenArray.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-8' : 'bg-white/50'
+                }`}
+            />
+          ))}
         </div>
-      ))}
-      <div className="flex justify-center gap-2 mt-6">
-        {childrenArray.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentIndex(idx)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              idx === currentIndex ? 'bg-white w-8' : 'bg-white/50'
-            }`}
-          />
-        ))}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   // Stats data for carousel
   const statsSlides = [
@@ -239,11 +233,10 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
                   setActiveNav('home');
                   scrollToSection('hero');
                 }}
-                className={`px-6 py-2.5 rounded-lg transition-all ${
-                  activeNav === 'home' 
-                    ? 'bg-[#1687A7] text-white' 
+                className={`px-6 py-2.5 rounded-lg transition-all ${activeNav === 'home'
+                    ? 'bg-[#1687A7] text-white'
                     : 'text-[#1687A7] hover:bg-[#D3E0EA]'
-                }`}
+                  }`}
               >
                 Home
               </button>
@@ -252,11 +245,10 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
                   setActiveNav('features');
                   scrollToSection('features');
                 }}
-                className={`px-6 py-2.5 rounded-lg transition-all ${
-                  activeNav === 'features' 
-                    ? 'bg-[#1687A7] text-white' 
+                className={`px-6 py-2.5 rounded-lg transition-all ${activeNav === 'features'
+                    ? 'bg-[#1687A7] text-white'
                     : 'text-[#1687A7] hover:bg-[#D3E0EA]'
-                }`}
+                  }`}
               >
                 Features
               </button>
@@ -265,11 +257,10 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
                   setActiveNav('about');
                   scrollToSection('about');
                 }}
-                className={`px-6 py-2.5 rounded-lg transition-all ${
-                  activeNav === 'about' 
-                    ? 'bg-[#1687A7] text-white' 
+                className={`px-6 py-2.5 rounded-lg transition-all ${activeNav === 'about'
+                    ? 'bg-[#1687A7] text-white'
                     : 'text-[#1687A7] hover:bg-[#D3E0EA]'
-                }`}
+                  }`}
               >
                 About
               </button>
@@ -277,29 +268,17 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
 
             {/* User Menu */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={handleNavigateToNotifications}
-                className="relative p-2.5 bg-[#D3E0EA] hover:bg-[#1687A7] text-[#1687A7] hover:text-white rounded-lg transition-all"
-              >
-                <Bell className="h-5 w-5" />
-                {mockOpenTicketsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {mockOpenTicketsCount}
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={handleNavigateToProfile}
-                className="p-2.5 bg-[#D3E0EA] hover:bg-[#1687A7] text-[#1687A7] hover:text-white rounded-lg transition-all"
-              >
-                <UserIcon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={handleLogout}
-                className="p-2.5 bg-[#D3E0EA] hover:bg-red-500 text-[#1687A7] hover:text-white rounded-lg transition-all"
-              >
-                <LogOut className="h-5 w-5" />
-              </button>
+              <div className="flex gap-3 pt-3">
+                <button className="w-full px-6 py-2 border-2 border-[#1687A7] text-[#1687A7] rounded-lg hover:bg-[#1687A7] hover:text-white duration-200">
+                  Login
+                </button>
+
+                <button className="px-6 py-2 bg-[#1687A7] text-white rounded-lg font-medium whitespace-nowrap hover:bg-[#0f6c87] hover:shadow-md transition duration-200">
+                  Sign Up
+                </button>
+
+              </div>
+
             </div>
           </div>
         </div>
@@ -315,13 +294,13 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
                 <div className="w-2 h-2 bg-[#1687A7] rounded-full animate-pulse"></div>
                 <span className="text-sm text-[#1687A7]">Welcome, {mockUser.name.split(' ')[0]}!</span>
               </div>
-              
+
               <h1 className="text-5xl lg:text-6xl text-[#1687A7] mb-6 leading-tight">
                 Your Apartment<br />
                 Management<br />
                 <span className="text-[#D3E0EA]">Made Simple</span>
               </h1>
-              
+
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
                 Submit requests, track maintenance, and communicate with our team—all from one powerful platform.
               </p>
@@ -374,7 +353,7 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
                     <div className="h-full bg-gradient-to-r from-white to-white/80 rounded-full w-2/3"></div>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-4 rounded-xl border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all">
                     <div className="bg-gradient-to-br from-emerald-500 to-green-500 p-2 rounded-lg inline-flex shadow-md mb-2">
@@ -415,7 +394,7 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
         </div>
-        
+
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeCarousel autoplay={true} autoplaySpeed={4000}>
             {statsSlides.map((slide, index) => (
@@ -607,107 +586,107 @@ const FadeCarousel = ({ children, autoplay = false, autoplaySpeed = 3000 }) => {
             </p>
           </div>
 
-                    <Carousel autoplay={true} autoplaySpeed={5000} slidesToShow={1}>
-                      {testimonials.map((testimonial, index) => (
-                        <div key={index} className="h-full">
-                          <div className="bg-white border-2 border-[#D3E0EA] rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all mx-2 h-full min-h-[280px]">
-                            <div className="flex items-center gap-4 mb-6">
-                              <div className="w-12 h-12 bg-gradient-to-br from-[#1687A7] to-[#126b8a] rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                                {testimonial.avatar}
-                              </div>
-                              <div>
-                                <h4 className="text-gray-900 font-semibold">{testimonial.name}</h4>
-                                <p className="text-sm text-gray-600">{testimonial.apartment}</p>
-                              </div>
-                            </div>
-                            <div className="flex gap-1 mb-4">
-                              {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                              ))}
-                            </div>
-                            <p className="text-gray-700 italic">"{testimonial.text}"</p>
-                          </div>
-                        </div>
-                      ))}
-                    </Carousel>
-                  </div>
-                </section>
-          
-                {/* Contact Section */}
-                <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-                  <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                      <h2 className="text-4xl lg:text-5xl text-[#1687A7] mb-4">
-                        Get In Touch
-                      </h2>
-                      <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-                        Have questions? We're here to help!
-                      </p>
+          <Carousel autoplay={true} autoplaySpeed={5000} slidesToShow={1}>
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="h-full">
+                <div className="bg-white border-2 border-[#D3E0EA] rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all mx-2 h-full min-h-[280px]">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#1687A7] to-[#126b8a] rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                      {testimonial.avatar}
                     </div>
-          
-                    <div className="grid md:grid-cols-3 gap-8 mb-12">
-                      <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
-                        <div className="bg-gradient-to-br from-cyan-500 to-blue-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
-                          <Mail className="h-8 w-8 text-white" />
-                        </div>
-                        <h3 className="text-xl text-gray-900 mb-2">Email</h3>
-                        <p className="text-gray-700">support@cafmportal.com</p>
-                      </div>
-                      <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
-                        <div className="bg-gradient-to-br from-emerald-500 to-green-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
-                          <Phone className="h-8 w-8 text-white" />
-                        </div>
-                        <h3 className="text-xl text-gray-900 mb-2">Phone</h3>
-                        <p className="text-gray-700">+1 (555) 123-4567</p>
-                      </div>
-                      <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
-                        <div className="bg-gradient-to-br from-purple-500 to-violet-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
-                          <MapPin className="h-8 w-8 text-white" />
-                        </div>
-                        <h3 className="text-xl text-gray-900 mb-2">Address</h3>
-                        <p className="text-gray-700">123 Management Ave, City, State</p>
-                      </div>
+                    <div>
+                      <h4 className="text-gray-900 font-semibold">{testimonial.name}</h4>
+                      <p className="text-sm text-gray-600">{testimonial.apartment}</p>
                     </div>
                   </div>
-                </section>
-          
-                {/* Footer */}
-                <footer className="bg-[#1687A7] text-white py-12 px-4 sm:px-6 lg:px-8">
-                  <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8">
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4">CAFM Portal</h4>
-                        <p className="text-white/80">Making apartment management simple and efficient.</p>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-                        <ul className="space-y-2 text-white/80">
-                          <li><button onClick={() => scrollToSection('hero')} className="hover:text-white transition-colors">Home</button></li>
-                          <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button></li>
-                          <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors">About</button></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4">Support</h4>
-                        <ul className="space-y-2 text-white/80">
-                          <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                          <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                          <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4">Legal</h4>
-                        <ul className="space-y-2 text-white/80">
-                          <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                          <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="border-t border-white/20 pt-8">
-                      <p className="text-center text-white/80">© 2024 CAFM Portal. All rights reserved.</p>
-                    </div>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                    ))}
                   </div>
-                </footer>
+                  <p className="text-gray-700 italic">"{testimonial.text}"</p>
+                </div>
               </div>
-            );
-          }
+            ))}
+          </Carousel>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl text-[#1687A7] mb-4">
+              Get In Touch
+            </h2>
+            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
+              Have questions? We're here to help!
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
+              <div className="bg-gradient-to-br from-cyan-500 to-blue-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
+                <Mail className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl text-gray-900 mb-2">Email</h3>
+              <p className="text-gray-700">support@cafmportal.com</p>
+            </div>
+            <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
+              <div className="bg-gradient-to-br from-emerald-500 to-green-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
+                <Phone className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl text-gray-900 mb-2">Phone</h3>
+              <p className="text-gray-700">+1 (555) 123-4567</p>
+            </div>
+            <div className="bg-[#F6F5F5] rounded-2xl p-8 text-center hover:shadow-lg transition-all">
+              <div className="bg-gradient-to-br from-purple-500 to-violet-500 p-4 rounded-xl inline-flex mb-4 shadow-lg">
+                <MapPin className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl text-gray-900 mb-2">Address</h3>
+              <p className="text-gray-700">123 Management Ave, City, State</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#1687A7] text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">CAFM Portal</h4>
+              <p className="text-white/80">Making apartment management simple and efficient.</p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-white/80">
+                <li><button onClick={() => scrollToSection('hero')} className="hover:text-white transition-colors">Home</button></li>
+                <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button></li>
+                <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors">About</button></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-white/80">
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-white/80">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-white/20 pt-8">
+            <p className="text-center text-white/80">© 2024 CAFM Portal. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
