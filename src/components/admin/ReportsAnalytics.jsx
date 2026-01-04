@@ -3,10 +3,13 @@ import DashboardCard from "../admin/AdminDashboardCard.jsx";
 import { Clock, TrendingUp, CircleAlert, Download } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { tickets } from "../../services/newTicketData.js";
+//import { tickets } from "../../services/newTicketData.js";
 import exportTicketsToCSV from "../../services/ExportCSV.js";
+import downloadBlob from "../../../util/downloadFile.js";
+import ReportService from "../../services/report.service.js";
+import toast from "react-hot-toast";
 
-const ReportsAnalytics = () => {
+const ReportsAnalytics = (data) => {
     const [totalTickets, setTotalTickets] = useState(0);
     const [resolutionRate, setResolutionRate] = useState("0 %");
     const [avgResolutionTime, setAvgResolutionTime] = useState(0);
@@ -22,7 +25,14 @@ const ReportsAnalytics = () => {
     ]);
 
     const [pieChartByJobTypeData, setPieChartByJobTypeData] = useState([]);
-
+    const [filters, setFilters] = useState({
+        by: "month",
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        status: "all",
+    });
+    const tickets = data.data || [];
+    
     // Calculate the summary data
     useEffect(() => {
         const total = tickets.length;
@@ -102,7 +112,7 @@ const ReportsAnalytics = () => {
     useEffect(() => {
         const jobTypeCounts = {};
         tickets.forEach(ticket => {
-            const jobType = ticket.jobType || 'Other';
+            const jobType = ticket.job_type || 'Other';
             if (jobTypeCounts[jobType]) {
                 jobTypeCounts[jobType]++;
             } else {
@@ -146,6 +156,23 @@ const ReportsAnalytics = () => {
         }
     };
 
+    const handlePDFDownload = async () => {
+        
+    };
+
+    const handleExcelDownload = async () => {
+        try {
+            const blob = await ReportService.downloadTicketExcel(filters);
+            downloadBlob(blob, "tickets-report.xlsx");
+            toast.success("Excel downloaded successfully");
+        } catch (error) {
+            console.error(error);
+            console.warn("Excel handled by browser download manager");
+            toast.error("Failed to download Excel");
+        }
+    };
+
+
     return (
         <>
             {/* Summary Cards */}
@@ -175,6 +202,87 @@ const ReportsAnalytics = () => {
                     description="Customer Satisfaction"
                 />
             </div>
+                    {/* 🔽 ADD FILTER UI HERE 🔽 */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Report Filters
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                    {/* By */}
+                    <div>
+                    <label className="text-sm font-medium text-gray-700">Group By</label>
+                    <select
+                        value={filters.by}
+                        onChange={(e) =>
+                        setFilters({ ...filters, by: e.target.value })
+                        }
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="month">Month</option>
+                        <option value="year">Year</option>
+                    </select>
+                    </div>
+
+                    {/* Year */}
+                    <div>
+                    <label className="text-sm font-medium text-gray-700">Year</label>
+                    <input
+                        type="number"
+                        value={filters.year}
+                        onChange={(e) =>
+                        setFilters({ ...filters, year: Number(e.target.value) })
+                        }
+                        className="w-full border rounded px-3 py-2"
+                    />
+                    </div>
+
+                    {/* Month */}
+                    {filters.by === "month" && (
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">Month</label>
+                        <select
+                        value={filters.month}
+                        onChange={(e) =>
+                            setFilters({ ...filters, month: Number(e.target.value) })
+                        }
+                        className="w-full border rounded px-3 py-2"
+                        >
+                            <option value={0}>Select Month</option>
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <option key={i + 1} value={i + 1}>
+                            {new Date(0, i).toLocaleString("default", {
+                                month: "long"
+                            })}
+                            </option>
+                        ))}
+                        </select>
+                    </div>
+                    )}
+
+                    {/* Status */}
+                    <div>
+                    <label className="text-sm font-medium text-gray-700">Status</label>
+                    <select
+                        value={filters.status}
+                        onChange={(e) =>
+                                setFilters({ ...filters, status: e.target.value })
+                                }
+                                className="w-full border rounded px-3 py-2"
+                            >
+                                <option value="all">All</option>
+                                <option value="open">Open</option>
+                                <option value="assigned">Assigned</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    {/* 🔼 FILTER UI ENDS HERE 🔼 */}
 
             {/* Export functions */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
@@ -183,12 +291,13 @@ const ReportsAnalytics = () => {
 
                 <div className="flex flex-wrap gap-3">
                     <button
-                        onClick={() => exportTicketsToCSV(tickets)}
+                        onClick={() => handleExcelDownload()}
                         className="shadow-sm inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <Download size={16} />
-                        Export as CSV
+                        Export as Excel
                     </button>
                     <button
+                        onClick={() => handlePDFDownload()}
                         className="shadow-sm inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <Download size={16} />
                         Export as PDF
