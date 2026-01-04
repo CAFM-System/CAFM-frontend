@@ -297,7 +297,7 @@ export default function AdminDashboard() {
             )}
 
             {activeTab === "reports" && (
-                <ReportsAnalytics />
+                <ReportsAnalytics  data={ticketList} />
             )}
             {/* Ticket Details Popup*/}
             {isTicketOpen && (

@@ -34,7 +34,7 @@ export default function Ticketcard({ ticket, onClick }) {
   const id = ticket.ticket_id || ticket.ticket_number;
   const desc = ticket.complaint || ticket.description;
   const name = ticket.resident_name || ticket.tenant_name;
-  const category = ticket.complaint_category || ticket.category;
+  const category = ticket.job_type || ticket.category;
   const createdDate = ticket.created_at || ticket.created_at;
 
   const normalizedStatus =
