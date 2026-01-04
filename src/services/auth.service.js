@@ -9,6 +9,11 @@ const AuthService = {
             localStorage.setItem("access_token",response.data.accessToken);
         }
         return response;
+    },
+
+    async getuser(){
+        const response = await apiClient.get("/auth/me");
+        return response;
     }
 }
 

@@ -14,8 +14,9 @@ export function HomePage({ user }) {
         <div className="w-full h-full">
             <Routes>
                 <Route index element={<ResidentLandingPage user={user} />} />
-                <Route path="resident/dashboard" element={<ResidentDashboad />} />                <Route 
-                    path="resident/notifications" 
+                <Route path="resident/dashboard" element={<ResidentDashboad />} />                
+                <Route 
+                    path="/notifications" 
                     element={
                         <NotificationsPage 
                             user={user}

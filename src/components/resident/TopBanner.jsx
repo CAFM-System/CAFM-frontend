@@ -1,34 +1,46 @@
 import { useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
+import AuthService from "../../services/auth.service";
 
 export default function TopBanner({ openTicket }) {
   // State to hold resident info and active requests
-  const [resident, setResident] = useState({ name: "Loading..." });
+  const [resident, setResident] = useState(null);
   const [activeRequests, setActiveRequests] = useState([]);
 
   // Simulate fetching data from a "database" with useEffect
   useEffect(() => {
-    // Mock API call delay
+ 
     const fetchData = async () => {
-      // Simulated resident data
-      const residentData = { id: 1, name: "John Smith" };
+      try {
+        
+        const response = await AuthService.getuser();
+        setResident(response.data.user);
+        
+        const requestsData = [
+          { id: 1, title: "AC not working" },
+          { id: 2, title: "Leaky faucet" },
+        ];
 
-      // Simulated active requests for this resident
-      const requestsData = [
-        { id: 1, title: "AC not working" },
-        { id: 2, title: "Leaky faucet" },
-      ];
+        
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Mimic network delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Set state
-      setResident(residentData);
-      setActiveRequests(requestsData);
+       
+        setActiveRequests(requestsData);
+      } catch (error) {
+        console.error("Error fetching resident data:", error);
+      }
+      
     };
 
     fetchData();
   }, []);
+  if (!resident) {
+    return (
+      <div className="relative overflow-hidden rounded-3xl mb-10">
+        <div className="p-10 text-white">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden rounded-3xl mb-10">
@@ -43,7 +55,7 @@ export default function TopBanner({ openTicket }) {
             </div>
 
             <h2 className="text-4xl text-white">
-              Hello, {resident.name}! 👋
+              Hello, {`${resident.profile.firstName} ${resident.profile.lastName}`}! 👋
             </h2>
             <p className="text-purple-100 text-lg max-w-xl mt-2">
               You have {activeRequests.length} active maintenance request
