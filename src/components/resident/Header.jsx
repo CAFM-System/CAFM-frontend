@@ -46,7 +46,7 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
                             Dashboard
                         </NavLink>
 
-                        <NavLink to="/resident/notifications" className={navClass}>
+                        <NavLink to="/notifications" className={navClass}>
                             <Bell className="h-4 w-4" />
                             Notifications
                             {notificationCount > 0 && (
@@ -56,7 +56,7 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
                             )}
                         </NavLink>
 
-                        <NavLink to="/resident/profile" className={navClass}>
+                        <NavLink to="/profile" className={navClass}>
                             <User className="h-4 w-4" />
                             Profile
                         </NavLink>
@@ -83,12 +83,12 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
                             {userName[0]}
                         </div>
 
-                        <button className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
+                        <NavLink to="/" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
                             <Home className="h-4 w-6 text-[#1687A7]  group-hover:text-black transition-colors" />
-                        </button>
-                        <button className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
+                        </NavLink>
+                        <NavLink to="/login" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
                             <LogOut className="h-4 w-6 text-gray-600 hover:text-red-600" />
-                        </button>
+                        </NavLink>
 
                     </div>
 

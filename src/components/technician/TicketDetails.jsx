@@ -172,7 +172,7 @@ const TicketDetails = ({ data, onClose ,refresh}) => {
                         </div>
 
                         {/* Techinician actions */}
-                        <TechnicianActions status={data.status}   workStart={handleStartWork} />
+                        <TechnicianActions status={data.status}   workStart={handleStartWork} ticketData={data} refresh={() => {setLoadingHistory(true);refresh()} } onClose={onClose} />
 
                     </div>
                 </div>

@@ -1,8 +1,9 @@
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResidentService from "../../services/resident.service";
+import toast from "react-hot-toast";
 
-export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
+export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose }) {
     const [showRatings, setShowRatings] =  useState(null);
     const [showFeedback, setShowFeedback] = useState();
     const [reloadkey, setReloadKey] = useState(0);
@@ -22,7 +23,36 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
     }, [reloadkey, ticketId]);
 
     
+    const handleCloseTicket = async () => {
+        try {
+            const payload = {
+                message: data.closeComment
+            };
+            await ResidentService.closeTicket(ticketId, payload);
+            toast.success("Ticket closed successfully.");
+            onClose();
+            refresh();
+            
+        } catch (error) {
+            toast.error("Failed to close the ticket. Please try again.");
+            console.error("Error closing ticket:", error);
+        }
+    }
 
+    const handleReopenTicket = async () => {
+        try {
+            const payload = {
+                message: data.reOpenComment
+            };
+            await ResidentService.reopenTicket(ticketId, payload);
+            toast.success("Ticket reopened successfully.");
+            onClose();
+            refresh();
+        } catch (error) {
+            toast.error("Failed to reopen the ticket. Please try again.");
+            console.error("Error reopening ticket:", error);
+        }
+    }
     return (
         <div className="space-y-6">
 
@@ -132,7 +162,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
                             "
                         />
 
-                        <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-medium">
+                        <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-medium"
+                            onClick={() => handleCloseTicket()}>
                             Close Ticket
                         </button>
                     </div>
@@ -143,8 +174,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
 
                         <textarea
                             placeholder="Please explain why you're reopening this ticket..."
-                            value={data.feedback}
-                            onChange={(e) => data.setFeedback(e.target.value)}
+                            value={data.reOpenComment}
+                            onChange={(e) => data.setReopenComment(e.target.value)}
                             rows={2}
                             className="
                                 w-full rounded-lg border border-gray-300 
@@ -153,7 +184,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
                             "
                         />
 
-                        <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium">
+                        <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium"
+                            onClick={() => handleReopenTicket()}>
                             Reopen Ticket
                         </button>
                     </div>
@@ -168,8 +200,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
 
                     <textarea
                         placeholder="Please explain why you're reopening this ticket..."
-                        value={data.feedback}
-                        onChange={(e) => data.setFeedback(e.target.value)}
+                        value={data.reOpenComment}
+                        onChange={(e) => data.setReopenComment(e.target.value)}
                         rows={2}
                         className="
                             w-full rounded-lg border border-gray-300 
@@ -178,7 +210,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh }) {
                         "
                     />
 
-                    <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium">
+                    <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium"
+                        onClick={() => handleReopenTicket()}>
                         Reopen Ticket
                     </button>
                 </div>
