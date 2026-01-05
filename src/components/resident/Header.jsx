@@ -11,8 +11,23 @@ import {
     ChartBar,
     ChartColumn,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import AuthService from "../../services/auth.service";
 
-export function Header({ userName = "John Smith", apartment = "A-101", notificationCount = 0 }) {
+export function Header({  notificationCount = 0 }) {
+    const [user,setUser] = useState(null);
+     useEffect(()=>{
+        const fetchMe = async () => {
+            try {
+                const response = await AuthService.getuser();
+                setUser(response.data.user);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+        fetchMe();
+    },[]);
+    
 
     const navigate = useNavigate();
 
@@ -28,7 +43,9 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
             ? "bg-[#1687A7] text-white"
             : "text-[#1687A7] hover:bg-[#D3E0EA]"
         }`;
-
+    if(!user){
+        return null;
+    }
     return (
         <header className="sticky top-0 z-50 bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-6">
@@ -81,16 +98,16 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
                     <div className="flex items-center gap-4">
                         <div className="hidden md:block text-right">
                             <p className="text-sm font-medium text-gray-800">
-                                {userName}
+                                {`${user.profile.firstName} ${user.profile.lastName}`}
                             </p>
                             <p className="text-xs text-gray-500 flex items-center justify-end gap-1">
                                 <MapPin className="h-3 w-3" />
-                                Apartment {apartment}
+                                Apartment {user.profile.apartmentNo}
                             </p>
                         </div>
 
                         <div className="h-10 w-10 rounded-full bg-[#1687A7] text-white flex items-center justify-center font-semibold">
-                            {userName[0]}
+                            {`${user.profile.firstName[0]}`}
                         </div>
 
                         <NavLink to="/" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">

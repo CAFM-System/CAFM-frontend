@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { CreateTicketDialog } from "../components/resident/CreateTicketDialog";
 import TopBanner from "../components/resident/TopBanner";
-//import { tickets} from "../services/newTicketData";
 import Ticketcard from "../components/common/ticketCard";
 import { ResidentTicketDialog } from "../components/resident/residentTicketDialog";
 import apiClient from "../services/apiclient";
-import { Header } from "../components/resident/Header";
 import Footer  from "../components/resident/Footer";
 import ResidentCard from "../components/resident/ResidentCard";
 import { Ticket, Clock, CheckCircle, TrendingUp, Award  } from "lucide-react";
@@ -38,6 +36,10 @@ export function ResidentDashboad() {
         }
     },[isLoading]);
 
+   
+
+    
+
     const totalRequests = tickets.length;
     const activeRequests = tickets.filter(ticket => 
         ticket.status === "in_progress" || 
@@ -58,7 +60,7 @@ export function ResidentDashboad() {
 
     return (
         <div className="w-full min-h-full flex flex-col gap-4 px-[100px] overflow-y-auto">
-            <Header/>
+            
 
             {openCreateTicketDialog && (
                 <CreateTicketDialog close={() => setOpenCreateTicketDialog(false)} refresh={()=>setIsLoading(true)} />
