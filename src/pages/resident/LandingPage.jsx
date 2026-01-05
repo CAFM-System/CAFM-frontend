@@ -544,7 +544,7 @@ export default function ResidentLandingPage() {
                 </div>
               </div>
               <Button
-                onClick={handleNavigateToLogin}
+                onClick={handleOpenDashboard}
                 className="px-8 py-6 group"
               >
                 <span className="flex items-center gap-2">
