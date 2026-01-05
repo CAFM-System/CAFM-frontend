@@ -9,7 +9,11 @@ const AuthService = {
             localStorage.setItem("access_token",response.data.accessToken);
         }
         return response;
+    },
+    logout() {
+        localStorage.removeItem("access_token");
     }
+
 }
 
 export default AuthService;

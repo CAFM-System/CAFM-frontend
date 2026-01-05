@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/auth.service";
 import {
     Home,
     Bell,
@@ -11,6 +13,14 @@ import {
 } from "lucide-react";
 
 export function Header({ userName = "John Smith", apartment = "A-101", notificationCount = 0 }) {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        AuthService.logout();
+        navigate("/login");
+    };
+
 
     const navClass = ({ isActive }) =>
         `flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition
@@ -86,7 +96,7 @@ export function Header({ userName = "John Smith", apartment = "A-101", notificat
                         <NavLink to="/" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
                             <Home className="h-4 w-6 text-[#1687A7]  group-hover:text-black transition-colors" />
                         </NavLink>
-                        <NavLink to="/login" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
+                        <NavLink to="/login" onClick={handleLogout} className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
                             <LogOut className="h-4 w-6 text-gray-600 hover:text-red-600" />
                         </NavLink>
 
