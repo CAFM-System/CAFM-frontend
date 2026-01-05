@@ -19,7 +19,7 @@ export function NotificationsPage({ tickets = [], user = {}, onViewTicket }) {
 
   useEffect(() => {
     fetchNotifications();
-  }, [notifications.length]);
+  }, []);
 
 const fetchNotifications = async () => {
   try {
