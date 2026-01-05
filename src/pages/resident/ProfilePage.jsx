@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Footer from "../../components/resident/Footer";
-import { Header } from "../../components/resident/Header";
+import AuthService from "../../services/auth.service";
 
 export default function UserProfileCard() {
   const [userData, setUserData] = useState(null);
@@ -19,21 +19,10 @@ export default function UserProfileCard() {
       // Simulate API call with mock data
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const mockData = {
-        name: "John Anderson",
-        email: "john.anderson@example.com",
-        apartment: "Apartment 402, Building A",
-        role: "Resident",
-        memberSince: "2023-03-15T00:00:00.000Z",
-        status: "Active",
-        activitySummary: {
-          totalTickets: 24,
-          activeTickets: 3,
-          resolvedTickets: 21
-        }
-      };
+      const response = await AuthService.getuser();
+
       
-      setUserData(mockData);
+      setUserData(response.data.user);
       
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -94,7 +83,6 @@ export default function UserProfileCard() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 p-4 md:p-8 flex flex-col">
-      <Header/>
       <div className="flex-1 p-4 md:p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6 md:p-8">
           {/* Header Section */}
@@ -102,14 +90,14 @@ export default function UserProfileCard() {
             {/* Avatar */}
             <div className="relative">
               <div className="w-24 h-24 bg-linear-to-br from-[#1687A7] to-[#126b8a] rounded-full flex items-center justify-center text-white text-3xl font-semibold shadow-[0_10px_40px_rgba(22,135,167,0.5)] ring-[6px] ring-white">
-                {getInitial(userData?.name)}
+                {getInitial(userData.profile.firstName)}
               </div>
             </div>
             
             {/* User Info */}
             <div className="flex-1 text-center sm:text-left">
               <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-1">
-                {userData?.name || 'N/A'}
+                {`${userData.profile.firstName} ${userData.profile.lastName}` || 'N/A'}
               </h1>
               <p className="text-gray-600 mb-2">{userData?.email || 'N/A'}</p>
               <div className="flex items-center justify-center sm:justify-start gap-2 text-gray-600">
@@ -132,7 +120,7 @@ export default function UserProfileCard() {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
                   />
                 </svg>
-                <span className="text-sm">{userData?.apartment || 'N/A'}</span>
+                <span className="text-sm">{userData.profile.apartmentNo || 'N/A'}</span>
               </div>
             </div>
           </div>
@@ -156,7 +144,7 @@ export default function UserProfileCard() {
                 <div>
                   <p className="text-base text-gray-500 mb-1">Member Since</p>
                   <p className="text-lg font-medium text-gray-800">
-                    {formatDate(userData?.memberSince)}
+                    {formatDate(userData?.profile?.dateOfEntry)}
                   </p>
                 </div>
                 

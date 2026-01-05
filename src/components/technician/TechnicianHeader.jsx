@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function TechnicianHeader() {
   const [user, setUser] = useState({ name: "Loading...", department: "" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -11,7 +13,8 @@ export default function TechnicianHeader() {
   }, []);
 
   const onLogout = () => {
-    alert("User logged out");
+    localStorage.removeItem("access_token");
+    navigate("/login");
   };
 
   return (

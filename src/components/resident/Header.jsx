@@ -13,10 +13,8 @@ import { useEffect, useState } from "react";
 import AuthService from "../../services/auth.service";
 
 export function Header({  notificationCount = 0 }) {
-
     const [user,setUser] = useState(null);
-
-    useEffect(()=>{
+     useEffect(()=>{
         const fetchMe = async () => {
             try {
                 const response = await AuthService.getuser();
@@ -27,10 +25,7 @@ export function Header({  notificationCount = 0 }) {
         }
         fetchMe();
     },[]);
-
-    if(!user){
-        return null;
-    }
+    
 
     const navClass = ({ isActive }) =>
         `flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition
@@ -38,7 +33,9 @@ export function Header({  notificationCount = 0 }) {
             ? "bg-[#1687A7] text-white"
             : "text-[#1687A7] hover:bg-[#D3E0EA]"
         }`;
-
+    if(!user){
+        return null;
+    }
     return (
         <header className="sticky top-0 z-50 bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-6">
