@@ -12,11 +12,10 @@ import {
     ChartColumn,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import AuthService from "../../services/auth.service";
 
-export function Header({  notificationCount = 0 }) {
-    const [user,setUser] = useState(null);
-     useEffect(()=>{
+export function Header({ notificationCount = 0 }) {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
         const fetchMe = async () => {
             try {
                 const response = await AuthService.getuser();
@@ -26,8 +25,8 @@ export function Header({  notificationCount = 0 }) {
             }
         }
         fetchMe();
-    },[]);
-    
+    }, []);
+
 
     const navigate = useNavigate();
 
@@ -43,7 +42,7 @@ export function Header({  notificationCount = 0 }) {
             ? "bg-[#1687A7] text-white"
             : "text-[#1687A7] hover:bg-[#D3E0EA]"
         }`;
-    if(!user){
+    if (!user) {
         return null;
     }
     return (

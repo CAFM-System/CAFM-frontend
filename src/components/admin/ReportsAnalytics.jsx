@@ -32,7 +32,7 @@ const ReportsAnalytics = (data) => {
         status: "all",
     });
     const tickets = data.data || [];
-    
+
     // Calculate the summary data
     useEffect(() => {
         const total = tickets.length;
@@ -157,7 +157,15 @@ const ReportsAnalytics = (data) => {
     };
 
     const handlePDFDownload = async () => {
-        
+        try {
+            const blob = await ReportService.downloadTicketPDF(filters);
+            downloadBlob(blob, "tickets-report.pdf");
+            toast.success("PDF downloaded successfully");
+        } catch (error) {
+            console.error(error);
+            console.warn("PDF handled by browser download manager");
+            toast.error("Failed to download PDF");
+        }
     };
 
     const handleExcelDownload = async () => {
@@ -202,7 +210,7 @@ const ReportsAnalytics = (data) => {
                     description="Customer Satisfaction"
                 />
             </div>
-                    {/* 🔽 ADD FILTER UI HERE 🔽 */}
+            {/* 🔽 ADD FILTER UI HERE 🔽 */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     Report Filters
@@ -212,77 +220,77 @@ const ReportsAnalytics = (data) => {
 
                     {/* By */}
                     <div>
-                    <label className="text-sm font-medium text-gray-700">Group By</label>
-                    <select
-                        value={filters.by}
-                        onChange={(e) =>
-                        setFilters({ ...filters, by: e.target.value })
-                        }
-                        className="w-full border rounded px-3 py-2"
-                    >
-                        <option value="month">Month</option>
-                        <option value="year">Year</option>
-                    </select>
+                        <label className="text-sm font-medium text-gray-700">Group By</label>
+                        <select
+                            value={filters.by}
+                            onChange={(e) =>
+                                setFilters({ ...filters, by: e.target.value })
+                            }
+                            className="w-full border rounded px-3 py-2"
+                        >
+                            <option value="month">Month</option>
+                            <option value="year">Year</option>
+                        </select>
                     </div>
 
                     {/* Year */}
                     <div>
-                    <label className="text-sm font-medium text-gray-700">Year</label>
-                    <input
-                        type="number"
-                        value={filters.year}
-                        onChange={(e) =>
-                        setFilters({ ...filters, year: Number(e.target.value) })
-                        }
-                        className="w-full border rounded px-3 py-2"
-                    />
+                        <label className="text-sm font-medium text-gray-700">Year</label>
+                        <input
+                            type="number"
+                            value={filters.year}
+                            onChange={(e) =>
+                                setFilters({ ...filters, year: Number(e.target.value) })
+                            }
+                            className="w-full border rounded px-3 py-2"
+                        />
                     </div>
 
                     {/* Month */}
                     {filters.by === "month" && (
-                    <div>
-                        <label className="text-sm font-medium text-gray-700">Month</label>
-                        <select
-                        value={filters.month}
-                        onChange={(e) =>
-                            setFilters({ ...filters, month: Number(e.target.value) })
-                        }
-                        className="w-full border rounded px-3 py-2"
-                        >
-                            <option value={0}>Select Month</option>
-                        {Array.from({ length: 12 }).map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                            {new Date(0, i).toLocaleString("default", {
-                                month: "long"
-                            })}
-                            </option>
-                        ))}
-                        </select>
-                    </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-700">Month</label>
+                            <select
+                                value={filters.month}
+                                onChange={(e) =>
+                                    setFilters({ ...filters, month: Number(e.target.value) })
+                                }
+                                className="w-full border rounded px-3 py-2"
+                            >
+                                <option value={0}>Select Month</option>
+                                {Array.from({ length: 12 }).map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                        {new Date(0, i).toLocaleString("default", {
+                                            month: "long"
+                                        })}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     )}
 
                     {/* Status */}
                     <div>
-                    <label className="text-sm font-medium text-gray-700">Status</label>
-                    <select
-                        value={filters.status}
-                        onChange={(e) =>
+                        <label className="text-sm font-medium text-gray-700">Status</label>
+                        <select
+                            value={filters.status}
+                            onChange={(e) =>
                                 setFilters({ ...filters, status: e.target.value })
-                                }
-                                className="w-full border rounded px-3 py-2"
-                            >
-                                <option value="all">All</option>
-                                <option value="open">Open</option>
-                                <option value="assigned">Assigned</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="resolved">Resolved</option>
-                                <option value="closed">Closed</option>
-                            </select>
-                            </div>
-
-                        </div>
+                            }
+                            className="w-full border rounded px-3 py-2"
+                        >
+                            <option value="all">All</option>
+                            <option value="open">Open</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
                     </div>
-                    {/* 🔼 FILTER UI ENDS HERE 🔼 */}
+
+                </div>
+            </div>
+            {/* 🔼 FILTER UI ENDS HERE 🔼 */}
 
             {/* Export functions */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
