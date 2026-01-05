@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service.js";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -27,6 +28,8 @@ export default function RegisterPage() {
   const [registered, setRegistered] = useState(false);
 
   const navigate = useNavigate();
+
+ 
 
   const passwordsMatch =
     password && confirmPassword && password === confirmPassword;
@@ -55,19 +58,14 @@ export default function RegisterPage() {
       return;
 
     try {
+      const data = { email, first_name: firstName, last_name: lastName, apartment_no: apartment, phone, password };
       setIsRegistering(true);
 
-      await AuthService.register({
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-        apartment_no: apartment,
-        phone
-      });
-
+      await AuthService.register(data);
+       
       setIsRegistering(false);
       setRegistered(true);
+      toast.success("Registration successful!");
 
       setTimeout(() => setRegistered(false), 2000);
       setTimeout(() => navigate("/login"), 800);
