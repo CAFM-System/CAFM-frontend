@@ -14,8 +14,10 @@ const AuthService = {
     async getuser(){
         const response = await apiClient.get("/auth/me");
         return response;
+    },
+    logout(){
+        localStorage.removeItem("access_token");
     }
-
 }
 
 export default AuthService;

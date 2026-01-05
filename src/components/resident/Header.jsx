@@ -12,7 +12,6 @@ import {
     ChartColumn,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import AuthService from "../../services/auth.service";
 
 export function Header({  notificationCount = 0 }) {
     const [user,setUser] = useState(null);
