@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import AuthHelper from '../../services/authHelper';
+import AuthService from '../../services/auth.service';
 import {
   Home,
   Bell,
@@ -24,6 +26,15 @@ import {
 export default function ResidentLandingPage() {
   const [activeNav, setActiveNav] = useState('home');
   const navigate = useNavigate();
+
+  const handleOpenDashboard = () => {
+    if (AuthHelper.isAuthenticated()) {
+      navigate("/resident/dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
 
   // Mock handlers
   const handleNavigateToLogin = () => navigate("/login");
@@ -278,7 +289,6 @@ export default function ResidentLandingPage() {
                 </button>
 
               </div>
-
             </div>
           </div>
         </div>
@@ -307,7 +317,7 @@ export default function ResidentLandingPage() {
 
               <div className="flex flex-wrap gap-4 mb-12">
                 <Button
-                  onClick={handleNavigateToLogin}
+                  onClick={handleOpenDashboard}
                   className="px-8 py-6 group"
                 >
                   <span className="flex items-center gap-2">
