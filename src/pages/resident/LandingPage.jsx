@@ -46,12 +46,6 @@ export default function ResidentLandingPage() {
     }
   };
 
-  // Mock User Data
-  const mockUser = {
-    name: "John Doe",
-    email: "john.doe@example.com"
-  };
-
   // Mock open tickets count
   const mockOpenTicketsCount = 3;
 
@@ -302,7 +296,7 @@ export default function ResidentLandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D3E0EA] rounded-full mb-6">
                 <div className="w-2 h-2 bg-[#1687A7] rounded-full animate-pulse"></div>
-                <span className="text-sm text-[#1687A7]">Welcome, {mockUser.name.split(' ')[0]}!</span>
+                <span className="text-sm text-[#1687A7]">Welcome !</span>
               </div>
 
               <h1 className="text-5xl lg:text-6xl text-[#1687A7] mb-6 leading-tight">
