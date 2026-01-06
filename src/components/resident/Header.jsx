@@ -8,13 +8,16 @@ import {
     Users,
     LogOut,
     MapPin,
-    ChartBar,
     ChartColumn,
+    Menu,
+    X
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function Header({ notificationCount = 0 }) {
     const [user, setUser] = useState(null);
+    const [mobileOpen, setMobileOpen] = useState(false);
+
     useEffect(() => {
         const fetchMe = async () => {
             try {
@@ -23,10 +26,9 @@ export function Header({ notificationCount = 0 }) {
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
-        }
+        };
         fetchMe();
     }, []);
-
 
     const navigate = useNavigate();
 
@@ -35,19 +37,18 @@ export function Header({ notificationCount = 0 }) {
         navigate("/login");
     };
 
-
     const navClass = ({ isActive }) =>
         `flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition
      ${isActive
             ? "bg-[#1687A7] text-white"
             : "text-[#1687A7] hover:bg-[#D3E0EA]"
         }`;
-    if (!user) {
-        return null;
-    }
+
+    if (!user) return null;
+
     return (
         <header className="sticky top-0 z-50 bg-white shadow-md">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-7xl mx-auto px-4 md:px-6">
                 <div className="flex items-center justify-between h-20">
 
                     {/* ===== Logo ===== */}
@@ -65,8 +66,16 @@ export function Header({ notificationCount = 0 }) {
                         </div>
                     </div>
 
-                    {/* ===== Navigation ===== */}
-                    <nav className="flex items-center gap-2">
+                    {/* ===== Mobile Menu Button ===== */}
+                    <button
+                        className="md:hidden p-2 rounded-lg border border-gray-200"
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                    >
+                        {mobileOpen ? <X /> : <Menu />}
+                    </button>
+
+                    {/* ===== Desktop Navigation ===== */}
+                    <nav className="hidden md:flex items-center gap-2">
                         <NavLink to="/resident/dashboard" className={navClass}>
                             <ChartColumn className="h-4 w-4" />
                             Dashboard
@@ -94,8 +103,8 @@ export function Header({ notificationCount = 0 }) {
                     </nav>
 
                     {/* ===== User Section ===== */}
-                    <div className="flex items-center gap-4">
-                        <div className="hidden md:block text-right">
+                    <div className="hidden md:flex items-center gap-4">
+                        <div className="text-right">
                             <p className="text-sm font-medium text-gray-800">
                                 {`${user.profile.firstName} ${user.profile.lastName}`}
                             </p>
@@ -106,19 +115,50 @@ export function Header({ notificationCount = 0 }) {
                         </div>
 
                         <div className="h-10 w-10 rounded-full bg-[#1687A7] text-white flex items-center justify-center font-semibold">
-                            {`${user.profile.firstName[0]}`}
+                            {user.profile.firstName[0]}
                         </div>
 
-                        <NavLink to="/" className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
-                            <Home className="h-4 w-6 text-[#1687A7]  group-hover:text-black transition-colors" />
+                        <NavLink
+                            to="/"
+                            className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200"
+                        >
+                            <Home className="h-4 w-6 text-[#1687A7] group-hover:text-black transition-colors" />
                         </NavLink>
-                        <NavLink to="/login" onClick={handleLogout} className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200">
+
+                        <NavLink
+                            to="/login"
+                            onClick={handleLogout}
+                            className="group p-1.5 bg-[#f1f3f4] border-2 border-[#c8e1e8] hover:bg-[#d2e3fc] rounded-xl transition-colors duration-200"
+                        >
                             <LogOut className="h-4 w-6 text-gray-600 hover:text-red-600" />
                         </NavLink>
-
                     </div>
-
                 </div>
+
+                {/* ===== Mobile Menu ===== */}
+                {mobileOpen && (
+                    <div className="md:hidden mt-3 bg-white rounded-xl border p-4 space-y-2 shadow">
+                        <NavLink onClick={() => setMobileOpen(false)} to="/resident/dashboard" className={navClass}>
+                            <ChartColumn className="h-4 w-4" />
+                            Dashboard
+                        </NavLink>
+
+                        <NavLink onClick={() => setMobileOpen(false)} to="/notifications" className={navClass}>
+                            <Bell className="h-4 w-4" />
+                            Notifications
+                        </NavLink>
+
+                        <NavLink onClick={() => setMobileOpen(false)} to="/profile" className={navClass}>
+                            <User className="h-4 w-4" />
+                            Profile
+                        </NavLink>
+
+                        <NavLink onClick={() => setMobileOpen(false)} to="/resident/visitors" className={navClass}>
+                            <Users className="h-4 w-4" />
+                            Visitors
+                        </NavLink>
+                    </div>
+                )}
             </div>
         </header>
     );

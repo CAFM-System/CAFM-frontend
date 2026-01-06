@@ -1,10 +1,9 @@
-import { DessertIcon } from "lucide-react";
 
 export default function DashboardCard({ title, value, icon,description, onClick }) {
     return (
         <div
             onClick={onClick}
-            className="p-8 bg-white rounded-xl shadow hover:shadow-md cursor-pointer transition "
+            className="p-8 bg-white border rounded-xl shadow hover:shadow-xl cursor-pointer transition "
         >
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-gray-600">{title}</h3>
