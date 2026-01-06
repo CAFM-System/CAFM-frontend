@@ -17,6 +17,10 @@ const AuthService = {
     },
     logout(){
         localStorage.removeItem("access_token");
+    },
+    async register(data){
+        const response = await apiClient.post("/auth/register",data);
+        return response;
     }
 }
 
