@@ -1,6 +1,5 @@
 // src/pages/resident/NotificationsPage.jsx
-import { useState } from 'react';
-import { Header } from '../../components/resident/Header';
+import { useState ,useEffect} from 'react';
 import Footer from '../../components/resident/Footer';
 import { Bell } from 'lucide-react';
 import {
@@ -8,53 +7,89 @@ import {
   Badge,
   ScrollArea,
   NotificationItem,
-  generateNotifications
 } from '../../components/resident/NotificationsComponents';
+import NotificationService from '../../services/notification.service';
 
 export function NotificationsPage({ tickets = [], user = {}, onViewTicket }) {
   const [filter, setFilter] = useState('all');
   const [theme, setTheme] = useState('light');
-  const [readNotifications, setReadNotifications] = useState(new Set());
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+const fetchNotifications = async () => {
+  try {
+    setLoading(true);
+    const response = await NotificationService.getMyNotifications();
+    setNotifications(response.data.notifications);
+  } catch (error) {
+    console.error("Failed to load notifications", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   // ============================================================
   //  STATE: Generate notifications (KEEP THIS AS IS)
   // TODO: When using API, replace with: const [notifications, setNotifications] = useState([]);
   // TODO: Then fetch from API in useEffect
   // ============================================================
-  const notifications = generateNotifications(tickets, user, theme, readNotifications);
   
   // ============================================================
   //  STATE: Calculate unread count (THIS IS THE KEY CHANGE)
+  const unreadCount = notifications.length;
   //  TODO: When using API, this will automatically update from notifications state
   // ============================================================
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+ 
   
   // Filter notifications
-  const filteredNotifications = filter === 'unread'
-    ? notifications.filter((n) => !n.isRead)
-    : notifications;
+ const filteredNotifications =
+  filter === "unread" ? notifications : notifications;
+
 
   // Handle notification click
-  const handleNotificationClick = (notification) => {
+
     // ============================================================
     // TODO API: Replace with API call to mark notification as read
     // Example: await fetch(`/api/notifications/${notification.id}/read`, { method: 'POST' });
     // ============================================================
-    setReadNotifications((prev) => new Set([...prev, notification.id]));
-    
-    if (notification.ticket && onViewTicket) {
-      onViewTicket(notification.ticket);
-    }
+    const handleNotificationClick = async (notification) => {
+      try {
+        await NotificationService.clearNotification(notification.id);
+
+        // Remove from UI after backend update
+        setNotifications((prev) =>
+          prev.filter((n) => n.id !== notification.id)
+        );
+
+        if (notification.ticket && onViewTicket) {
+          onViewTicket(notification.ticket);
+        }
+      } catch (error) {
+        console.error("Failed to clear notification", error);
+      }
   };
 
+    
+
   // Mark all as read
-  const markAllAsRead = () => {
-    // ============================================================
-    // TODO API: Replace with API call to mark all as read
-    // Example: await fetch('/api/notifications/mark-all-read', { method: 'POST' });
-    // ============================================================
-    const allIds = notifications.map((n) => n.id);
-    setReadNotifications(new Set(allIds));
+  const markAllAsRead = async () => {
+    try {
+      await Promise.all(
+        notifications.map((n) =>
+          NotificationService.clearNotification(n.id)
+        )
+      );
+      setNotifications([]);
+    } catch (error) {
+      console.error("Failed to mark all as read", error);
+    }
   };
 
   // Theme classes
@@ -79,7 +114,18 @@ export function NotificationsPage({ tickets = [], user = {}, onViewTicket }) {
         : 'bg-transparent text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-slate-900'
   };
 
+   if (loading) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${themeClasses.page}`}
+      >
+        Loading notifications...
+      </div>
+    );
+  }
+  
   return (
+    
     <div className={`min-h-screen flex flex-col ${themeClasses.page}`}>
       {/* ============================================================ */}
       {/* CHANGE: Pass unreadCount to Header */}

@@ -67,7 +67,7 @@ export default function AdminDashboard() {
 
         const statusMatch = statusFilter === "" || (ticket.status || "").toLowerCase() === statusFilter.toLowerCase();
         const priorityMatch = priorityFilter === "" || (ticket.priority || "").toLowerCase() === priorityFilter.toLowerCase();
-        const categoryMatch = categoryFilter === "" || (ticket.category || "").toLowerCase() === categoryFilter.toLowerCase();
+        const categoryMatch = categoryFilter === "" || (ticket.job_type || "").toLowerCase() === categoryFilter.toLowerCase();
 
         return searchMatch && statusMatch && priorityMatch && categoryMatch;
     });
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
                             <div className="flex flex-col gap-6">
                                 {urgentTickets.map(ticket => (
                                     <TicketCard
-                                        key={ticket.ticketId}
+                                        key={ticket.ticket_id}
                                         ticket={ticket}
                                         onClick={() => openTicketDetails(ticket)}
                                     />
