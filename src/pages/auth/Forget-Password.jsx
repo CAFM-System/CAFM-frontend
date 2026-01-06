@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Mail, ArrowLeft, Key, CheckCircle2 } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,35 +37,45 @@ export default function ForgotPasswordPage() {
   };
 
   const handleBackToLogin = () => {
-    navigate('/login');
-  };
+navigate('/login');  };
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="bg-blue-800/40 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-blue-600/30">
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1687A7]/90 via-[#1687A7]/85 to-[#0d5f7a]/90"></div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-md">
+          <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border-2 border-white/40">
             <div className="text-center mb-6">
-              <div className="mx-auto w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+              <div className="mx-auto w-16 h-16 bg-[#76C7D8]/30 rounded-full flex items-center justify-center mb-4 border-2 border-[#76C7D8]/50">
+                <CheckCircle2 className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Check Your Email</h2>
-              <p className="text-blue-200 text-sm">
-                We've sent a password reset link to <span className="text-cyan-300 font-medium">{email}</span>
+              <h2 className="text-3xl font-bold text-white mb-3 drop-shadow-lg">Check Your Email</h2>
+              <p className="text-white/90 text-sm drop-shadow">
+                We've sent a password reset link to
+              </p>
+              <p className="text-[#76C7D8] font-semibold mt-1 drop-shadow">
+                {email}
               </p>
             </div>
 
-            <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-4 mb-6">
-              <p className="text-sm text-blue-100">
+            <div className="bg-[#1687A7]/20 border border-[#76C7D8]/30 rounded-xl p-4 mb-6 backdrop-blur-sm">
+              <p className="text-sm text-white/90">
                 Didn't receive the email? Check your spam folder or try again with a different email address.
               </p>
             </div>
 
             <button
               onClick={handleBackToLogin}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-cyan-500/50"
+              className="w-full bg-gradient-to-r from-[#1687A7] to-[#0d5f7a] hover:from-[#1a9ec4] hover:to-[#1687A7] text-white font-semibold py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-[#1687A7]/30"
             >
               Back to Login
             </button>
@@ -75,18 +86,26 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-blue-800/40 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-blue-600/30">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1687A7]/90 via-[#1687A7]/85 to-[#0d5f7a]/90"></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border-2 border-white/40">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="mx-auto w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
+            <div className="mx-auto w-16 h-16 bg-[#76C7D8]/30 rounded-full flex items-center justify-center mb-4 border-2 border-[#76C7D8]/50">
+              <Key className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Forgot Password?</h2>
-            <p className="text-blue-200 text-sm">
+            <h2 className="text-3xl font-bold text-white mb-3 drop-shadow-lg">Forgot Password?</h2>
+            <p className="text-white/90 text-sm drop-shadow">
               No worries! Enter your email and we'll send you reset instructions.
             </p>
           </div>
@@ -94,7 +113,8 @@ export default function ForgotPasswordPage() {
           {/* Form */}
           <div>
             <div className="mb-6">
-              <label className="block text-blue-100 text-sm font-medium mb-2">
+              <label className="block text-white text-sm font-medium mb-2 drop-shadow flex items-center gap-2">
+                <Mail className="w-4 h-4" />
                 Email Address
               </label>
               <input
@@ -102,26 +122,23 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' && email) {
                     handleSubmit(e);
                   }
                 }}
-                className="w-full px-4 py-3 bg-blue-900/30 border border-blue-600/40 rounded-lg text-white placeholder-blue-300/50 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition-all duration-300"
+                className="w-full px-4 py-3 bg-[#0d5f7a]/40 border-2 border-white/40 rounded-xl text-white placeholder-white/60 focus:outline-none focus:border-[#1687A7] focus:bg-[#0d5f7a]/60 transition-all duration-300 shadow-lg"
               />
             </div>
 
             <button
               onClick={handleSubmit}
               disabled={isLoading || !email}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-[#1687A7] to-[#0d5f7a] hover:from-[#1a9ec4] hover:to-[#1687A7] text-white font-semibold py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-[#1687A7]/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                   Sending...
                 </>
               ) : (
@@ -134,11 +151,9 @@ export default function ForgotPasswordPage() {
           <div className="mt-6 text-center">
             <button
               onClick={handleBackToLogin}
-              className="text-sm text-cyan-300 hover:text-cyan-200 transition-colors duration-300 hover:underline font-medium inline-flex items-center"
+              className="text-sm text-[#76C7D8] hover:text-[#D3E0EA] transition-colors duration-300 hover:underline font-medium inline-flex items-center"
             >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
+              <ArrowLeft className="w-4 h-4 mr-1" />
               Back to Login
             </button>
           </div>
