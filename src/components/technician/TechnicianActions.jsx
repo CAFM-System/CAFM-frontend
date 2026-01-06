@@ -53,9 +53,9 @@ const TechnicianActions = ({ status, workStart , ticketData ,onClose , refresh})
                         >
                             Accept & Start Work
                         </button>
-                        <button className="px-6 py-3 w-1/2 border border-gray-400 rounded-lg hover:bg-black hover:text-white transition-colors">
+                        {/* <button className="px-6 py-3 w-1/2 border border-gray-400 rounded-lg hover:bg-black hover:text-white transition-colors"> 
                             Decline
-                        </button>
+                        </button>*/}
                     </div>
                     <div className="w-full mt-4">
                         <textarea
