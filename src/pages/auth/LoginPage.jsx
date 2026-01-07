@@ -190,6 +190,8 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+
                   className={`w-full rounded-xl bg-[#0d5f7a]/40 border-2 text-white placeholder:text-white/60 px-4 py-3 pr-12 shadow-lg outline-none transition-all duration-300 ${
                     focusedField === 'password' 
                       ? 'border-[#1687A7] bg-[#0d5f7a]/60' 
