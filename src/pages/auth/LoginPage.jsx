@@ -63,33 +63,29 @@ export default function LoginPage() {
           backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1687A7]/90 via-[#1687A7]/85 to-[#0d5f7a]/90"></div>
+        {/* Overlay using Secondary Color */}
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/95 via-secondary/90 to-[#1F2B2A]/95"></div>
       </div>
 
       {/* Main Grid Container */}
       <div className="relative z-10 w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center h-screen">
         {/* Left Section - Fixed, No Scroll */}
-        <div className="text-white space-y-6 px-4 hidden md:flex md:flex-col md:justify-center">
-          <div className="flex items-center gap-2 text-sm tracking-widest">
-            <div className="p-2 bg-[#1687A7]/30 rounded-lg backdrop-blur-sm border border-[#1687A7]/50">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <span className="font-semibold">FACILITIES</span>
-          </div>
+        <div className="text-primary space-y-6 px-4 hidden md:flex md:flex-col md:justify-center">
+          
 
           <div className="space-y-4">
-            <div className="text-6xl tracking-tight leading-tight font-bold">
+            <div className="text-6xl tracking-tight leading-tight font-bold text-primary">
               MANAGE
-              <div className="text-7xl bg-gradient-to-r from-white via-[#D3E0EA] to-[#76C7D8] bg-clip-text text-transparent">
+              <div className="text-7xl bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                 SMARTER
               </div>
             </div>
 
-            <p className="text-xl text-white/90 max-w-md font-medium">
+            <p className="text-xl text-primary/90 max-w-md font-medium">
               Where Your Facilities Management Becomes Effortless.
             </p>
 
-            <p className="text-base text-white/80 max-w-lg leading-relaxed">
+            <p className="text-base text-primary/70 max-w-lg leading-relaxed">
               Streamline maintenance requests, track complaints, and enhance
               communication between residents, technicians, and administrators—
               all in one powerful platform.
@@ -104,10 +100,10 @@ export default function LoginPage() {
               ].map((feature, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 text-white bg-[#1687A7]/20 backdrop-blur-md p-4 rounded-xl border border-[#1687A7]/30 hover:bg-[#1687A7]/30 transition-colors duration-300"
+                  className="flex items-center gap-3 text-primary bg-primary/5 backdrop-blur-md p-4 rounded-xl border border-primary/10 hover:bg-primary/10 transition-colors duration-300"
                 >
-                  <div className="p-2 bg-[#76C7D8]/30 rounded-lg">
-                    <feature.icon className="w-5 h-5 text-[#D3E0EA]" />
+                  <div className="p-2 bg-accent/20 rounded-lg">
+                    <feature.icon className="w-5 h-5 text-accent" />
                   </div>
                   <span className="font-medium">{feature.text}</span>
                 </div>
@@ -127,30 +123,35 @@ export default function LoginPage() {
               scrollbar-width: none;
             }
           `}</style>
-          <div className="w-full bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 border-2 border-white/40">
+          
+          {/* Form Card - Glassmorphism on Secondary Background */}
+          <div className="w-full bg-secondary/60 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 border border-primary/20">
+            
             {/* Form Header */}
             <div className="text-center mb-6">
               <div className="flex justify-center mb-3">
-                <div className="bg-gradient-to-br from-[#1687A7]/50 to-[#0d5f7a]/50 backdrop-blur-sm p-3 rounded-2xl border border-[#1687A7]/50 shadow-xl">
-                  <Building2 className="h-8 w-8 text-white drop-shadow-lg" />
-                </div>
+                  {/* Updated Logo Path */}
+                  <img 
+                    src="/images/logo_withoutBG.png" 
+                    alt="Facilitron Logo" 
+                    className="h-30 w-auto object-contain drop-shadow-lg" 
+                  />
               </div>
 
-              <h1 className="text-2xl text-white mb-1 drop-shadow-lg font-bold">
-                CAFM System
+              <h1 className="text-2xl text-primary mb-1 drop-shadow-lg font-bold tracking-wide">
               </h1>
-              <h2 className="text-lg text-white/95 mb-1 drop-shadow-md font-semibold">
+              <h2 className="text-lg text-primary/90 mb-1 drop-shadow-md font-semibold">
                 Welcome Back
               </h2>
-              <p className="text-white/85 text-xs drop-shadow">
-                Help Desk & Complaint Management
+              <p className="text-primary/60 text-xs drop-shadow">
+                Computer Aided Facility Management
               </p>
             </div>
 
             {/* Email Field */}
             <div className="mb-4">
-              <label className="block text-white text-sm mb-2 drop-shadow flex items-center gap-2 font-medium">
-                <Mail className="w-4 h-4" />
+              <label className="block text-primary text-sm mb-2 drop-shadow flex items-center gap-2 font-medium">
+                <Mail className="w-4 h-4 text-accent" />
                 Email Address
               </label>
 
@@ -163,22 +164,22 @@ export default function LoginPage() {
                     onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField(null)}
                     onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                    className={`w-full rounded-xl bg-[#0d5f7a]/40 border-2 text-white placeholder:text-white/60 px-4 py-3 shadow-lg outline-none transition-all duration-300 ${
+                    className={`w-full rounded-xl bg-primary/5 border-2 text-primary placeholder:text-primary/40 px-4 py-3 shadow-lg outline-none transition-all duration-300 ${
                       focusedField === 'email' 
-                        ? 'border-[#1687A7] bg-[#0d5f7a]/60' 
-                        : 'border-white/40'
+                        ? 'border-accent bg-primary/10' 
+                        : 'border-primary/10'
                     }`}
                   />
                 {email && (
-                  <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#76C7D8]" />
+                  <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-accent" />
                 )}
               </div>
             </div>
 
             {/* Password Field */}
             <div className="mb-4">
-              <label className="block text-white text-sm mb-2 drop-shadow flex items-center gap-2 font-medium">
-                <Lock className="w-4 h-4" />
+              <label className="block text-primary text-sm mb-2 drop-shadow flex items-center gap-2 font-medium">
+                <Lock className="w-4 h-4 text-accent" />
                 Password
               </label>
 
@@ -190,18 +191,17 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
-                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-
-                  className={`w-full rounded-xl bg-[#0d5f7a]/40 border-2 text-white placeholder:text-white/60 px-4 py-3 pr-12 shadow-lg outline-none transition-all duration-300 ${
+                  onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                  className={`w-full rounded-xl bg-primary/5 border-2 text-primary placeholder:text-primary/40 px-4 py-3 pr-12 shadow-lg outline-none transition-all duration-300 ${
                     focusedField === 'password' 
-                      ? 'border-[#1687A7] bg-[#0d5f7a]/60' 
-                      : 'border-white/40'
+                      ? 'border-accent bg-primary/10' 
+                      : 'border-primary/10'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/60 hover:text-accent transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -212,7 +212,7 @@ export default function LoginPage() {
             <div className="mb-4 text-right">
               <button
                 onClick={handleForgotPassword}
-                className="text-sm text-[#76C7D8] hover:text-[#D3E0EA] transition-colors duration-300 hover:underline font-medium"
+                className="text-sm text-accent hover:text-primary transition-colors duration-300 hover:underline font-medium"
               >
                 Forgot Password?
               </button>
@@ -222,12 +222,12 @@ export default function LoginPage() {
             <button
               onClick={handleLogin}
               disabled={isLoggingIn || !email || !password}
-              className="w-full bg-gradient-to-r from-[#1687A7] to-[#0d5f7a] hover:from-[#1a9ec4] hover:to-[#1687A7] text-white font-semibold py-2.5 rounded-xl shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 border border-[#1687A7]/30"
+              className="w-full bg-accent hover:bg-[#d69200] text-secondary font-bold py-2.5 rounded-xl shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 border border-accent/50"
             >
               <span className="flex items-center justify-center gap-2 text-base">
                 {isLoggingIn ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-secondary/30 border-t-secondary rounded-full animate-spin" />
                     Logging in...
                   </>
                 ) : loginSuccess ? (
@@ -247,11 +247,11 @@ export default function LoginPage() {
             {/* Divider */}
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/30" />
+                <div className="w-full border-t border-primary/20" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-[#0d5f7a]/40 backdrop-blur-sm text-white/90 rounded-full font-medium">
-                  New to CAFM?
+                <span className="px-4 bg-secondary/40 backdrop-blur-sm text-primary/60 rounded-full font-medium">
+                  New to FACILITRON?
                 </span>
               </div>
             </div>
@@ -259,7 +259,7 @@ export default function LoginPage() {
             {/* Register Link */}
             <button 
               onClick={handleCreateAccount}
-              className="w-full bg-[#1687A7]/20 hover:bg-[#1687A7]/30 text-white font-semibold py-2.5 rounded-xl backdrop-blur-sm border border-[#1687A7]/30 transition-all duration-300 shadow-lg"
+              className="w-full bg-primary/5 hover:bg-primary/10 text-primary font-semibold py-2.5 rounded-xl backdrop-blur-sm border border-primary/20 transition-all duration-300 shadow-lg"
             >
               Create Account
             </button>
