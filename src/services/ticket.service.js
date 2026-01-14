@@ -16,9 +16,8 @@ const TicketService = {
         return response;
     },
 
-    async assignTechnician(ticketId, technicianId,priority){
-        const response = await apiClient.put("/tickets/assign-technician/"+ticketId, { 
-            technician_id :technicianId,
+    async assignPriority(ticketId, priority){
+        const response = await apiClient.put("/tickets/assign-priority/"+ticketId, { 
             priority 
         });
         return response;

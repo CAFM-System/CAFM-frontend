@@ -61,18 +61,18 @@ const TicketDetails = ({ data, onClose , refreshTickets }) => {
     
 
     const handelAssignTechnician = async () => {
-        if(!assignedTech || !selectedPriority){
-            alert("Please select both technician and priority.");
+        if( !selectedPriority){
+            alert("Please select priority.");
             return;
         }
         try {
-            const respone = await TicketService.assignTechnician(data.id, assignedTech, selectedPriority.toLowerCase());
-            toast.success("Technician assigned successfully");
+            const respone = await TicketService.assignPriority(data.id,selectedPriority.toLowerCase());
+            toast.success("Priority assigned successfully");
             refreshTickets();
             onClose?.();
         } catch (error) {
-            toast.error("Failed to assign technician");
-            console.error("Error assigning technician:", error);
+            toast.error("Failed to assign priority");
+            console.error("Error assigning priority:", error);
         }
     }
 
