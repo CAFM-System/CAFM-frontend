@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Building2, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AuthService from "../../services/auth.service.js";
 
 export default function LoginPage() {
@@ -11,6 +11,11 @@ export default function LoginPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const redirectTo = searchParams.get("redirect")
+  ? decodeURIComponent(searchParams.get("redirect"))
+  : null;
   
   const handleLogin = async () => {
     if (!email || !password) return;
@@ -34,9 +39,13 @@ export default function LoginPage() {
       console.log("User role:", role);
 
       setTimeout(() => {
-        if (role === "admin") navigate("/admin");
-        else if (role === "technician") navigate("/technician");
-        else navigate("/resident/dashboard");
+        if (redirectTo) {
+          navigate(redirectTo, { replace: true });
+        } else {
+          if (role === "admin") navigate("/admin");
+          else if (role === "technician") navigate("/technician");
+          else navigate("/resident/dashboard");
+        }
       }, 800);
 
     } catch (error) {
