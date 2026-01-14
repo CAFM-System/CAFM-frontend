@@ -11,37 +11,37 @@ const AdminActions = ({ data , onAssign }) => {
 
     
 
-useEffect(()=>{
-        console.log("JOB TYPE FROM TICKET:", data.jobType);
-        if(!data.jobType) return;
-       const fetchTechnicians = async () => {
-        try {
-            setLoadingTechnicians(true);
-            const response = await UserSevervice.getAllTechnicians(data.jobType);
-            console.log("Fetched technicians:", response.data);
-            setTechnicians(response.data  || []);
-        } catch (error) {
-            console.error("Error fetching technicians:", error);
-        } finally {
-            setLoadingTechnicians(false);
-        }
-       }
-       fetchTechnicians();
-    },[data.jobType]);
+// useEffect(()=>{
+//         console.log("JOB TYPE FROM TICKET:", data.jobType);
+//         if(!data.jobType) return;
+//        const fetchTechnicians = async () => {
+//         try {
+//             setLoadingTechnicians(true);
+//             const response = await UserSevervice.getAllTechnicians(data.jobType);
+//             console.log("Fetched technicians:", response.data);
+//             setTechnicians(response.data  || []);
+//         } catch (error) {
+//             console.error("Error fetching technicians:", error);
+//         } finally {
+//             setLoadingTechnicians(false);
+//         }
+//        }
+//        fetchTechnicians();
+//     },[data.jobType]);
 
     
-    const formattedTechnicians = technicians?.map(t => ({
-        user_id: t.user_id,
-        full_name: `${t.first_name} ${t.last_name}`
-    })) || [];
+    // const formattedTechnicians = technicians?.map(t => ({
+    //     user_id: t.user_id,
+    //     full_name: `${t.first_name} ${t.last_name}`
+    // })) || [];
 
     return (
         <>
             <div className="space-y-6">
                 <div>
-                    <h4 className="font-semibold mb-3">Assign/Reassign Technician</h4>
+                    {/* <h4 className="font-semibold mb-3">Assign/Reassign Technician</h4> */}
                     <div className="flex items-center gap-3">
-                        <div className="relative flex-1">
+                        {/* <div className="relative flex-1">
                             <select
                                 value={data.assignedTech}
                                 onChange={(e) => data.setAssignedTech(e.target.value)}
@@ -59,11 +59,8 @@ useEffect(()=>{
                                 }
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
-                        </div>
-                        <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                            onClick={onAssign}>
-                            Assign
-                        </button>
+                        </div> */}
+                        
                         
                     </div>
 
@@ -84,6 +81,10 @@ useEffect(()=>{
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
                         </div>
+                        <button className="px-6 py-3 mt-4 w-full bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                            onClick={onAssign}>
+                            Assign Priority
+                        </button>
                     </div>
 
                 

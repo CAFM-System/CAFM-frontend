@@ -7,6 +7,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPg from './pages/auth/RegisterPg';
 import ForgotPasswordPage from './pages/auth/Forget-Password'; 
 import ResetPasswordPage from './pages/auth/Reset-Password';
+import AcceptTicket from './pages/technician/AcceptTicket';
 
 function App() {
   // Example user - in a real app, this would come from authentication context
@@ -35,6 +36,7 @@ function App() {
           
           {/* All resident routes handled by HomePage */}
           <Route path='/*' element={<HomePage user={user} />} />
+          <Route path='/accept-ticket' element={<AcceptTicket/>} />
         </Routes>
       </div>
     </BrowserRouter>
