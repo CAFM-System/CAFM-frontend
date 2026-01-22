@@ -4,7 +4,7 @@ import { Clock, TrendingUp, CircleAlert, Download } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 //import { tickets } from "../../services/newTicketData.js";
-import exportTicketsToCSV from "../../services/ExportCSV.js";
+//import exportTicketsToCSV from "../../services/ExportCSV.js";
 import downloadBlob from "../../../util/downloadFile.js";
 import ReportService from "../../services/report.service.js";
 import toast from "react-hot-toast";
@@ -188,26 +188,38 @@ const ReportsAnalytics = (data) => {
                 <DashboardCard
                     title="Total Tickets"
                     value={totalTickets}
-                    icon={<TrendingUp />}
+                    icon={<TrendingUp size={30} />}
                     description="All time"
+                    accentColor="bg-yellow-500"
+                    iconBgColor="bg-yellow-50"
+                    iconColor="text-yellow-500"
                 />
                 <DashboardCard
                     title="Resolution Rate"
                     value={resolutionRate}
-                    icon={<CircleAlert className="text-green-500" />}
+                    icon={<CircleAlert size={30} />}
                     description={resolvedTickets + " resolved"}
+                    accentColor="bg-green-500"
+                    iconBgColor="bg-green-50"
+                    iconColor="text-green-500"
                 />
                 <DashboardCard
                     title="Avg Resolution Time"
                     value={avgResolutionTime}
-                    icon={<Clock className="text-orange-500" />}
+                    icon={<Clock size={30} />}
+                    accentColor="bg-blue-500"
+                    iconBgColor="bg-blue-50"
+                    iconColor="text-blue-500"
                     description="hours"
                 />
                 <DashboardCard
                     title="Avg CSAT Rating"
                     value={avgCSATRating}
-                    icon={<TrendingUp className="text-yellow-500" />}
+                    icon={<TrendingUp size={30} />}
                     description="Customer Satisfaction"
+                    accentColor="bg-red-500"
+                    iconBgColor="bg-red-50"
+                    iconColor="text-red-500"
                 />
             </div>
             {/* 🔽 ADD FILTER UI HERE 🔽 */}

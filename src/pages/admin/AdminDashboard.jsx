@@ -106,31 +106,43 @@ export default function AdminDashboard() {
                         <AdminDashboardCard
                             title="Total Tickets"
                             value={totalTickets}
-                            icon={<Ticket />}
+                            icon={<Ticket size={30} />}
                             description="All tickets"
+                            accentColor="bg-yellow-500"
+                            iconBgColor="bg-yellow-50"
+                            iconColor="text-yellow-500"
                             onClick={() => console.log("Clicked Completed Tasks")}
                         />
                         <AdminDashboardCard
                             title="Active Tickets"
                             value={activeTickets.length}
-                            icon={<Clock4 className="text-red-500" />}
+                            icon={<Clock4 size={30} />}
                             description="In progress"
+                            accentColor="bg-blue-500"
+                            iconBgColor="bg-blue-50"
+                            iconColor="text-blue-500"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
                         <AdminDashboardCard
                             title="Resolved"
                             value={resolvedTickets.length}
-                            icon={<CheckCircle className="text-green-500" />}
+                            icon={<CheckCircle size={30} />}
                             description="Awaiting closure"
+                            accentColor="bg-green-500"
+                            iconBgColor="bg-green-50"
+                            iconColor="text-green-500"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
                         <AdminDashboardCard
                             title="Urgent"
                             value={urgentTickets.length}
-                            icon={<AlertTriangle className="text-red-500" />}
+                            icon={<AlertTriangle size={30} />}
                             description="Needs attention"
+                            accentColor="bg-red-500"
+                            iconBgColor="bg-red-50"
+                            iconColor="text-red-500"
                             onClick={() => console.log("Clicked Pending Issues")}
                             className="bg-blue-50"
                         />
