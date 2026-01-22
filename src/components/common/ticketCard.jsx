@@ -3,7 +3,8 @@ import { FiUser } from "react-icons/fi";
 import { GoClock } from "react-icons/go";
 import { BsExclamationCircle } from "react-icons/bs";
 
-export default function Ticketcard({ ticket, onClick }) {
+// ADD 'isDarkMode = false' HERE
+export default function Ticketcard({ ticket, onClick, isDarkMode = false }) {
   const statusColors = {
     open: "bg-blue-100 text-blue-800",
     assigned: "bg-purple-100 text-purple-800",
@@ -31,6 +32,7 @@ export default function Ticketcard({ ticket, onClick }) {
     other: "Other",
   };
 
+  // Normalizing Data
   const id = ticket.ticket_id || ticket.ticket_number;
   const desc = ticket.complaint || ticket.description;
   const name = ticket.resident_name || ticket.tenant_name;
@@ -45,24 +47,43 @@ export default function Ticketcard({ ticket, onClick }) {
   const normalizedCategory =
     category?.toLowerCase().replace(" ", "_") || "other";
 
+  // --- THEME STYLING LOGIC ---
+  // If isDarkMode is false (or not passed), it uses the second string (Light Mode)
+  const cardBase = isDarkMode 
+    ? "bg-secondary/40 border-primary/20 hover:bg-secondary/60" 
+    : "bg-white border-gray-300 shadow-sm hover:shadow-md";
+
+  const textColor = isDarkMode 
+    ? "text-primary" 
+    : "text-gray-900";
+
+  const subTextColor = isDarkMode 
+    ? "text-primary/70" 
+    : "text-gray-600";
+    
+  const iconColor = isDarkMode 
+    ? "text-accent" 
+    : "text-gray-400";
+
   return (
     <div
       onClick={onClick}
-      className="
+      className={`
         w-full
         min-h-[220px]
         cursor-pointer
-        border border-gray-300
+        border
         rounded-2xl
         p-4 sm:p-6
-        hover:shadow-md
-        transition-shadow
+        transition-all
+        duration-300
         flex flex-col justify-between
-      "
+        ${cardBase}
+      `}
     >
       {/* Header */}
       <div className="flex flex-wrap gap-2 items-center">
-        <span className="font-medium">{id}</span>
+        <span className={`font-medium ${textColor} opacity-90`}>{id}</span>
 
         <span
           className={`px-2 py-1 rounded-lg text-xs sm:text-sm ${statusColors[normalizedStatus]}`}
@@ -78,33 +99,33 @@ export default function Ticketcard({ ticket, onClick }) {
       </div>
 
       {/* Title */}
-      <h1 className="text-base sm:text-lg font-semibold mt-2">
+      <h1 className={`text-base sm:text-lg font-semibold mt-2 ${textColor}`}>
         {ticket.title}
       </h1>
 
       {/* Description */}
-      <span className="text-gray-600 text-sm line-clamp-2 mt-1">
+      <span className={`text-sm line-clamp-2 mt-1 ${subTextColor}`}>
         {desc}
       </span>
 
       {/* Footer */}
-      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between gap-4 text-gray-600 text-sm">
+      <div className={`mt-4 flex flex-col sm:flex-row sm:justify-between gap-4 text-sm ${subTextColor}`}>
         <div className="flex flex-col gap-1">
           <span className="flex gap-2 items-center">
-            <GrLocation /> {ticket.location}
+            <GrLocation className={iconColor} /> {ticket.location}
           </span>
           <span className="flex gap-2 items-center">
-            <FiUser /> {name}
+            <FiUser className={iconColor} /> {name}
           </span>
         </div>
 
         <div className="flex flex-col gap-1">
           <span className="flex gap-2 items-center">
-            <BsExclamationCircle />
+            <BsExclamationCircle className={iconColor} />
             {categoryLabels[normalizedCategory] || category}
           </span>
           <span className="flex gap-2 items-center">
-            <GoClock /> {createdDate}
+            <GoClock className={iconColor} /> {createdDate}
           </span>
         </div>
       </div>
