@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Wrench, User, LogOut, Sun, Moon } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "../../hooks/useTheme"; 
 
 /**
  * TechnicianHeader Component
- * * * COLOR STRATEGY:
- * - Light Mode: bg-secondary (#334443) -> Creates strong contrast with white pages.
- * - Dark Mode:  bg-[#1c2625] (Deepened Teal) -> Darker than the dashboard background 
- * to create depth, but keeps the color tone consistent.
+ * - Light Mode: bg-secondary (#334443) 
+ * - Dark Mode: bg-[#1c2625] (Deepened Teal)
  */
-export default function TechnicianHeader({ isDarkMode, toggleTheme }) {
+export default function TechnicianHeader() { 
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Use theme hook
+  const theme = useTheme();
+  const { isDarkMode, toggleTheme } = theme;
   
   const [user, setUser] = useState({ name: "Loading...", department: "" });
 
@@ -33,20 +36,12 @@ export default function TechnicianHeader({ isDarkMode, toggleTheme }) {
   // THEME & COLOR LOGIC
   // ============================================================================
 
-  // Background Color
-  // Dark Mode uses a custom "Deep Teal" hex to sit nicely above the "Secondary" body
   const headerClasses = isDarkMode 
     ? "bg-[#1c2625] text-primary border-b border-white/5" 
     : "bg-secondary text-primary shadow-md";
 
-  // Accent Colors (Yellow/Gold)
-  // Used for high-priority visual elements in both modes
   const accentBoxClass = "bg-accent text-secondary"; 
-
-  // Hover States
   const hoverClasses = isDarkMode ? "hover:bg-white/5" : "hover:bg-white/10";
-
-  // Navigation Button Styles
   const activeNavClass = `${accentBoxClass} shadow-sm`;
   const inactiveNavClass = "text-primary/80 hover:text-white";
 
@@ -62,12 +57,10 @@ export default function TechnicianHeader({ isDarkMode, toggleTheme }) {
           
           {/* ======================= LEFT: LOGO ======================= */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            {/* Logo Icon Box */}
             <div className={`${accentBoxClass} p-2 rounded-lg transition-colors duration-300`}>
               <Wrench className="h-6 w-6" />
             </div>
             
-            {/* Logo Text */}
             <div>
               <h1 className="text-xl font-bold tracking-wide">FACILITRON</h1>
               <p className="text-xs uppercase tracking-wider opacity-80">

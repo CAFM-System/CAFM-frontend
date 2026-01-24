@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import DashboardCard from "../admin/AdminDashboardCard.jsx";
 import { Clock, TrendingUp, CircleAlert, Download } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-
-//import { tickets } from "../../services/newTicketData.js";
-//import exportTicketsToCSV from "../../services/ExportCSV.js";
 import downloadBlob from "../../../util/downloadFile.js";
 import ReportService from "../../services/report.service.js";
 import toast from "react-hot-toast";
+import { useTheme } from "../../hooks/useTheme"; 
 
 const ReportsAnalytics = (data) => {
+    //  Use theme hook
+    const { isDarkMode } = useTheme();
+
     const [totalTickets, setTotalTickets] = useState(0);
     const [resolutionRate, setResolutionRate] = useState("0 %");
     const [avgResolutionTime, setAvgResolutionTime] = useState(0);
@@ -32,6 +33,28 @@ const ReportsAnalytics = (data) => {
         status: "all",
     });
     const tickets = data.data || [];
+
+    // Theme-aware classes
+    const cardBg = isDarkMode
+        ? "bg-secondary/50 border-primary/10"
+        : "bg-white border-gray-200";
+
+    const headingColor = isDarkMode ? "text-primary" : "text-gray-900";
+    const subTextColor = isDarkMode ? "text-primary/70" : "text-gray-600";
+    const labelColor = isDarkMode ? "text-primary/80" : "text-gray-700";
+    
+    const inputBg = isDarkMode
+        ? "bg-secondary/30 border-primary/20 text-primary"
+        : "bg-white border-gray-300 text-gray-900";
+
+    const buttonBg = isDarkMode
+        ? "bg-secondary/30 border-primary/20 text-primary hover:bg-primary/10"
+        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-200";
+
+    // Chart colors for dark mode
+    const chartGridColor = isDarkMode ? "#FCF9EA20" : "#E5E7EB";
+    const chartTextColor = isDarkMode ? "#FCF9EA" : "#6B7280";
+    const barColor = isDarkMode ? "#F0A500" : "#3B82F6";
 
     // Calculate the summary data
     useEffect(() => {
@@ -129,16 +152,13 @@ const ReportsAnalytics = (data) => {
         setPieChartByJobTypeData(pieData);
     }, []);
 
-
     const BarChartToolTip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <>
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-                        <p className="font-semibold text-gray-800">{payload[0].payload.status}</p>
-                        <p className="text-gray-600">Count: {payload[0].value}</p>
-                    </div>
-                </>
+                <div className={`rounded-lg shadow-lg p-3 border ${cardBg}`}>
+                    <p className={`font-semibold ${headingColor}`}>{payload[0].payload.status}</p>
+                    <p className={subTextColor}>Count: {payload[0].value}</p>
+                </div>
             );
         }
     };
@@ -146,12 +166,10 @@ const ReportsAnalytics = (data) => {
     const PieChartToolTip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <>
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-                        <p className="font-semibold text-gray-800">{payload[0].payload.jobType}</p>
-                        <p className="text-gray-600">{payload[0].value}%</p>
-                    </div>
-                </>
+                <div className={`rounded-lg shadow-lg p-3 border ${cardBg}`}>
+                    <p className={`font-semibold ${headingColor}`}>{payload[0].payload.jobType}</p>
+                    <p className={subTextColor}>{payload[0].value}%</p>
+                </div>
             );
         }
     };
@@ -179,7 +197,6 @@ const ReportsAnalytics = (data) => {
             toast.error("Failed to download Excel");
         }
     };
-
 
     return (
         <>
@@ -222,74 +239,60 @@ const ReportsAnalytics = (data) => {
                     iconColor="text-red-500"
                 />
             </div>
-            {/* 🔽 ADD FILTER UI HERE 🔽 */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+
+            {/* Filter UI */}
+            <div className={`rounded-lg shadow-sm border p-6 m-6 ${cardBg}`}>
+                <h2 className={`text-lg font-semibold mb-4 ${headingColor}`}>
                     Report Filters
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-
-                    {/* By */}
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Group By</label>
+                        <label className={`text-sm font-medium ${labelColor}`}>Group By</label>
                         <select
                             value={filters.by}
-                            onChange={(e) =>
-                                setFilters({ ...filters, by: e.target.value })
-                            }
-                            className="w-full border rounded px-3 py-2"
+                            onChange={(e) => setFilters({ ...filters, by: e.target.value })}
+                            className={`w-full border rounded px-3 py-2 ${inputBg}`}
                         >
                             <option value="month">Month</option>
                             <option value="year">Year</option>
                         </select>
                     </div>
 
-                    {/* Year */}
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Year</label>
+                        <label className={`text-sm font-medium ${labelColor}`}>Year</label>
                         <input
                             type="number"
                             value={filters.year}
-                            onChange={(e) =>
-                                setFilters({ ...filters, year: Number(e.target.value) })
-                            }
-                            className="w-full border rounded px-3 py-2"
+                            onChange={(e) => setFilters({ ...filters, year: Number(e.target.value) })}
+                            className={`w-full border rounded px-3 py-2 ${inputBg}`}
                         />
                     </div>
 
-                    {/* Month */}
                     {filters.by === "month" && (
                         <div>
-                            <label className="text-sm font-medium text-gray-700">Month</label>
+                            <label className={`text-sm font-medium ${labelColor}`}>Month</label>
                             <select
                                 value={filters.month}
-                                onChange={(e) =>
-                                    setFilters({ ...filters, month: Number(e.target.value) })
-                                }
-                                className="w-full border rounded px-3 py-2"
+                                onChange={(e) => setFilters({ ...filters, month: Number(e.target.value) })}
+                                className={`w-full border rounded px-3 py-2 ${inputBg}`}
                             >
                                 <option value={0}>Select Month</option>
                                 {Array.from({ length: 12 }).map((_, i) => (
                                     <option key={i + 1} value={i + 1}>
-                                        {new Date(0, i).toLocaleString("default", {
-                                            month: "long"
-                                        })}
+                                        {new Date(0, i).toLocaleString("default", { month: "long" })}
                                     </option>
                                 ))}
                             </select>
                         </div>
                     )}
 
-                    {/* Status */}
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Status</label>
+                        <label className={`text-sm font-medium ${labelColor}`}>Status</label>
                         <select
                             value={filters.status}
-                            onChange={(e) =>
-                                setFilters({ ...filters, status: e.target.value })
-                            }
-                            className="w-full border rounded px-3 py-2"
+                            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                            className={`w-full border rounded px-3 py-2 ${inputBg}`}
                         >
                             <option value="all">All</option>
                             <option value="open">Open</option>
@@ -299,26 +302,26 @@ const ReportsAnalytics = (data) => {
                             <option value="closed">Closed</option>
                         </select>
                     </div>
-
                 </div>
             </div>
-            {/* 🔼 FILTER UI ENDS HERE 🔼 */}
 
             {/* Export functions */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 m-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Export Reports</h2>
-                <p className="text-gray-600 text-sm mb-6">Download data for external analysis</p>
+            <div className={`rounded-lg shadow-sm border p-6 m-6 ${cardBg}`}>
+                <h2 className={`text-xl font-semibold mb-2 ${headingColor}`}>Export Reports</h2>
+                <p className={`text-sm mb-6 ${subTextColor}`}>Download data for external analysis</p>
 
                 <div className="flex flex-wrap gap-3">
                     <button
                         onClick={() => handleExcelDownload()}
-                        className="shadow-sm inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        className={`shadow-sm inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 ${buttonBg}`}
+                    >
                         <Download size={16} />
                         Export as Excel
                     </button>
                     <button
                         onClick={() => handlePDFDownload()}
-                        className="shadow-sm inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        className={`shadow-sm inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 ${buttonBg}`}
+                    >
                         <Download size={16} />
                         Export as PDF
                     </button>
@@ -326,33 +329,32 @@ const ReportsAnalytics = (data) => {
             </div>
 
             <div className="mx-auto grid grid-cols-1 lg:grid-cols-2 pl-6 pr-6 gap-6 m-6">
-
-                {/* Bar Graphs */}
-                <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-6">Tickets by Status</h2>
+                {/* Bar Chart */}
+                <div className={`rounded-lg shadow-md p-6 border ${cardBg}`}>
+                    <h2 className={`text-xl font-semibold mb-6 ${headingColor}`}>Tickets by Status</h2>
 
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={barGraphByStatusData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                            <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} />
                             <XAxis
                                 dataKey="status"
-                                tick={{ fill: '#6B7280', fontSize: 12 }}
-                                axisLine={{ stroke: '#E5E7EB' }}
+                                tick={{ fill: chartTextColor, fontSize: 12 }}
+                                axisLine={{ stroke: chartGridColor }}
                             />
                             <YAxis
-                                tick={{ fill: '#6B7280', fontSize: 12 }}
-                                axisLine={{ stroke: '#E5E7EB' }}
+                                tick={{ fill: chartTextColor, fontSize: 12 }}
+                                axisLine={{ stroke: chartGridColor }}
                                 tickCount={6}
                             />
-                            <Tooltip content={<BarChartToolTip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
-                            <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                            <Tooltip content={<BarChartToolTip />} cursor={{ fill: 'rgba(240, 165, 0, 0.1)' }} />
+                            <Bar dataKey="count" fill={barColor} radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
 
-                {/* Pie Charts */}
-                <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-6">Tickets by Job Type</h2>
+                {/* Pie Chart */}
+                <div className={`rounded-lg shadow-md p-6 border ${cardBg}`}>
+                    <h2 className={`text-xl font-semibold mb-6 ${headingColor}`}>Tickets by Job Type</h2>
 
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
@@ -363,7 +365,7 @@ const ReportsAnalytics = (data) => {
                                 labelLine={false}
                                 label={({ jobType, percentage }) => `${jobType}: ${percentage}%`}
                                 outerRadius={100}
-                                fill="#3B82F6"
+                                fill={barColor}
                                 dataKey="percentage"
                                 nameKey="jobType"
                             >
@@ -371,7 +373,7 @@ const ReportsAnalytics = (data) => {
                                     <Cell key={`cell-${index}`} fill={`hsl(${(index / pieChartByJobTypeData.length) * 360}, 70%, 50%)`} />
                                 ))}
                             </Pie>
-                            <Tooltip content={<PieChartToolTip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
+                            <Tooltip content={<PieChartToolTip />} cursor={{ fill: 'rgba(240, 165, 0, 0.1)' }} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>

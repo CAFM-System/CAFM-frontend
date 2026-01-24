@@ -1,11 +1,10 @@
 import React from "react";
+import { useTheme } from "../../hooks/useTheme"; 
 
-// 1. Adjusted Variant Styles to use opacity for backgrounds (bg-opacity-10)
-// This ensures they look good on both White and Dark Teal backgrounds.
 const variantStyles = {
   blue: {
     icon: "text-blue-500",
-    bubble: "bg-blue-500/10", // Transparent bg works on dark & light
+    bubble: "bg-blue-500/10",
     border: "border-l-blue-500",
   },
   purple: {
@@ -30,14 +29,14 @@ export default function DashboardCard({
   value, 
   icon: Icon, 
   variant = "blue", 
-  onClick,
-  isDarkMode // <--- Receive the theme state
+  onClick
+ 
 }) {
+  
+  const { isDarkMode } = useTheme();
+  
   const styles = variantStyles[variant] || variantStyles.blue;
 
-  // 2. Define Theme-Specific Base Classes
-  // Light: White bg, Gray text
-  // Dark: Secondary (Dark Teal) bg, Primary (Cream) text
   const cardBg = isDarkMode 
     ? "bg-secondary shadow-lg border-primary/10" 
     : "bg-white shadow-sm border-gray-100 hover:shadow-md";
@@ -56,19 +55,16 @@ export default function DashboardCard({
       `}
     >
       <div className="flex items-start justify-between relative z-10">
-        {/* Left Side: Title & Value */}
         <div>
           <p className={`text-sm font-medium ${titleColor}`}>{title}</p>
           <p className={`text-3xl font-bold mt-2 ${valueColor}`}>{value}</p>
         </div>
 
-        {/* Right Side: Icon Bubble */}
         <div className={`p-3 rounded-xl ${styles.bubble}`}>
           <Icon className={`h-6 w-6 ${styles.icon}`} />
         </div>
       </div>
       
-      {/* Optional: Subtle glow effect in dark mode for aesthetic */}
       {isDarkMode && (
         <div className={`absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 rounded-full blur-2xl opacity-10 ${styles.bubble.replace('/10', '/20')}`} />
       )}
