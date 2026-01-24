@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminDashboardHeader from "../../components/admin/AdminDashboardHeader";
 import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
@@ -6,12 +6,15 @@ import TicketCard from "../../components/common/ticketCard";
 import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
 import TicketDetails from "../../components/admin/TicketDetails";
 import TicketService from "../../services/ticket.service";
-
-
+import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
 
 export default function AdminDashboard() {
+    // 👇 ADDED: Use theme hook
+    const theme = useTheme();
+    const { isDarkMode } = theme;
+
     // Tickets state
-    const [ticketList,setTicketList] = useState([]);
+    const [ticketList, setTicketList] = useState([]);
     // UI state
     const [activeTab, setActiveTab] = useState("overview");
     const [searchText, setSearchText] = useState("");
@@ -25,11 +28,11 @@ export default function AdminDashboard() {
     const [isTicketOpen, setIsTicketOpen] = useState(false);
 
     useEffect(
-        ()=>{
+        () => {
             try {
-                if(isLoading){
+                if (isLoading) {
                     TicketService.getTicket().then(
-                        (response)=>{
+                        (response) => {
                             console.log(response.data.tickets);
                             setTicketList(response.data.tickets);
                             setIsLoading(false);
@@ -39,15 +42,14 @@ export default function AdminDashboard() {
             } catch (error) {
                 console.error("Error fetching tickets:", error);
             }
-        },[isLoading]);
+        }, [isLoading]);
 
     const openTicketDetails = (ticket) => {
         setSelectedTicket(ticket);
         setIsTicketOpen(true);
     };
 
-
-    // Derived lists (computed from `tickets` state)
+    // Derived lists
     const urgentTickets = ticketList.filter(t => (t.priority || "").toLowerCase() === "urgent");
     const activeTickets = ticketList.filter(t => {
         const s = (t.status || "").toLowerCase();
@@ -73,8 +75,8 @@ export default function AdminDashboard() {
     });
 
     return (
-
-        <>
+        // 👇 ADDED: Theme-aware background
+        <div className={`min-h-screen transition-colors duration-300 ${theme.bg}`}>
             <AdminDashboardHeader
                 title="Admin Dashboard"
                 name="Admin User"
@@ -82,15 +84,14 @@ export default function AdminDashboard() {
             />
 
             {/* Tabs */}
-
-            <div className="flex gap-6 border-b border-gray-200 px-4 sm:px-6 mt-10 overflow-x-auto whitespace-nowrap sm:justify-start">
+            <div className={`flex gap-6 border-b px-4 sm:px-6 mt-10 overflow-x-auto whitespace-nowrap sm:justify-start ${theme.border}`}>
                 {["overview", "all", "reports"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`pb-2 font-medium ${activeTab === tab
-                            ? "text-blue-600 border-b-2 border-blue-600"
-                            : "text-gray-600"
+                        className={`pb-2 font-medium transition-colors ${activeTab === tab
+                            ? "text-accent border-b-2 border-accent"
+                            : isDarkMode ? "text-primary/60 hover:text-primary" : "text-gray-600 hover:text-gray-800"
                             }`}
                     >
                         {tab === "overview" && "Overview"}
@@ -106,56 +107,55 @@ export default function AdminDashboard() {
                         <AdminDashboardCard
                             title="Total Tickets"
                             value={totalTickets}
-                            icon={<Ticket size={30} />}
+                            icon={<Ticket size={25} />}
                             description="All tickets"
                             accentColor="bg-yellow-500"
-                            iconBgColor="bg-yellow-50"
+                            iconBgColor= "bg-yellow-50"
                             iconColor="text-yellow-500"
                             onClick={() => console.log("Clicked Completed Tasks")}
                         />
                         <AdminDashboardCard
                             title="Active Tickets"
                             value={activeTickets.length}
-                            icon={<Clock4 size={30} />}
+                            icon={<Clock4 size={25} />}
                             description="In progress"
-                            accentColor="bg-blue-500"
-                            iconBgColor="bg-blue-50"
-                            iconColor="text-blue-500"
-                            onClick={() => console.log("Clicked Pending Issues")}
-                            className="bg-blue-50"
-                        />
-                        <AdminDashboardCard
-                            title="Resolved"
-                            value={resolvedTickets.length}
-                            icon={<CheckCircle size={30} />}
-                            description="Awaiting closure"
                             accentColor="bg-green-500"
                             iconBgColor="bg-green-50"
                             iconColor="text-green-500"
                             onClick={() => console.log("Clicked Pending Issues")}
-                            className="bg-blue-50"
+                            
+                        />
+                        <AdminDashboardCard
+                            title="Resolved"
+                            value={resolvedTickets.length}
+                            icon={<CheckCircle size={25} />}
+                            description="Awaiting closure"
+                            accentColor="bg-blue-500"
+                            iconBgColor="bg-blue-50"
+                            iconColor="text-blue-500"
+                            onClick={() => console.log("Clicked Pending Issues")}
+                           
                         />
                         <AdminDashboardCard
                             title="Urgent"
                             value={urgentTickets.length}
-                            icon={<AlertTriangle size={30} />}
+                            icon={<AlertTriangle size={25} />}
                             description="Needs attention"
                             accentColor="bg-red-500"
                             iconBgColor="bg-red-50"
                             iconColor="text-red-500"
                             onClick={() => console.log("Clicked Pending Issues")}
-                            className="bg-blue-50"
+                        
                         />
                     </div>
 
                     {/* Urgent Tickets Section */}
                     {urgentTickets.length > 0 && (
                         <div className="mt-8 px-4 sm:px-6">
-                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 ${theme.text}`}>
                                 Urgent Tickets
                             </h2>
 
-                            {/* Vertical list: one ticket per row */}
                             <div className="flex flex-col gap-6">
                                 {urgentTickets.map(ticket => (
                                     <TicketCard
@@ -169,48 +169,41 @@ export default function AdminDashboard() {
                     )}
 
                     <div className="mt-8 px-4 sm:px-6">
-                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 ${theme.text}`}>
                             Unassigned Tickets
                         </h2>
 
                         <div className="flex flex-col gap-6 mb-4">
                             {unassignedTickets.length > 0
                                 ? unassignedTickets.map(ticket => (
-                                    <TicketCard 
-                                        key={ticket.ticket_Id} 
+                                    <TicketCard
+                                        key={ticket.ticket_Id}
                                         ticket={ticket}
                                         onClick={() => openTicketDetails(ticket)}
-                                     />
+                                    />
                                 ))
                                 : (
-                                    // Placeholder empty ticket
-                                    <div className="w-full h-[250px] border border-gray-300 rounded-2xl p-4 mb-4 flex flex-col items-center justify-center text-gray-400">
-
+                                    <div className={`w-full h-[250px] border rounded-2xl p-4 mb-4 flex flex-col items-center justify-center ${theme.cardBg}`}>
                                         <CheckCircle className="text-green-300 mb-4" size={60} />
-
-                                        <p className="text-lg text-gray-500">All tickets are assigned!</p>
+                                        <p className={`text-lg ${theme.subText}`}>All tickets are assigned!</p>
                                     </div>
-
                                 )
                             }
                         </div>
                     </div>
-
-
                 </>
             )}
 
             {activeTab === "all" && (
                 <>
-                    <div className="w-full space-y-4  mt-8">
-
+                    <div className="w-full space-y-4 mt-8">
                         {/* Search */}
-                        <div className="flex items-center  rounded-xl px-4 py-2 bg-white shadow-sm transition-all focus-within:border-3 focus-within:border-gray-500 ml-4 ">
-                            <Search className="text-gray-400 mr-3" size={20} />
+                        <div className={`flex items-center rounded-xl px-4 py-2 shadow-sm transition-all focus-within:border-3 focus-within:ring-2 focus-within:ring-accent ml-4 ${theme.cardBg}`}>
+                            <Search className={`mr-3 ${theme.subText}`} size={20} />
                             <input
                                 type="text"
                                 placeholder="Search by ticket ID, title, resident, apartment..."
-                                className="w-full outline-none"
+                                className={`w-full outline-none bg-transparent ${theme.text} placeholder:${theme.subText}`}
                                 value={searchText}
                                 onChange={(e) => setSearchText(e.target.value)}
                             />
@@ -221,7 +214,7 @@ export default function AdminDashboard() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="rounded-xl px-4 py-3 bg-white shadow-sm cursor-pointer"
+                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
                             >
                                 <option value="">All Statuses</option>
                                 <option value="Open">Open</option>
@@ -235,7 +228,7 @@ export default function AdminDashboard() {
                             <select
                                 value={priorityFilter}
                                 onChange={(e) => setPriorityFilter(e.target.value)}
-                                className="rounded-xl px-4 py-3 bg-white shadow-sm cursor-pointer"
+                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
                             >
                                 <option value="">All Priorities</option>
                                 <option value="Urgent">Urgent</option>
@@ -247,7 +240,7 @@ export default function AdminDashboard() {
                             <select
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="rounded-xl px-4 py-3 bg-white shadow-sm cursor-pointer"
+                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
                             >
                                 <option value="">All Categories</option>
                                 <option value="HVAC">HVAC</option>
@@ -264,12 +257,12 @@ export default function AdminDashboard() {
                         {/* Show filtered info & Clear filters */}
                         {(searchText || statusFilter || priorityFilter || categoryFilter) && (
                             <div className="flex items-center mt-4 ml-4 gap-2">
-                                <span className="text-gray-600">
+                                <span className={theme.subText}>
                                     <Funnel className="inline-block mr-2" size={18} />
                                     Showing {filteredTickets.length} of {ticketList.length} tickets
                                 </span>
                                 <button
-                                    className="font-semibold hover:underline"
+                                    className="text-accent font-semibold hover:underline"
                                     onClick={() => {
                                         setSearchText("");
                                         setStatusFilter("");
@@ -282,7 +275,6 @@ export default function AdminDashboard() {
                             </div>
                         )}
 
-
                         {/* Tickets */}
                         <div className="flex flex-col gap-6 mt-6 ml-4">
                             {filteredTickets.length > 0 ? (
@@ -294,32 +286,30 @@ export default function AdminDashboard() {
                                     />
                                 ))
                             ) : (
-                                <div className="text-gray-300 p-6 border border-gray-200 rounded-xl flex flex-col items-center justify-center">
-                                    <Ticket className="mb-4" size={60} />
-                                    <p className="text-lg text-gray-500 text-center">
+                                <div className={`p-6 border rounded-xl flex flex-col items-center justify-center ${theme.cardBg}`}>
+                                    <Ticket className={`mb-4 ${theme.subText}`} size={60} />
+                                    <p className={`text-lg text-center ${theme.subText}`}>
                                         No tickets found matching your criteria
                                     </p>
                                 </div>
-
                             )}
                         </div>
-
                     </div>
                 </>
             )}
 
             {activeTab === "reports" && (
-                <ReportsAnalytics  data={ticketList} />
+                <ReportsAnalytics data={ticketList} />
             )}
+
             {/* Ticket Details Popup*/}
             {isTicketOpen && (
                 <TicketDetails
                     data={selectedTicket}
                     onClose={() => setIsTicketOpen(false)}
-                    refreshTickets={()=>setIsLoading(true)}
+                    refreshTickets={() => setIsLoading(true)}
                 />
             )}
-
-        </>
+        </div>
     );
 }

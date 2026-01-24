@@ -2,9 +2,12 @@ import { GrLocation } from "react-icons/gr";
 import { FiUser } from "react-icons/fi";
 import { GoClock } from "react-icons/go";
 import { BsExclamationCircle } from "react-icons/bs";
+import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
 
-// ADD 'isDarkMode = false' HERE
-export default function Ticketcard({ ticket, onClick, isDarkMode = false }) {
+export default function Ticketcard({ ticket, onClick }) { // 👈 REMOVED: isDarkMode prop
+  // 👇 ADDED: Use theme hook
+  const { isDarkMode } = useTheme();
+
   const statusColors = {
     open: "bg-blue-100 text-blue-800",
     assigned: "bg-purple-100 text-purple-800",
@@ -47,8 +50,7 @@ export default function Ticketcard({ ticket, onClick, isDarkMode = false }) {
   const normalizedCategory =
     category?.toLowerCase().replace(" ", "_") || "other";
 
-  // --- THEME STYLING LOGIC ---
-  // If isDarkMode is false (or not passed), it uses the second string (Light Mode)
+  // Theme-aware styling
   const cardBase = isDarkMode 
     ? "bg-secondary/40 border-primary/20 hover:bg-secondary/60" 
     : "bg-white border-gray-300 shadow-sm hover:shadow-md";
