@@ -1,10 +1,10 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ResidentDashboad } from "./ResidentDashboad";
-import ResidentLandingPage from "./resident/LandingPage";
 import UserProfileCard from "./resident/ProfilePage";
 import NotificationsPage from "./resident/NotificationsPage";
 import { Header } from "../components/resident/Header";
-import { use } from "react";
+// import { use } from "react";
+import Home from "./home/HomeLanding";
 
 export function HomePage({ user }) {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export function HomePage({ user }) {
     return (
         <div className="w-full h-full">
             <Routes>
-                <Route index element={<ResidentLandingPage user={user} />} />
+                <Route index element={<Home user={user} />} />
                 <Route path="resident/dashboard" element={<><Header/><ResidentDashboad /></>} />                
                 <Route 
                     path="/notifications" 
