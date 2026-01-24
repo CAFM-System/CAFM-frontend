@@ -1,11 +1,11 @@
-import { LogOut, Sun, Moon } from "lucide-react"; // 👈 ADDED: Sun, Moon
+import { LogOut, Sun, Moon } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 export default function AdminDashboardHeader({ title, name, department }) {
   const navigate = useNavigate();
   
-  // 👇 ADDED: Use theme hook
+  // Use theme hook
   const { isDarkMode, toggleTheme } = useTheme();
 
   const onLogout = () => {
@@ -13,7 +13,7 @@ export default function AdminDashboardHeader({ title, name, department }) {
     navigate("/login");
   };
 
-  // 👇 ADDED: Theme-aware classes
+  // Theme-aware classes
   const headerBg = isDarkMode
     ? "bg-[#1c2625] border-primary/10"
     : "bg-white border-gray-200";
@@ -45,7 +45,7 @@ export default function AdminDashboardHeader({ title, name, department }) {
         {/* Right section */}
         <div className="flex items-center gap-3">
           
-          {/* 👇 ADDED: Theme Toggle Button */}
+          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
             className={`p-2 rounded-md transition-all ${buttonClasses}`}

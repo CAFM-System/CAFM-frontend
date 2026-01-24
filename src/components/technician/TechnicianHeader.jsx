@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Wrench, User, LogOut, Sun, Moon } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 /**
  * TechnicianHeader Component
  * - Light Mode: bg-secondary (#334443) 
  * - Dark Mode: bg-[#1c2625] (Deepened Teal)
  */
-export default function TechnicianHeader() { // 👈 REMOVED: isDarkMode, toggleTheme props
+export default function TechnicianHeader() { 
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 👇 ADDED: Use theme hook
+  // Use theme hook
   const theme = useTheme();
   const { isDarkMode, toggleTheme } = theme;
   

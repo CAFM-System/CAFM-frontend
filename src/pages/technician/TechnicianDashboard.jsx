@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import TicketService from "../../services/ticket.service";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 /**
  * TechnicianDashboard
@@ -30,7 +30,7 @@ export function TechnicianDashboard() {
   // 1. STATE MANAGEMENT
   // ============================================================================
   
-  // 👇 CHANGED: Use theme hook instead of local state
+  
   const theme = useTheme();
   const { isDarkMode, toggleTheme } = theme;
 
@@ -78,7 +78,7 @@ export function TechnicianDashboard() {
   const completedTickets = filteredTickets.filter((t) => t.status === "completed" || t.status === "resolved" || t.status === "closed");
 
   return (
-    // 👇 CHANGED: Use theme.bg instead of mainBgClass
+    
     <div className={`min-h-screen transition-colors duration-300 ${theme.bg} font-sans`}>
 
       {/* HEADER: Pass state and toggle function down */}
@@ -90,7 +90,7 @@ export function TechnicianDashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8 mb-6">
           <div>
             <h1 className={`text-3xl font-bold ${theme.text}`}>
-              Welcome back, <span className="text-accent">{userName}</span> 👋
+              Welcome back, <span className="text-accent">{userName}</span> 
             </h1>
             <p className={`${theme.subText} mt-1 text-sm`}>Maintenance Department</p>
           </div>

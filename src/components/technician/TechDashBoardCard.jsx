@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 const variantStyles = {
   blue: {
@@ -30,9 +30,9 @@ export default function DashboardCard({
   icon: Icon, 
   variant = "blue", 
   onClick
-  // 👆 REMOVED: isDarkMode prop
+ 
 }) {
-  // 👇 ADDED: Use theme hook
+  
   const { isDarkMode } = useTheme();
   
   const styles = variantStyles[variant] || variantStyles.blue;

@@ -5,10 +5,10 @@ import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer,
 import downloadBlob from "../../../util/downloadFile.js";
 import ReportService from "../../services/report.service.js";
 import toast from "react-hot-toast";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 const ReportsAnalytics = (data) => {
-    // 👇 ADDED: Use theme hook
+    //  Use theme hook
     const { isDarkMode } = useTheme();
 
     const [totalTickets, setTotalTickets] = useState(0);
@@ -34,7 +34,7 @@ const ReportsAnalytics = (data) => {
     });
     const tickets = data.data || [];
 
-    // 👇 ADDED: Theme-aware classes
+    // Theme-aware classes
     const cardBg = isDarkMode
         ? "bg-secondary/50 border-primary/10"
         : "bg-white border-gray-200";

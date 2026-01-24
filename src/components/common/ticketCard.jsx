@@ -2,10 +2,9 @@ import { GrLocation } from "react-icons/gr";
 import { FiUser } from "react-icons/fi";
 import { GoClock } from "react-icons/go";
 import { BsExclamationCircle } from "react-icons/bs";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
-export default function Ticketcard({ ticket, onClick }) { // 👈 REMOVED: isDarkMode prop
-  // 👇 ADDED: Use theme hook
+export default function Ticketcard({ ticket, onClick }) { 
   const { isDarkMode } = useTheme();
 
   const statusColors = {

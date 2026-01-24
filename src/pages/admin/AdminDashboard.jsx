@@ -6,10 +6,10 @@ import TicketCard from "../../components/common/ticketCard";
 import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
 import TicketDetails from "../../components/admin/TicketDetails";
 import TicketService from "../../services/ticket.service";
-import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
+import { useTheme } from "../../hooks/useTheme"; 
 
 export default function AdminDashboard() {
-    // 👇 ADDED: Use theme hook
+
     const theme = useTheme();
     const { isDarkMode } = theme;
 
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
     });
 
     return (
-        // 👇 ADDED: Theme-aware background
+        // Theme-aware background
         <div className={`min-h-screen transition-colors duration-300 ${theme.bg}`}>
             <AdminDashboardHeader
                 title="Admin Dashboard"
