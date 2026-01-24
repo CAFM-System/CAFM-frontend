@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import TicketService from "../../services/ticket.service";
+import { useTheme } from "../../hooks/useTheme"; // 👈 ADDED
 
 /**
  * TechnicianDashboard
@@ -29,8 +30,9 @@ export function TechnicianDashboard() {
   // 1. STATE MANAGEMENT
   // ============================================================================
   
-  // Theme State (Lifted up from Header)
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // 👇 CHANGED: Use theme hook instead of local state
+  const theme = useTheme();
+  const { isDarkMode, toggleTheme } = theme;
 
   const [activeTab, setActiveTab] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -44,11 +46,6 @@ export function TechnicianDashboard() {
   // ============================================================================
   // 2. HELPER FUNCTIONS
   // ============================================================================
-
-  // Toggle Function passed down to Header
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
-  };
 
   useEffect(() => {
     if (isLoading) {
@@ -80,21 +77,9 @@ export function TechnicianDashboard() {
   const inProgressTickets = filteredTickets.filter((t) => t.status === "in_progress");
   const completedTickets = filteredTickets.filter((t) => t.status === "completed" || t.status === "resolved" || t.status === "closed");
 
-  // ============================================================================
-  // 4. THEME STYLES (Dynamic Classes)
-  // ============================================================================
-  
-  // Main Background: Cream (Primary) in Light, Dark Teal (Secondary) in Dark
-  const mainBgClass = isDarkMode ? "bg-secondary" : "bg-primary";
-  
-  // Text Colors
-  const headingColor = isDarkMode ? "text-primary" : "text-secondary";
-  const subTextColor = isDarkMode ? "text-primary/70" : "text-gray-500";
-  const cardBgColor = isDarkMode ? "bg-secondary/50 border-primary/10" : "bg-white border-gray-100";
-
   return (
-    // WRAPPER: Applies the theme class to the whole page
-    <div className={`min-h-screen transition-colors duration-300 ${mainBgClass} font-sans`}>
+    // 👇 CHANGED: Use theme.bg instead of mainBgClass
+    <div className={`min-h-screen transition-colors duration-300 ${theme.bg} font-sans`}>
 
       {/* HEADER: Pass state and toggle function down */}
       <TechnicianHeader isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
@@ -104,66 +89,66 @@ export function TechnicianDashboard() {
         {/* ---------------- WELCOME SECTION ---------------- */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8 mb-6">
           <div>
-            <h1 className={`text-3xl font-bold ${headingColor}`}>
+            <h1 className={`text-3xl font-bold ${theme.text}`}>
               Welcome back, <span className="text-accent">{userName}</span> 👋
             </h1>
-            <p className={`${subTextColor} mt-1 text-sm`}>Maintenance Department</p>
+            <p className={`${theme.subText} mt-1 text-sm`}>Maintenance Department</p>
           </div>
 
           {/* Date Widget */}
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm border transition-colors ${cardBgColor}`}>
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm border transition-colors ${theme.cardBg}`}>
             <Calendar className="h-4 w-4 text-accent" />
-            <span className={`text-sm font-medium ${isDarkMode ? "text-primary" : "text-gray-600"}`}>
+            <span className={`text-sm font-medium ${theme.text}`}>
                {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </span>
           </div>
         </div>
 
         {/* ---------------- OVERVIEW CARDS ---------------- */}
-<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-  
-  <DashboardCard 
-    title="Total Tickets"
-    value={tickets.length}
-    icon={ClipboardList}
-    variant="blue"
-    onClick={() => setActiveTab("all")}
-    isDarkMode={isDarkMode}  // <--- ADD THIS
-  />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          
+          <DashboardCard 
+            title="Total Tickets"
+            value={tickets.length}
+            icon={ClipboardList}
+            variant="blue"
+            onClick={() => setActiveTab("all")}
+            isDarkMode={isDarkMode}
+          />
 
-  <DashboardCard 
-    title="New Assigned"
-    value={assignedTickets.length}
-    icon={AlertCircle}
-    variant="purple"
-    onClick={() => setActiveTab("assigned")}
-    isDarkMode={isDarkMode}  // <--- ADD THIS
-  />
+          <DashboardCard 
+            title="New Assigned"
+            value={assignedTickets.length}
+            icon={AlertCircle}
+            variant="purple"
+            onClick={() => setActiveTab("assigned")}
+            isDarkMode={isDarkMode}
+          />
 
-  <DashboardCard 
-    title="In Progress"
-    value={inProgressTickets.length}
-    icon={Clock4}
-    variant="amber"
-    onClick={() => setActiveTab("in_progress")}
-    isDarkMode={isDarkMode}  // <--- ADD THIS
-  />
+          <DashboardCard 
+            title="In Progress"
+            value={inProgressTickets.length}
+            icon={Clock4}
+            variant="amber"
+            onClick={() => setActiveTab("in_progress")}
+            isDarkMode={isDarkMode}
+          />
 
-  <DashboardCard 
-    title="Completed"
-    value={completedTickets.length}
-    icon={CheckCircle}
-    variant="green"
-    onClick={() => setActiveTab("completed")}
-    isDarkMode={isDarkMode}  // <--- ADD THIS
-  />
+          <DashboardCard 
+            title="Completed"
+            value={completedTickets.length}
+            icon={CheckCircle}
+            variant="green"
+            onClick={() => setActiveTab("completed")}
+            isDarkMode={isDarkMode}
+          />
 
-</div>
+        </div>
 
         {/* ---------------- TABS + PRIORITY FILTER ---------------- */}
         <div className="w-full mt-8 mb-6">
 
-          <div className={`flex flex-col md:flex-row md:items-center md:justify-between border-b ${isDarkMode ? "border-primary/20" : "border-gray-200"}`}>
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between border-b ${theme.border}`}>
             
             {/* TABS */}
             <div className="flex gap-6 overflow-x-auto pb-[-1px]">
@@ -200,7 +185,7 @@ export function TechnicianDashboard() {
             {/* PRIORITY FILTER */}
             <div className="flex items-center gap-3 mt-4 md:mt-0 pb-2 md:pb-0">
               <div className="relative">
-                  <Filter className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${subTextColor}`} />
+                  <Filter className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${theme.subText}`} />
                   <select
                     value={priorityFilter}
                     onChange={(e) => setPriorityFilter(e.target.value)}
@@ -213,12 +198,12 @@ export function TechnicianDashboard() {
                     `}
                   >
                     <option value="all">All Priorities</option>
-                      <option value="urgent">🔴 Urgent</option>
-              <option value="high">🟠 High</option>
-              <option value="medium">🟡 Medium</option>
-              <option value="low">🟢 Low</option>
+                    <option value="urgent">🔴 Urgent</option>
+                    <option value="high">🟠 High</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="low">🟢 Low</option>
                   </select>
-                  <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none ${subTextColor}`} />
+                  <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none ${theme.subText}`} />
               </div>
             </div>
           </div>
@@ -238,13 +223,13 @@ export function TechnicianDashboard() {
         {/* ---------------- TICKET LIST ---------------- */}
         <div className="mb-12">
           {activeTab === "all" &&
-            renderList(filteredTickets, ClipboardList, "No tickets found.", setSelectedTicket, isDarkMode)}
+            renderList(filteredTickets, ClipboardList, "No tickets found.", setSelectedTicket, isDarkMode, theme)}
           {activeTab === "assigned" &&
-            renderList(assignedTickets, AlertCircle, "No assigned tickets.", setSelectedTicket, isDarkMode)}
+            renderList(assignedTickets, AlertCircle, "No assigned tickets.", setSelectedTicket, isDarkMode, theme)}
           {activeTab === "in_progress" &&
-            renderList(inProgressTickets, Clock4, "No tickets in progress.", setSelectedTicket, isDarkMode)}
+            renderList(inProgressTickets, Clock4, "No tickets in progress.", setSelectedTicket, isDarkMode, theme)}
           {activeTab === "completed" &&
-            renderList(completedTickets, CheckCircle, "No completed tickets.", setSelectedTicket, isDarkMode)}
+            renderList(completedTickets, CheckCircle, "No completed tickets.", setSelectedTicket, isDarkMode, theme)}
         </div>
 
         {/* ---------------- DETAILS POPUP ---------------- */}
@@ -253,7 +238,7 @@ export function TechnicianDashboard() {
             data={selectedTicket}
             onClose={() => setSelectedTicket(null)}
             refresh={() => setIsLoading(true)}
-            isDarkMode={isDarkMode} // Pass theme to modal if needed
+            isDarkMode={isDarkMode}
           />
         )}
 
@@ -296,7 +281,7 @@ function TabButton({ label, activeTab, setActiveTab, count, isDarkMode }) {
 }
 
 /* ---------------- REUSABLE TICKET LIST ---------------- */
-function renderList(list, Icon, emptyMessage, setSelectedTicket, isDarkMode) {
+function renderList(list, Icon, emptyMessage, setSelectedTicket, isDarkMode, theme) {
   const emptyBorder = isDarkMode ? "border-primary/20 bg-primary/5" : "border-gray-300 bg-gray-50/50";
   const emptyText = isDarkMode ? "text-primary/50" : "text-gray-500";
   const iconColor = isDarkMode ? "text-primary/30" : "text-gray-300";
@@ -313,7 +298,7 @@ function renderList(list, Icon, emptyMessage, setSelectedTicket, isDarkMode) {
           key={ticket.ticket_id}
           ticket={ticket}
           onClick={() => setSelectedTicket(ticket)}
-          isDarkMode={isDarkMode} /* <--- Applied mode here */
+          isDarkMode={isDarkMode}
         />
       ))}
     </div>

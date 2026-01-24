@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #F0A500;
-  --color-primary: #FCF9EA;
-  --color-secondary: #334443;
+  /* -- The Sting (Rich Sunflower) -- */
+  --color-accent: #EAB308;
+
+  /* -- The Structure (Ink Black) -- */
+  --color-secondary: #18181B;
+
+  /* -- The Canvas (Pure White) -- */
+  --color-primary: #FFFFFF;
 }
+
+/* Enable class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
