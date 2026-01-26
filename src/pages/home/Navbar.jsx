@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
-  // Navigation handlers
   const handleNavigateToLogin = () => navigate("/login");
   const handleNavigateToSignUp = () => navigate("/register");
 
-  // Smooth scroll handler
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -16,81 +15,116 @@ export default function Navbar() {
     }
   };
 
+  /* 🌙 DARK MODE STATE */
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50
-                    bg-gradient-to-r from-[#0b3530] via-[#0f3f3a] to-[#0b3530]
-                    backdrop-blur-lg shadow-lg">
+    <nav
+      className="
+        fixed top-0 left-0 w-full z-50
+        bg-primary dark:bg-secondary
+        text-secondary dark:text-primary
+        shadow-lg backdrop-blur-md
+      "
+    >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* LEFT: LOGO */}
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => scrollToSection("Home")}
+        >
           <img
-            src="/images/logo_withoutBG.png"
+            src="/images/logo_withoutBG1.png"
             alt="Logo"
-            className="h-10 w-auto cursor-pointer"
-            onClick={() => scrollToSection("hero")}
+            className="h-10 w-auto"
           />
-          <span className="text-[#a7f3e3] font-bold text-lg">
+          <span className="font-bold text-lg text-accent">
             CAFM Portal
           </span>
         </div>
 
         {/* CENTER: NAV LINKS */}
-        <div className="hidden md:flex justify-center items-center gap-6">
-          <button
-            onClick={() => scrollToSection("hero")}
-            className="px-4 py-2 rounded-xl text-white
-                       hover:bg-[#2fd6b5]/20 transition"
-          >
-            Home
-          </button>
-          <button
-            onClick={() => scrollToSection("features")}
-            className="px-4 py-2 rounded-xl text-white
-                       hover:bg-[#2fd6b5]/20 transition"
-          >
-            Features
-          </button>
-          <button
-            onClick={() => scrollToSection("about")}
-            className="px-4 py-2 rounded-xl text-white
-                       hover:bg-[#2fd6b5]/20 transition"
-          >
-            About
-          </button>
+        <div className="hidden md:flex items-center gap-6">
+          {["Home", "features", "about"].map((section) => (
+            <button
+              key={section}
+              onClick={() => scrollToSection(section)}
+              className="
+                px-4 py-2 rounded-lg
+                hover:text-accent
+                hover:bg-accent/10
+                transition
+              "
+            >
+              {section.charAt(0).toUpperCase() + section.slice(1)}
+            </button>
+          ))}
         </div>
 
-        {/* RIGHT: AUTH BUTTONS */}
+        {/* RIGHT: ACTIONS */}
         <div className="flex items-center gap-3">
-  <div className="flex items-center gap-3">
-    
-    {/* Login */}
-    <button
-      onClick={handleNavigateToLogin}
-      className="px-6 py-2 border-2 border-[#2fd6b5] text-[#2fd6b5]
-                 rounded-lg font-medium
-                 hover:bg-[#2fd6b5] hover:text-white
-                 transition-all duration-200"
-    >
-      Login
-    </button>
 
-    {/* Sign Up */}
-    <button
-      onClick={handleNavigateToSignUp}
-      className="px-6 py-2 bg-[#2fd6b5] text-white
-                 rounded-lg font-medium whitespace-nowrap
-                 hover:bg-[#2fd6b5]
-                 hover:shadow-md hover:-translate-y-[1px]
-                 transition-all duration-200"
-    >
-      Sign Up
-    </button>
+          {/* 🌙 DARK / LIGHT TOGGLE */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="
+              w-10 h-10 rounded-full
+              flex items-center justify-center
+              border border-accent/40
+              hover:bg-accent/10
+              transition
+            "
+            aria-label="Toggle theme"
+          >
+            {darkMode ? (
+              <Sun className="h-5 w-5 text-accent" />
+            ) : (
+              <Moon className="h-5 w-5 text-accent" />
+            )}
+          </button>
 
-  </div>
-</div>
+          {/* Login */}
+          <button
+            onClick={handleNavigateToLogin}
+            className="
+              px-6 py-2 rounded-lg font-medium
+              border-2 border-accent
+              text-accent
+              hover:bg-accent
+              hover:text-secondary
+              transition-all duration-200
+            "
+          >
+            Login
+          </button>
 
+          {/* Sign Up */}
+          <button
+            onClick={handleNavigateToSignUp}
+            className="
+              px-6 py-2 rounded-lg font-medium whitespace-nowrap
+              bg-accent text-secondary
+              hover:shadow-md hover:-translate-y-[1px]
+              transition-all duration-200
+            "
+          >
+            Sign Up
+          </button>
 
+        </div>
       </div>
     </nav>
   );

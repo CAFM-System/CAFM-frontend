@@ -1,69 +1,131 @@
 import React from "react";
 import { Wrench, Bell, ShieldCheck } from "lucide-react";
+import { motion }  from "framer-motion";
+
+const features = [
+  {
+    icon: Wrench,
+    title: "Maintenance Requests",
+    desc: "Submit and track maintenance requests in real time without phone calls.",
+  },
+  {
+    icon: Bell,
+    title: "Instant Notifications",
+    desc: "Stay informed with updates on repairs, announcements, and alerts.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Secure Platform",
+    desc: "Your data is protected with enterprise-grade security and access control.",
+  },
+];
 
 export default function FeaturesSection() {
   return (
     <section
       id="features"
-      className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0b3530]"
+      className="relative py-28 px-4 sm:px-6 lg:px-8
+                 bg-primary dark:bg-secondary overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Soft background glow */}
+      <div className="absolute -top-40 left-1/2 -translate-x-1/2
+                      w-[800px] h-[800px] bg-accent/15
+                      blur-[160px] rounded-full pointer-events-none" />
 
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-2 bg-[#1f6f63] text-[#2fd6b5] rounded-full text-sm mb-4">
+      <div className="relative max-w-7xl mx-auto">
+
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-20"
+        >
+          <span
+            className="
+              inline-block px-4 py-2 rounded-full text-sm font-medium mb-4
+              bg-accent/15 text-accent
+            "
+          >
             Powerful Features
           </span>
-          <h2 className="text-4xl font-bold text-[#a7f3e3] mb-4">
-            Everything You Need in One Place
+
+          <h2 className="text-4xl lg:text-5xl font-extrabold
+                         text-secondary dark:text-primary mb-5">
+            Everything You Need <br />
+            <span className="text-accent">In One Place</span>
           </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto">
-            Manage your apartment easily with smart tools designed for residents and management.
+
+          <p className="text-secondary/70 dark:text-primary/70
+                        max-w-2xl mx-auto">
+            Manage your apartment easily with smart tools designed
+            for residents and management.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {features.map((f, i) => {
+            const Icon = f.icon;
 
-          {/* Card 1 */}
-          <div className="group bg-[#0f3f3a] border border-[#1f6f63] p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
-            <div className="w-14 h-14 flex items-center justify-center bg-[#1f6f63] rounded-xl mb-6 group-hover:scale-110 transition">
-              <Wrench className="text-[#2fd6b5]" size={28} />
-            </div>
-            <h3 className="text-xl font-semibold text-[#a7f3e3] mb-3">
-              Maintenance Requests
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              Submit and track maintenance requests in real time without phone calls.
-            </p>
-          </div>
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: i * 0.15 }}
+                whileHover={{
+                  y: -12,
+                  rotateX: 6,
+                  rotateY: -6,
+                }}
+                style={{ perspective: 1200 }}
+                className="
+                  group relative rounded-3xl p-8
+                  bg-white/70 dark:bg-white/5
+                  border border-accent/20
+                  backdrop-blur-xl
+                  shadow-lg hover:shadow-2xl
+                  transition-all
+                "
+              >
+                {/* Icon glow */}
+                <div className="
+                  absolute -top-10 left-1/2 -translate-x-1/2
+                  w-24 h-24 bg-accent/30
+                  blur-[60px] rounded-full
+                  opacity-0 group-hover:opacity-100
+                  transition
+                " />
 
-          {/* Card 2 */}
-          <div className="group bg-[#0f3f3a] border border-[#1f6f63] p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
-            <div className="w-14 h-14 flex items-center justify-center bg-[#1f6f63] rounded-xl mb-6 group-hover:scale-110 transition">
-              <Bell className="text-[#2fd6b5]" size={28} />
-            </div>
-            <h3 className="text-xl font-semibold text-[#a7f3e3] mb-3">
-              Instant Notifications
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              Stay informed with updates on repairs, announcements, and alerts.
-            </p>
-          </div>
+                {/* Icon */}
+                <div
+                  className="
+                    relative w-14 h-14 flex items-center justify-center
+                    rounded-xl mb-6
+                    bg-accent text-secondary
+                    shadow-md
+                    group-hover:scale-110 transition
+                  "
+                >
+                  <Icon size={28} />
+                </div>
 
-          {/* Card 3 */}
-          <div className="group bg-[#0f3f3a] border border-[#1f6f63] p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
-            <div className="w-14 h-14 flex items-center justify-center bg-[#1f6f63] rounded-xl mb-6 group-hover:scale-110 transition">
-              <ShieldCheck className="text-[#2fd6b5]" size={28} />
-            </div>
-            <h3 className="text-xl font-semibold text-[#a7f3e3] mb-3">
-              Secure Platform
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              Your data is protected with enterprise-grade security and access control.
-            </p>
-          </div>
+                {/* Text */}
+                <h3 className="text-xl font-semibold
+                               text-secondary dark:text-primary mb-3">
+                  {f.title}
+                </h3>
 
+                <p className="text-secondary/70 dark:text-primary/70
+                              leading-relaxed">
+                  {f.desc}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
