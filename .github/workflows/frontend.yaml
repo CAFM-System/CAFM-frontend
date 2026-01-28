@@ -86,10 +86,10 @@ jobs:
           vuln-type: os,library
           directory: .
 
-      - name: Gitleaks scan
-        uses: gitleaks/gitleaks-action@v2
+      - name: Gitleaks scan (community version)
+        uses: gacts/gitleaks@v1
         with:
-          verbose: true
+          version: latest
           exit-code: 1
 
   # -----------------------------
