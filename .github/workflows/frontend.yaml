@@ -87,7 +87,7 @@ jobs:
           directory: .
 
       - name: Gitleaks scan
-        uses: zricethezav/gitleaks-action@v8
+        uses: gitleaks/gitleaks-action@v2
         with:
           verbose: true
           exit-code: 1
