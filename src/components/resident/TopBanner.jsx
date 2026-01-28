@@ -23,10 +23,14 @@ export default function TopBanner({ openTicket }) {
 
   if (loading) {
     return (
-      <div className="relative overflow-hidden rounded-3xl mb-10 bg-[color:var(--color-secondary)]">
-        <div className="p-10 text-[color:var(--color-primary)]">
-          Loading...
-        </div>
+      <div
+        className="
+          relative overflow-hidden rounded-3xl mb-10
+          bg-[color:var(--color-secondary)]
+          dark:bg-black
+        "
+      >
+        <div className="p-10 text-white">Loading...</div>
       </div>
     );
   }
@@ -35,47 +39,54 @@ export default function TopBanner({ openTicket }) {
 
   return (
     <div className="relative overflow-hidden rounded-3xl mb-10">
-      {/* Background gradient */}
+      {/* ===== Background Gradient ===== */}
       <div
-        className="absolute inset-0 bg-gradient-to-r
-        from-[color:var(--color-secondary)]
-        via-[color:var(--color-accent)]
-        to-[color:var(--color-secondary)] opacity-90"
+        className="
+          absolute inset-0
+          bg-gradient-to-r
+          from-[color:var(--color-secondary)]
+          via-[color:var(--color-accent)]
+          to-[color:var(--color-secondary)]
+          dark:from-black dark:via-[color:var(--color-accent)] dark:to-black
+          opacity-90
+        "
       />
 
       <div className="relative p-10">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          {/* Left content */}
+
+          {/* ===== Left Content ===== */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-5 w-5 text-[color:var(--color-accent)]" />
-              <span className="text-[color:var(--color-primary)]/80 text-sm">
+              <span className="text-white/80 text-sm">
                 Welcome back
               </span>
             </div>
 
-            <h2 className="text-4xl text-[color:var(--color-primary)]">
+            <h2 className="text-4xl font-semibold text-white">
               Hello, {resident.profile.firstName} {resident.profile.lastName}! 👋
             </h2>
 
-            <p className="text-[color:var(--color-primary)]/80 text-lg mt-2">
+            <p className="text-white/80 text-lg mt-2">
               Hope you’re having a great day at your residence.
             </p>
           </div>
 
-          {/* Action button */}
+          {/* ===== Action Button ===== */}
           <button
             onClick={() => openTicket(true)}
             className="
-              bg-[color:var(--color-accent)]
-              text-[color:var(--color-secondary)]
               rounded-lg px-6 py-3 shadow-lg
+              bg-[color:var(--color-accent)]
+              text-black
               hover:bg-[rgba(234,179,8,0.85)]
               transition transform hover:scale-105
             "
           >
             + Create Request
           </button>
+
         </div>
       </div>
     </div>

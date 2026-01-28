@@ -1,29 +1,53 @@
-import { DessertIcon } from "lucide-react";
+export default function ResidentCard({
+  title,
+  value,
+  headericon,
+  description,
+  icon,
+  onClick,
+}) {
+  return (
+    <div
+      onClick={onClick}
+      className="
+        p-6 rounded-2xl cursor-pointer transition
+        bg-[color:var(--color-primary)]
+        dark:bg-black
+        border border-black/10 dark:border-white/10
+        shadow-sm hover:shadow-md
+      "
+    >
+      {/* ===== Header ===== */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-medium text-[color:var(--color-secondary)]/70 dark:text-white/70">
+          {title}
+        </h3>
 
-export default function ResidentCard({ title, value, headericon, description, icon, onClick }) {
-    return (
         <div
-            onClick={onClick}
-            className="p-6  bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md cursor-pointer transition"
+          className="
+            rounded-2xl p-3
+            bg-[color:var(--color-accent)]
+            text-black
+          "
         >
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-600">{title}</h3>
-                <div className="bg-[#1687A7] rounded-2xl p-3 text-white">{headericon}</div>
-            </div>
-
-            <p className="text-5xl font-bold text-gray-900 mb-2">{value}</p>
-
-
-            <div className="text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                    <span className="inline-flex w-4 h-4 mb-2">
-                        {icon}
-                    </span>
-                    {description}
-                </div>
-            </div>
-
-
+          {headericon}
         </div>
-    );
+      </div>
+
+      {/* ===== Value ===== */}
+      <p className="text-5xl font-bold text-[color:var(--color-secondary)] dark:text-white mb-2">
+        {value}
+      </p>
+
+      {/* ===== Description ===== */}
+      <div className="text-sm text-[color:var(--color-secondary)]/60 dark:text-white/60">
+        <div className="flex items-center gap-1">
+          <span className="inline-flex w-4 h-4">
+            {icon}
+          </span>
+          {description}
+        </div>
+      </div>
+    </div>
+  );
 }
