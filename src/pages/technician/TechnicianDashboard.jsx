@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import TechnicianHeader from "../../components/technician/TechnicianHeader";
-import DashboardCard from "../../components/technician/TechDashBoardCard"; 
+import DashboardCard from "../../components/technician/dashboard/TechDashBoardCard"; 
 import TicketCard from "../../components/common/ticketCard"; 
 import TicketDetails from "../../components/technician/TicketDetails";
 
@@ -18,19 +19,8 @@ import {
 import TicketService from "../../services/ticket.service";
 import { useTheme } from "../../hooks/useTheme"; 
 
-/**
- * TechnicianDashboard
- * * Handles the main layout, data fetching, and THEME STATE.
- * * Toggles between:
- * - Light Mode: bg-primary (Cream)
- * - Dark Mode: bg-secondary (Dark Teal)
- */
 export function TechnicianDashboard() {
-  // ============================================================================
   // 1. STATE MANAGEMENT
-  // ============================================================================
-  
-  
   const theme = useTheme();
   const { isDarkMode, toggleTheme } = theme;
 
@@ -40,13 +30,46 @@ export function TechnicianDashboard() {
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock user data
-  const userName = "John"; 
+  // CHANGED: Replaced hardcoded "John" with state
+  const [userName, setUserName] = useState("Technician"); 
 
-  // ============================================================================
-  // 2. HELPER FUNCTIONS
-  // ============================================================================
+  // 2. API CALLS (Tickets + User Profile)
 
+  // --- Fetch User Name ---
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
+
+        const response = await axios.get("http://localhost:4000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const userData = response.data.user;
+
+        // Logic to combine First + Last name or use 'name' field
+        let rawName = userData.name || 
+                      (userData.profile ? `${userData.profile.firstName} ${userData.profile.lastName}` : "Technician");
+        
+        // Capitalize Name
+        const formattedName = rawName
+          .toLowerCase()
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+
+        setUserName(formattedName);
+
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // --- Fetch Tickets ---
   useEffect(() => {
     if (isLoading) {
       TicketService.getTicket().then(
@@ -64,9 +87,7 @@ export function TechnicianDashboard() {
   }, [isLoading]);
 
 
-  // ============================================================================
   // 3. FILTER LOGIC
-  // ============================================================================
 
   const filteredTickets =
     priorityFilter === "all"
@@ -82,7 +103,7 @@ export function TechnicianDashboard() {
     <div className={`min-h-screen transition-colors duration-300 ${theme.bg} font-sans`}>
 
       {/* HEADER: Pass state and toggle function down */}
-      <TechnicianHeader isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+
 
       <main className="max-w-8xl mx-auto px-6 py-4">
 
@@ -90,7 +111,8 @@ export function TechnicianDashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8 mb-6">
           <div>
             <h1 className={`text-3xl font-bold ${theme.text}`}>
-              Welcome back, <span className="text-accent">{userName}</span> 
+              {/* DYNAMIC USER NAME DISPLAYED HERE */}
+              Welcome back, <span className="text-accent">{userName} 👋 </span> 
             </h1>
             <p className={`${theme.subText} mt-1 text-sm`}>Maintenance Department</p>
           </div>
