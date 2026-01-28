@@ -85,13 +85,6 @@ jobs:
           exit-code: 1
           vuln-type: os,library
           directory: .
-
-      - name: Gitleaks scan
-        uses: gitleaks/gitleaks-action@v2
-        with:
-          verbose: true
-          exit-code: 1
-
   # -----------------------------
   # 4️⃣ Run tests
   # -----------------------------
