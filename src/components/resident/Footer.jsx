@@ -1,4 +1,4 @@
-import { Home, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer({
   onNavigateToDashboard,
@@ -6,47 +6,79 @@ export default function Footer({
   onNavigateToProfile,
 }) {
   return (
-    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#1687A7]/5 via-[#D3E0EA]/30 to-[#F6F5F5]/50 backdrop-blur-xl border-t border-[#D3E0EA]/50">
+    <footer
+      className="
+        relative py-12 px-4 sm:px-6 lg:px-8
+        bg-gradient-to-br
+        from-black/5 via-yellow-400/5 to-white
+        dark:from-black dark:via-black dark:to-black
+        backdrop-blur-xl
+        border-t border-black/10 dark:border-white/10
+      "
+    >
       <div className="max-w-7xl mx-auto">
 
+        {/* ===== Top Grid ===== */}
         <div className="grid md:grid-cols-4 gap-8 mb-8">
 
-          {/* Brand */}
+          {/* ===== Brand ===== */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-gradient-to-br from-[#1687A7] to-[#126b8a] p-2 rounded-xl shadow-lg">
-                <Home className="h-5 w-5 text-white" />
+              <div className="bg-[color:var(--color-accent)] p-2 rounded-xl shadow-lg">
+                <img
+                  src="/images/logo_withoutBG1.png"
+                  alt="CAFM Logo"
+                  className="h-6 w-6 object-contain"
+                />
               </div>
-              <h3 className="text-xl text-[#1687A7]">CAFM Portal</h3>
+
+              <h3 className="text-xl font-semibold text-[color:var(--color-secondary)] dark:text-white">
+                CAFM Portal
+              </h3>
             </div>
 
-            <p className="text-gray-700 mb-4">
+            <p className="text-[color:var(--color-secondary)]/70 dark:text-white/70 mb-4 max-w-md">
               Professional apartment facilities management and maintenance services.
             </p>
 
             <div className="flex gap-3">
-              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
-                <Mail className="h-5 w-5" />
-              </button>
-
-              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
-                <Phone className="h-5 w-5" />
-              </button>
-
-              <button className="p-3 bg-white/60 backdrop-blur-sm border border-[#D3E0EA]/50 rounded-xl hover:bg-gradient-to-br hover:from-[#1687A7] hover:to-[#126b8a] hover:text-white hover:border-transparent transition-all shadow-sm hover:shadow-lg">
-                <MapPin className="h-5 w-5" />
-              </button>
+              {[Mail, Phone, MapPin].map((Icon, i) => (
+                <button
+                  key={i}
+                  className="
+                    p-3 rounded-xl
+                    bg-white/60 dark:bg-white/10
+                    border border-black/10 dark:border-white/10
+                    backdrop-blur-md
+                    hover:bg-[color:var(--color-accent)]
+                    hover:text-black
+                    transition-all shadow-sm hover:shadow-lg
+                  "
+                >
+                  <Icon className="h-5 w-5" />
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-2xl p-6 shadow-lg">
-            <h4 className="text-[#1687A7] mb-4">Quick Links</h4>
-            <ul className="space-y-2">
+          {/* ===== Quick Links ===== */}
+          <div
+            className="
+              rounded-2xl p-6 shadow-lg
+              bg-white/60 dark:bg-white/5
+              backdrop-blur-md
+              border border-black/10 dark:border-white/10
+            "
+          >
+            <h4 className="mb-4 font-semibold text-[color:var(--color-secondary)] dark:text-white">
+              Quick Links
+            </h4>
+
+            <ul className="space-y-2 text-sm">
               <li>
                 <button
                   onClick={onNavigateToDashboard}
-                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                  className="text-[color:var(--color-secondary)]/70 dark:text-white/70 hover:text-[color:var(--color-secondary)] dark:hover:text-white transition"
                 >
                   Dashboard
                 </button>
@@ -55,7 +87,7 @@ export default function Footer({
               <li>
                 <button
                   onClick={onNavigateToNotifications}
-                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                  className="text-[color:var(--color-secondary)]/70 dark:text-white/70 hover:text-[color:var(--color-secondary)] dark:hover:text-white transition"
                 >
                   Notifications
                 </button>
@@ -64,7 +96,7 @@ export default function Footer({
               <li>
                 <button
                   onClick={onNavigateToProfile}
-                  className="text-[#1687A7]/70 hover:text-[#1687A7] transition-colors"
+                  className="text-[color:var(--color-secondary)]/70 dark:text-white/70 hover:text-[color:var(--color-secondary)] dark:hover:text-white transition"
                 >
                   Profile
                 </button>
@@ -72,31 +104,77 @@ export default function Footer({
             </ul>
           </div>
 
-          {/* Support */}
-          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-2xl p-6 shadow-lg">
-            <h4 className="text-[#1687A7] mb-4">Support</h4>
-            <ul className="space-y-2">
-              <li className="text-gray-700">Help Center</li>
-              <li className="text-gray-700">Contact Us</li>
-              <li className="text-gray-700">FAQs</li>
+          {/* ===== Support ===== */}
+          <div
+            className="
+              rounded-2xl p-6 shadow-lg
+              bg-white/60 dark:bg-white/5
+              backdrop-blur-md
+              border border-black/10 dark:border-white/10
+            "
+          >
+            <h4 className="mb-4 font-semibold text-[color:var(--color-secondary)] dark:text-white">
+              Support
+            </h4>
+
+            <ul className="space-y-2 text-sm text-[color:var(--color-secondary)]/70 dark:text-white/70">
+              <li className="hover:text-[color:var(--color-secondary)] dark:hover:text-white transition cursor-pointer">
+                Help Center
+              </li>
+              <li className="hover:text-[color:var(--color-secondary)] dark:hover:text-white transition cursor-pointer">
+                Contact Us
+              </li>
+              <li className="hover:text-[color:var(--color-secondary)] dark:hover:text-white transition cursor-pointer">
+                FAQs
+              </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#D3E0EA]/50 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-6 py-3 shadow-sm">
-            <p className="text-gray-700 text-sm">
+        {/* ===== Bottom Bar ===== */}
+        <div
+          className="
+            pt-8 flex flex-col md:flex-row justify-between items-center gap-4
+            border-t border-black/10 dark:border-white/10
+          "
+        >
+          <div
+            className="
+              px-6 py-3 rounded-xl shadow-sm
+              bg-white/60 dark:bg-white/5
+              backdrop-blur-md
+              border border-black/10 dark:border-white/10
+            "
+          >
+            <p className="text-sm text-[color:var(--color-secondary)]/70 dark:text-white/70">
               © 2024 CAFM Portal. All rights reserved.
             </p>
           </div>
 
           <div className="flex gap-3">
-            <button className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-5 py-2.5 text-sm text-gray-700 hover:text-[#1687A7] hover:bg-white/60 transition-all shadow-sm">
+            <button
+              className="
+                px-5 py-2.5 rounded-xl text-sm
+                bg-white/60 dark:bg-white/5
+                border border-black/10 dark:border-white/10
+                text-[color:var(--color-secondary)]/70 dark:text-white/70
+                hover:text-[color:var(--color-secondary)] dark:hover:text-white
+                transition shadow-sm
+              "
+            >
               Privacy Policy
             </button>
 
-            <button className="bg-white/40 backdrop-blur-md border border-[#D3E0EA]/50 rounded-xl px-5 py-2.5 text-sm text-gray-700 hover:text-[#1687A7] hover:bg-white/60 transition-all shadow-sm">
+            <button
+              className="
+                px-5 py-2.5 rounded-xl text-sm
+                bg-white/60 dark:bg-white/5
+                border border-black/10 dark:border-white/10
+                text-[color:var(--color-secondary)]/70 dark:text-white/70
+                hover:text-[color:var(--color-secondary)] dark:hover:text-white
+                transition shadow-sm
+              "
+            >
               Terms of Service
             </button>
           </div>
