@@ -10,7 +10,7 @@ export function FeedbackCard({
   feedback,
   customerName,
   location,
-  date,
+  ticketDate,
 }) {
   const { isDarkMode } = useTheme();
 
@@ -91,7 +91,7 @@ export function FeedbackCard({
         
         <div className="flex items-center gap-2 ml-auto">
           <Calendar className="h-4 w-4" />
-          <span>{new Date(date).toLocaleDateString()}</span>
+          <span>{new Date(ticketDate).toLocaleDateString()}</span>
         </div>
       </div>
 
