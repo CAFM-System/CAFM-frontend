@@ -100,7 +100,7 @@ export function Header({ notificationCount = 0 }) {
               Dashboard
             </NavLink>
 
-            <NavLink to="/notifications" className={navClass}>
+            <NavLink to="/resident/notifications" className={navClass}>
               <Bell className="h-4 w-4" />
               Notifications
               {notificationCount > 0 && (
@@ -111,7 +111,7 @@ export function Header({ notificationCount = 0 }) {
               )}
             </NavLink>
 
-            <NavLink to="/profile" className={navClass}>
+            <NavLink to="/resident/profile" className={navClass}>
               <User className="h-4 w-4" />
               Profile
             </NavLink>
