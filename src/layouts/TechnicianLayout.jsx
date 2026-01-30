@@ -10,10 +10,10 @@ export default function TechnicianLayout() {
     <div className={`min-h-screen ${bg} transition-colors duration-300`}>
       
       {/* 1. STATIC HEADER: This never unmounts, so User Data stays loaded! */}
-      <TechnicianHeader />
+      <TechnicianHeader/>
 
       {/* 2. DYNAMIC CONTENT: React Router swaps this part only */}
-      <div className="relative z-0"> 
+      <div className="relative"> 
         <Outlet /> 
       </div>
       

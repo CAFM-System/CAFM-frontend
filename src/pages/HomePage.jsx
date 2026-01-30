@@ -5,6 +5,7 @@ import NotificationsPage from "./resident/NotificationsPage";
 import { Header } from "../components/resident/Header";
 // import { use } from "react";
 import Home from "./home/HomeLanding";
+import Footer from "./home/Footer";
 
 export function HomePage({ user }) {
     const navigate = useNavigate();
@@ -18,18 +19,20 @@ export function HomePage({ user }) {
         <div className="w-full h-full">
             <Routes>
                 <Route index element={<Home user={user} />} />
-                <Route path="resident/dashboard" element={<><Header/><ResidentDashboad /></>} />                
-                <Route 
-                    path="/notifications" 
-                    element={
-                        <><Header/>
-                        <NotificationsPage 
-                            user={user}
-                            onViewTicket={handleViewTicket}
-                        /></>
-                    } 
-                />
-                <Route path="profile" element={<><Header/><UserProfileCard user={user} /></>} />
+                <Route path="resident">
+                    <Route path="dashboard" element={<><Header/><ResidentDashboad /></>} />                
+                    <Route 
+                        path="notifications" 
+                        element={
+                            <><Header/>
+                            <NotificationsPage 
+                                user={user}
+                                onViewTicket={handleViewTicket}
+                            /></>
+                        } 
+                    />
+                    <Route path="profile" element={<><Header/><UserProfileCard user={user} /></>} />
+                </Route>
             </Routes>
         </div>
     )
