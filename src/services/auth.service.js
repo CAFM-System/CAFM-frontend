@@ -21,6 +21,11 @@ const AuthService = {
     async register(data){
         const response = await apiClient.post("/auth/register",data);
         return response;
+    },
+
+    async updateProfile(payload){
+        const response = await apiClient.put("/auth/me", payload);
+        return response;
     }
 }
 
