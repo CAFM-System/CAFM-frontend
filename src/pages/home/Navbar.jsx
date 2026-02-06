@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Sun, Moon, LogIn } from "lucide-react";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
   const handleNavigateToLogin = () => navigate("/login");
-  const handleNavigateToSignUp = () => navigate("/register");
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -15,117 +14,93 @@ export default function Navbar() {
     }
   };
 
-  /* 🌙 DARK MODE STATE */
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
 
   return (
-    <nav
-      className="
-        fixed top-0 left-0 w-full z-50
-        bg-primary dark:bg-secondary
-        text-secondary dark:text-primary
-        shadow-lg backdrop-blur-md
+    <header className="fixed top-0 left-0 w-full z-50">
+      {/* FULLY TRANSPARENT */}
+      <div className="bg-transparent">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
+          {/* LOGO */}
+          <div className="flex items-center gap-3"
+            onClick={() => scrollToSection("Home")}
+          >
+            <img
+              src="/images/logo_withoutBG1.png"
+              alt="Logo"
+              className="h-9 w-auto"
+            />
+
+            {/*Title*/}
+            <span className="font-extrabold text-xl gradient-text">
+              FACILITRON
+            </span>
+          </div>
+
+          {/* MENU */}
+          <div className="hidden md:flex items-center gap-6">
+            {[
+              { label: "Home", id: "Home" },
+              { label: "Features", id: "features" },
+              { label: "About", id: "about" },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="
+        px-4 py-2 rounded-lg
+        text-sm font-medium
+        text-white
+        hover:text-accent
+        hover:bg-accent/10
+        transition
       "
-    >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
-        {/* LEFT: LOGO */}
-        <div
-          className="flex items-center gap-3 cursor-pointer"
-          onClick={() => scrollToSection("Home")}
-        >
-          <img
-            src="/images/logo_withoutBG1.png"
-            alt="Logo"
-            className="h-10 w-auto"
-          />
-          <span className="font-bold text-lg text-accent">
-            CAFM Portal
-          </span>
-        </div>
 
-        {/* CENTER: NAV LINKS */}
-        <div className="hidden md:flex items-center gap-6">
-          {["Home", "features", "about"].map((section) => (
+          {/* RIGHT ACTIONS */}
+          <div className="flex items-center gap-4">
+
+            {/* THEME TOGGLE */}
             <button
-              key={section}
-              onClick={() => scrollToSection(section)}
-              className="
-                px-4 py-2 rounded-lg
-                hover:text-accent
-                hover:bg-accent/10
-                transition
-              "
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition"
             >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
+              {darkMode ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-900" />
+              )}
             </button>
-          ))}
-        </div>
 
-        {/* RIGHT: ACTIONS */}
-        <div className="flex items-center gap-3">
-
-          {/* 🌙 DARK / LIGHT TOGGLE */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="
-              w-10 h-10 rounded-full
-              flex items-center justify-center
-              border border-accent/40
-              hover:bg-accent/10
-              transition
-            "
-            aria-label="Toggle theme"
-          >
-            {darkMode ? (
-              <Sun className="h-5 w-5 text-accent" />
-            ) : (
-              <Moon className="h-5 w-5 text-accent" />
-            )}
-          </button>
-
-          {/* Login */}
-          <button
-            onClick={handleNavigateToLogin}
-            className="
-              px-6 py-2 rounded-lg font-medium
-              border-2 border-accent
-              text-accent
-              hover:bg-accent
-              hover:text-secondary
-              transition-all duration-200
-            "
-          >
-            Login
-          </button>
-
-          {/* Sign Up */}
-          <button
-            onClick={handleNavigateToSignUp}
-            className="
-              px-6 py-2 rounded-lg font-medium whitespace-nowrap
-              bg-accent text-secondary
-              hover:shadow-md hover:-translate-y-[1px]
-              transition-all duration-200
-            "
-          >
-            Sign Up
-          </button>
+            {/* LOGIN BUTTON */}
+            <div
+              onClick={handleNavigateToLogin}
+              className="flex items-center gap-2 px-4 py-2 rounded-full 
+                         bg-accent text-black font-semibold
+                         hover:opacity-90 transition"
+            >
+              <LogIn className="w-4 h-4" />
+              Login
+            </div>
+          </div>
 
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
