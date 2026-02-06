@@ -3,10 +3,10 @@ import { Users, CalendarCheck, UserPlus } from "lucide-react";
 
 export default function VisitorStats({ stats, isDarkMode }) {
   
-  // Safe defaults in case stats are undefined
+  // Safe defaults
   const todayTotal = stats.today || 0;
   const preReg = stats.preRegistered || 0;
-  const onSite = Math.max(0, todayTotal - preReg); // Calculate Walk-ins
+  const onSite = stats.onSite || 0; // Use the calculated onSite from parent
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -20,7 +20,16 @@ export default function VisitorStats({ stats, isDarkMode }) {
         isDarkMode={isDarkMode} 
       />
 
-      {/* Card 2: Pre-Registered */}
+      {/* Card 2: On-Site Registered */}
+      <StatCard 
+        icon={UserPlus} 
+        label="On-Site Registered" 
+        value={onSite} 
+        color="orange" 
+        isDarkMode={isDarkMode} 
+      />
+
+      {/* Card 3: Pre-Registered */}
       <StatCard 
         icon={CalendarCheck} 
         label="Pre-Registered" 
@@ -29,45 +38,31 @@ export default function VisitorStats({ stats, isDarkMode }) {
         isDarkMode={isDarkMode} 
       />
 
-      {/* Card 3: On-Site Registered (Walk-ins) */}
-      <StatCard 
-        icon={UserPlus} 
-        label="On-Site Registered" 
-        value={onSite} 
-        color="orange" // Changed to Orange/Gold to match the "Action" theme
-        isActive={true} 
-        isDarkMode={isDarkMode} 
-      />
     </div>
   );
 }
 
-// Sub-component specific to Stats
-function StatCard({ icon: Icon, label, value, color, isActive, isDarkMode }) {
+// Sub-component
+function StatCard({ icon: Icon, label, value, color, isDarkMode }) {
   
   const colors = {
     blue: isDarkMode ? "text-blue-400 bg-blue-400/10" : "text-blue-600 bg-blue-50",
     purple: isDarkMode ? "text-purple-400 bg-purple-400/10" : "text-purple-600 bg-purple-50",
     orange: isDarkMode ? "text-[#EAB308] bg-[#EAB308]/10" : "text-orange-600 bg-orange-50",
-    emerald: isDarkMode ? "text-emerald-400 bg-emerald-400/10" : "text-emerald-600 bg-emerald-50",
   };
   
-  // Dynamic border colors based on 'color' prop
-  const activeBorders = {
-    blue: "border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]",
-    purple: "border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.15)]",
-    orange: "border-[#EAB308]/50 shadow-[0_0_20px_rgba(234,179,8,0.15)]",
+  // Border colors for hover state
+  const borderColors = {
+    blue: "hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]",
+    purple: "hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.1)]",
+    orange: "hover:border-[#EAB308]/50 hover:shadow-[0_0_20px_rgba(234,179,8,0.1)]",
   };
-
-  const activeGlow = isDarkMode 
-    ? `${activeBorders[color] || activeBorders.orange} border-opacity-30` 
-    : `${activeBorders[color] || activeBorders.orange}`;
 
   return (
     <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 border group
-      ${isActive 
-        ? activeGlow 
-        : isDarkMode ? "bg-zinc-900/40 border-white/5" : "bg-white border-gray-100 hover:border-[#EAB308] hover:shadow-lg hover:shadow-orange-100"
+      ${isDarkMode 
+        ? `bg-zinc-900/40 border-white/5 ${borderColors[color]}` 
+        : `bg-white border-gray-100 shadow-sm ${borderColors[color]}`
       }
     `}>
       <div className="flex items-start justify-between">
@@ -82,12 +77,11 @@ function StatCard({ icon: Icon, label, value, color, isActive, isDarkMode }) {
         </div>
       </div>
       
-      {/* Bottom accent line for active card */}
-      {isActive && (
-        <div className={`absolute bottom-0 left-0 w-full h-1 
-          ${color === 'orange' ? 'bg-[#EAB308]/50' : 'bg-current opacity-20'}`}>
-        </div>
-      )}
+      {/* Subtle bottom accent line on hover */}
+      <div className={`absolute bottom-0 left-0 w-full h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left
+        ${color === 'blue' ? 'bg-blue-500/50' : 
+          color === 'purple' ? 'bg-purple-500/50' : 'bg-[#EAB308]/50'}`}>
+      </div>
     </div>
   );
 }
