@@ -4,6 +4,7 @@ import HeroSection from "./Herosection";
 import FeaturesSection from "./Feature";
 import AboutSection from "./About";
 import Footer from "./Footer";
+import ContactUs from "./ContactUs";
 
 export default function Home() {
     return (
@@ -12,6 +13,7 @@ export default function Home() {
             <HeroSection/>
             <FeaturesSection/>
             <AboutSection/>
+            <ContactUs/>
             <Footer/>
 
         </div>
