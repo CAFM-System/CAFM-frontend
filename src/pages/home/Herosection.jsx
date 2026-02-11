@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import AuthHelper from "../../services/authHelper";
@@ -17,74 +17,108 @@ export default function HeroSection({ scrollToSection }) {
     <section
       id="Home"
       className="
-        relative py-24 px-4 sm:px-6 lg:px-8
-        bg-primary dark:bg-secondary overflow-hidden
+        relative overflow-hidden
+        py-28 px-4 sm:px-6 lg:px-8
+        bg-[color:var(--color-primary)]
+        dark:bg-black
       "
     >
-      {/* Soft background glow */}
-      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-        <div className="w-[600px] h-[600px] bg-accent/15 blur-[140px] rounded-full" />
-      </div>
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://www.pexels.com/download/video/4877217/"
+        // src="public\video\4877217-uhd_3840_2160_30fps.mp4"
+        autoPlay
+        loop
+        muted
+      />
+      {/* Dark / Light overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br
+        from-black/70 via-black/60 to-black/80
+        dark:from-black/80 dark:via-black/70 dark:to-black
+      " />
 
+      {/* Accent glow blobs */}
+      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[color:var(--color-accent)]/25 blur-[160px] rounded-full" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[color:var(--color-accent)]/15 blur-[180px] rounded-full" />
+
+      {/* ================= CONTENT ================= */}
       <div className="relative max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-          {/* LEFT CONTENT */}
+          {/* ================= LEFT ================= */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
           >
-            {/* Welcome pill */}
-            <div className="
-              inline-flex items-center gap-2 px-4 py-2
-              bg-accent/15 rounded-full mb-6
-            ">
-              <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-              <span className="text-sm text-accent font-medium">
-                Welcome !
+            {/* Pill */}
+            <div
+              className="
+                inline-flex items-center gap-2 px-5 py-2 mb-8
+                rounded-full
+                bg-white/10 dark:bg-white/5
+                backdrop-blur-md
+                border border-white/10
+              "
+            >
+              <span className="w-2 h-2 rounded-full bg-[color:var(--color-accent)] animate-pulse" />
+              <span className="font-extrabold text-xl gradient-text">
+                Welcome
               </span>
             </div>
 
-            <h1 className="
-              text-5xl lg:text-6xl font-extrabold
-              leading-tight mb-6
-              text-secondary dark:text-primary
-            ">
-              Your Apartment <br />
+            {/* Heading */}
+            <h1
+              className="
+                text-5xl lg:text-7xl font-extrabold leading-tight mb-8
+                text-white
+              "
+            >
+              Apartment <br />
               Management <br />
-              <span className="text-accent">Made Simple</span>
+              <span className="text-[color:var(--color-accent)]">
+                Made Simple
+              </span>
             </h1>
 
-            <p className="
-              text-xl text-secondary/70 dark:text-primary/70
-              mb-10 leading-relaxed
-            ">
-              Submit requests, track maintenance, and communicate with
-              our team — all from one powerful platform.
+            {/* Description */}
+            <p
+              className="
+                text-xl max-w-xl mb-12
+                text-white/80 leading-relaxed
+              "
+            >
+              Submit maintenance requests, track progress, and stay connected —
+              all from one powerful, modern platform built for residents.
             </p>
 
-            <div className="flex flex-wrap gap-4">
+            {/* Buttons */}
+            <div className="flex flex-wrap gap-5">
               <button
                 onClick={handleOpenDashboard}
                 className="
-                  px-8 py-6 rounded-xl
-                  bg-accent text-secondary font-medium
-                  hover:scale-105 transition
+                  group px-9 py-5 rounded-2xl
+                  bg-[color:var(--color-accent)]
+                  text-black font-semibold
+                  shadow-[0_20px_50px_rgba(234,179,8,0.35)]
+                  hover:scale-105 active:scale-95
+                  transition-transform
                 "
               >
                 <span className="flex items-center gap-2">
                   Open Dashboard
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </button>
 
               <button
                 onClick={() => scrollToSection("features")}
                 className="
-                  px-8 py-6 rounded-xl
-                  border-2 border-accent text-accent
-                  hover:bg-accent hover:text-secondary
+                  px-9 py-5 rounded-2xl
+                  border border-white/30
+                  text-white font-medium
+                  backdrop-blur-md
+                  hover:bg-white hover:text-black
                   transition
                 "
               >
@@ -93,20 +127,72 @@ export default function HeroSection({ scrollToSection }) {
             </div>
           </motion.div>
 
-          {/* RIGHT LOGO / IMAGE */}
+          {/* ================= RIGHT ================= */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="flex justify-center"
-          >
-            <img
-              src="/images/logo_withoutBG1.png"
-              alt="CAFM Logo"
-              className="w-80 lg:w-96 drop-shadow-2xl"
-            />
-          </motion.div>
+  initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
+  whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+  className="flex justify-center perspective-[1200px]"
+>
+  <div
+    className="
+      relative
+      bg-primary/10 dark:bg-secondary/10
+      backdrop-blur-xl
+      border border-accent/20
+      rounded-3xl p-12
+      shadow-[0_40px_120px_rgba(0,0,0,0.35)]
+      transform-gpu
+      hover:rotate-y-6 hover:rotate-x-3
+      transition-transform duration-500
+      max-w-xl
+    "
+  >
+    {/* Heading */}
+    <h3
+      className="
+        text-3xl font-bold mb-6
+        text-secondary dark:text-primary
+      "
+    >
+      Ready to Experience{" "}
+      <span className="text-accent">Better Maintenance?</span>
+    </h3>
+
+    {/* Description */}
+    <p className="text-secondary/70 dark:text-primary/70 mb-10">
+      Join hundreds of satisfied residents who trust our platform.
+    </p>
+
+    {/* Stats */}
+    <div className="grid grid-cols-2 gap-6">
+      {[
+        ["500+", "Active Users"],
+        ["5,000+", "Tickets Resolved"],
+        ["24/7", "Support Available"],
+        ["98%", "Satisfaction Rate"],
+      ].map(([value, label], i) => (
+        <div
+          key={i}
+          className="
+            rounded-xl p-4
+            bg-accent/10
+            border border-accent/20
+          "
+        >
+          <div className="text-4xl font-bold text-accent">
+            {value}
+          </div>
+          <div className="text-secondary/70 dark:text-primary/70">
+            {label}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</motion.div>
+
 
         </div>
       </div>
