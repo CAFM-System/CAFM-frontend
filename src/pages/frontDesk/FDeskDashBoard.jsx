@@ -7,7 +7,7 @@ import VisitorStats  from "../../components/frontDesk/VisitorStats";
 import QuickActions  from "../../components/frontDesk/QuickActions";
 import VisitorList  from "../../components/frontDesk/VisitorList";
 
-export default function FrontDeskDashboard() {
+export default function FDeskDashBoard() {
   const { isDarkMode } = useTheme();
   
   // --- STATE ---

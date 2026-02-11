@@ -17,8 +17,8 @@ import TechnicianReports from './pages/technician/TechnicianReports';
 import TechnicianNotification from './pages/technician/TechnicianNotification';
 
 // Pages - Front Desk
-import FrontDeskDashboard from './pages/frontDesk/FrontDeskDashBoard';
 import VisitorRegForm from './pages/frontDesk/VisitorRegForm';
+import FDeskDashBoard from './pages/frontDesk/FDeskDashBoard';
 
 function App() {
   const user = {
@@ -61,7 +61,7 @@ function App() {
           {/* We group them under /frontdesk */}
           <Route path='/frontdesk'>
              {/* 1. Main Dashboard view */}
-             <Route index element={<FrontDeskDashboard />} />
+             <Route index element={<FDeskDashBoard />} />
              
              {/* 2. The Register Form view */}
              <Route 
