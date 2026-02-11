@@ -129,36 +129,70 @@ export default function HeroSection({ scrollToSection }) {
 
           {/* ================= RIGHT ================= */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-            className="flex justify-center perspective-[1200px]"
-          >
-            <div
-              className="
-                relative
-                bg-white/10 dark:bg-white/5
-                backdrop-blur-xl
-                border border-white/20
-                rounded-3xl p-10
-                shadow-[0_40px_120px_rgba(0,0,0,0.6)]
-                transform-gpu
-                hover:rotate-y-6 hover:rotate-x-3
-                transition-transform duration-500
-              "
-            >
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Smart CAFM Platform
-              </h3>
+  initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
+  whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+  className="flex justify-center perspective-[1200px]"
+>
+  <div
+    className="
+      relative
+      bg-primary/10 dark:bg-secondary/10
+      backdrop-blur-xl
+      border border-accent/20
+      rounded-3xl p-12
+      shadow-[0_40px_120px_rgba(0,0,0,0.35)]
+      transform-gpu
+      hover:rotate-y-6 hover:rotate-x-3
+      transition-transform duration-500
+      max-w-xl
+    "
+  >
+    {/* Heading */}
+    <h3
+      className="
+        text-3xl font-bold mb-6
+        text-secondary dark:text-primary
+      "
+    >
+      Ready to Experience{" "}
+      <span className="text-accent">Better Maintenance?</span>
+    </h3>
 
-              <ul className="space-y-4 text-white/80">
-                <li>✔ Maintenance Request Tracking</li>
-                <li>✔ Real-time Notifications</li>
-                <li>✔ Resident & Admin Dashboards</li>
-                <li>✔ Secure Cloud-based System</li>
-              </ul>
-            </div>
-          </motion.div>
+    {/* Description */}
+    <p className="text-secondary/70 dark:text-primary/70 mb-10">
+      Join hundreds of satisfied residents who trust our platform.
+    </p>
+
+    {/* Stats */}
+    <div className="grid grid-cols-2 gap-6">
+      {[
+        ["500+", "Active Users"],
+        ["5,000+", "Tickets Resolved"],
+        ["24/7", "Support Available"],
+        ["98%", "Satisfaction Rate"],
+      ].map(([value, label], i) => (
+        <div
+          key={i}
+          className="
+            rounded-xl p-4
+            bg-accent/10
+            border border-accent/20
+          "
+        >
+          <div className="text-4xl font-bold text-accent">
+            {value}
+          </div>
+          <div className="text-secondary/70 dark:text-primary/70">
+            {label}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</motion.div>
+
 
         </div>
       </div>
