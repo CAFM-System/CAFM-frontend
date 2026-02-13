@@ -2,6 +2,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { ResidentDashboad } from "./ResidentDashboad";
 import UserProfileCard from "./resident/ProfilePage";
 import NotificationsPage from "./resident/NotificationsPage";
+import VisitorRegPage from "./resident/VisitorPage";
 import { Header } from "../components/resident/Header";
 // import { use } from "react";
 import Home from "./home/HomeLanding";
@@ -32,6 +33,10 @@ export function HomePage({ user }) {
                         } 
                     />
                     <Route path="profile" element={<><Header/><UserProfileCard user={user} /></>} />
+                    
+                    <Route path="visitors" element={<><Header/>< VisitorRegPage  /></>} />
+                  
+                    
                 </Route>
             </Routes>
         </div>
