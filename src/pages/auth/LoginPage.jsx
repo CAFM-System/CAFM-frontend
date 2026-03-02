@@ -42,6 +42,7 @@ export default function LoginPage() {
         if (redirectTo) navigate(redirectTo, { replace: true });
         else if (role === "admin") navigate("/admin");
         else if (role === "technician") navigate("/technician");
+        else if (role === "frontdesk") navigate("/frontdesk");
         else navigate("/resident/dashboard");
       }, 800);
 
