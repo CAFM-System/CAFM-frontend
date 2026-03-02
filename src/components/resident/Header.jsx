@@ -10,12 +10,20 @@ import {
   ChartColumn,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTheme } from "../../hooks/useTheme"; // Adjust the import path to your hook file
 
 export function Header({ notificationCount = 0 }) {
   const [user, setUser] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  
+  // Accessing your hook
+  const { isDarkMode, toggleTheme } = useTheme();
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -28,8 +36,6 @@ export function Header({ notificationCount = 0 }) {
     };
     fetchMe();
   }, []);
-
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     AuthService.logout();
@@ -78,8 +84,8 @@ export function Header({ notificationCount = 0 }) {
               </p>
             </div>
           </div>
-
-          {/* ===== Mobile Menu Button ===== */}
+          
+           {/* ===== Mobile Menu Button ===== */}
           <button
             className="
               md:hidden p-2 rounded-lg
@@ -92,6 +98,7 @@ export function Header({ notificationCount = 0 }) {
           >
             {mobileOpen ? <X /> : <Menu />}
           </button>
+
 
           {/* ===== Desktop Navigation ===== */}
           <nav className="hidden md:flex items-center gap-2">
@@ -122,9 +129,11 @@ export function Header({ notificationCount = 0 }) {
             </NavLink>
           </nav>
 
-          {/* ===== User Section ===== */}
-          <div className="hidden md:flex items-center gap-4">
-            <div className="text-right">
+          {/* ===== Action Section (Theme, User, Logout) ===== */}
+          <div className="flex items-center gap-2 md:gap-4">
+            
+            {/* User Info (Desktop Only) */}
+            <div className="hidden md:block text-right">
               <p className="text-sm font-medium text-[color:var(--color-secondary)] dark:text-white">
                 {user.profile.firstName} {user.profile.lastName}
               </p>
@@ -134,36 +143,68 @@ export function Header({ notificationCount = 0 }) {
               </p>
             </div>
 
-            <div className="h-10 w-10 rounded-full bg-[color:var(--color-accent)] text-black flex items-center justify-center font-semibold">
+            {/* Avatar (Desktop Only) */}
+            <div className="hidden md:flex h-10 w-10 rounded-full bg-[color:var(--color-accent)] text-black items-center justify-center font-semibold">
               {user.profile.firstName[0]}
             </div>
 
-            <NavLink
-              to="/"
-              className="
-                p-1.5 rounded-xl
-                bg-white/60 dark:bg-white/10
-                border border-[color:var(--color-accent)]/40
-                hover:bg-[rgba(234,179,8,0.2)]
-                transition
-              "
-            >
-              <Home className="h-4 w-6 text-[color:var(--color-secondary)] dark:text-white" />
-            </NavLink>
+            <div className="flex items-center gap-1.5 ml-2">
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                title="Toggle Theme"
+                className="
+                  p-2 rounded-xl
+                  bg-white/60 dark:bg-white/10
+                  border border-[color:var(--color-accent)]/40
+                  hover:bg-[rgba(234,179,8,0.2)]
+                  transition
+                  text-[color:var(--color-secondary)] dark:text-white
+                "
+              >
+                {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
 
-            <NavLink
-              to="/login"
-              onClick={handleLogout}
-              className="
-                p-1.5 rounded-xl
-                bg-white/60 dark:bg-white/10
-                border border-red-400/40
-                hover:bg-red-500/10
-                transition
-              "
-            >
-              <LogOut className="h-4 w-6 text-red-500" />
-            </NavLink>
+              <NavLink
+                to="/"
+                className="
+                  p-2 rounded-xl
+                  bg-white/60 dark:bg-white/10
+                  border border-[color:var(--color-accent)]/40
+                  hover:bg-[rgba(234,179,8,0.2)]
+                  transition
+                "
+              >
+                <Home className="h-4 w-4 text-[color:var(--color-secondary)] dark:text-white" />
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="
+                  p-2 rounded-xl
+                  bg-white/60 dark:bg-white/10
+                  border border-red-400/40
+                  hover:bg-red-500/10
+                  transition
+                "
+              >
+                <LogOut className="h-4 w-4 text-red-500" />
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="
+                  md:hidden p-2 rounded-xl
+                  border border-[color:var(--color-accent)]
+                  text-[color:var(--color-secondary)] dark:text-white
+                  hover:bg-[color:var(--color-accent)]
+                  transition
+                "
+                onClick={() => setMobileOpen(!mobileOpen)}
+              >
+                {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -171,7 +212,7 @@ export function Header({ notificationCount = 0 }) {
         {mobileOpen && (
           <div
             className="
-              md:hidden mt-3 rounded-xl p-4 space-y-2 shadow
+              md:hidden mt-3  mb-4 rounded-xl p-4 space-y-2 shadow-lg
               bg-[color:var(--color-primary)]
               dark:bg-black
               border border-black/10 dark:border-white/10
@@ -182,12 +223,12 @@ export function Header({ notificationCount = 0 }) {
               Dashboard
             </NavLink>
 
-            <NavLink onClick={() => setMobileOpen(false)} to="/notifications" className={navClass}>
+            <NavLink onClick={() => setMobileOpen(false)} to="/resident/notifications" className={navClass}>
               <Bell className="h-4 w-4" />
               Notifications
             </NavLink>
 
-            <NavLink onClick={() => setMobileOpen(false)} to="/profile" className={navClass}>
+            <NavLink onClick={() => setMobileOpen(false)} to="/resident/profile" className={navClass}>
               <User className="h-4 w-4" />
               Profile
             </NavLink>
