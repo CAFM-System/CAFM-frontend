@@ -11,7 +11,10 @@ export default function UserProfileCard() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [formData, setFormData] = useState(null);
+<<<<<<< HEAD
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+=======
+>>>>>>> 785f7903eaa4974b6cecac2a00082c4350ca5bc4
 
   useEffect(() => {
     fetchUserProfile();
