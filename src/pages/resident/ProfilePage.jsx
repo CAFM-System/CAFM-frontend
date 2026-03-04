@@ -11,6 +11,7 @@ export default function UserProfileCard() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [formData, setFormData] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     fetchUserProfile();
@@ -66,15 +67,9 @@ export default function UserProfileCard() {
     });
   };
 
-  const handleEditClick = () => {
-    const confirmed = window.confirm(
-      "Do you want to edit your profile? Email and NIC/Passport cannot be changed."
-    );
-    if (!confirmed) return;
-    setSaveError(null);
-    setFormData(buildFormData(userData));
-    setIsEditing(true);
-  };
+ const handleEditClick = () => {
+  setShowConfirmModal(true);
+};
 
   const handleCancelEdit = () => {
     setSaveError(null);
@@ -184,6 +179,48 @@ export default function UserProfileCard() {
   ======================== */
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-4 md:p-8 flex flex-col">
+      
+         {showConfirmModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl w-[90%] max-w-md p-6 animate-fadeIn">
+      
+      <h2 className="text-lg font-semibold mb-3">
+        Confirm Edit
+      </h2>
+
+      <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+        Do you want to edit your profile? 
+        <br />
+        <span className="text-red-500">
+          Email and NIC/Passport cannot be changed.
+        </span>
+      </p>
+
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowConfirmModal(false)}
+          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+            setShowConfirmModal(false);
+            setSaveError(null);
+            setFormData(buildFormData(userData));
+            setIsEditing(true);
+          }}
+          className="px-4 py-2 rounded-lg bg-accent text-white hover:opacity-90 transition"
+        >
+          Yes, Edit
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-lg">
 
