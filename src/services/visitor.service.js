@@ -1,3 +1,4 @@
+import { pre } from "motion/react-client";
 import apiClient from "./apiclient"
 
 const visitorService = {
@@ -7,6 +8,10 @@ const visitorService = {
     },
     async getVisitorInfoByResidentId() {
         const response = await apiClient.get("/visitors/my-visitors");
+        return response;
+    },
+    async preRegisterVisitor(visitorData) {
+        const response = await apiClient.post("/visitors/pre-register", visitorData);
         return response;
     }
         

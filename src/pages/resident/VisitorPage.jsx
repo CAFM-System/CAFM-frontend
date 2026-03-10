@@ -30,7 +30,7 @@ export default function VisitorPage() {
 
   
 
-  useEffect(() => {
+  
   const fetchVisitors = async () => {
     try {
       setLoading(true);
@@ -44,7 +44,7 @@ export default function VisitorPage() {
       setLoading(false);
     }
   };
-
+useEffect(() => {
   fetchVisitors();
 }, []);
 
@@ -164,7 +164,7 @@ export default function VisitorPage() {
               >
                 <X size={24} className={text} />
               </button>
-              <ResidentSideVisitorForm onCancel={() => setIsModalOpen(false)} />
+              <ResidentSideVisitorForm onCancel={() => setIsModalOpen(false)} onSuccess={fetchVisitors} />
             </div>
           </div>
         )}
