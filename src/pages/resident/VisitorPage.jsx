@@ -4,6 +4,7 @@ import { useTheme } from "../../hooks/useTheme";
 import ResidentSideVisitorForm from "../../components/resident/VisitorMainForm";
 import VisitorStats from "../../components/frontDesk/VisitorStats"; 
 import VisitorListForResident from "../../components/resident/VisitorListForResident";
+import visitorService from '../../services/visitor.service';
 
 export default function VisitorPage() {
   const { text, cardBg, subText, border, isDarkMode } = useTheme();
@@ -12,107 +13,76 @@ export default function VisitorPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("today"); 
   const [searchQuery, setSearchQuery] = useState("");
+  const [visitors, setVisitors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  //const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getTodayStr = () => {
+  const today = new Date();
+  return (
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0")
+  );
+};
 
-  // --- MOCK DATA ---
-  const [visitors, setVisitors] = useState([
-    { 
-      id: 1, 
-      fullName: "Kasun Perera", 
-      idNumber: "199856789V", 
-      phone: "0771234567",
-      email: "kasun@gmail.com",
-      visitorType: "normal", 
-      visitDate: getTodayStr(), 
-      entryTime: "08:30 AM", 
-      vehicleNumber: "CAD-8899",
-      numberOfOthers: 2,
-    },
-    { 
-      id: 2, 
-      fullName: "Sarah De Alwis", 
-      idNumber: "200045612V", 
-      phone: "0701112223",
-      email: "sarah@outlook.com",
-      visitorType: "normal", 
-      visitDate: getTodayStr(), 
-      entryTime: null, // Pending Arrival for Today
-      vehicleNumber: null,
-      numberOfOthers: 0,
-    },
-    { 
-      id: 3, 
-      fullName: "Sunil Shantha", 
-      idNumber: "197588992V", 
-      phone: "0715554443",
-      email: "sunil.s@business.lk",
-      visitorType: "regular", 
-      dateFrom: "2026-02-01",
-      dateTo: "2026-05-30",
-      visitDate: getTodayStr(), 
-      entryTime: "07:15 AM", 
-      vehicleNumber: "WP WP-9988",
-      numberOfOthers: 1,
-    },
-    { 
-      id: 4, 
-      fullName: "Kamal Addararachchi", 
-      idNumber: "198844556V", 
-      phone: "0762223334",
-      email: "kamal.act@media.com",
-      visitorType: "normal", 
-      visitDate: "2026-02-12", 
-      entryTime: "10:00 AM", 
-      vehicleNumber: "CAS-1122",
-      numberOfOthers: 0,
-    },
-    { 
-      id: 5, 
-      fullName: "Emily Blunt", 
-      idNumber: "N66778899", 
-      phone: "0779998887",
-      email: "emily@gmail.com",
-      visitorType: "normal", 
-      visitDate: "2026-02-10", 
-      entryTime: "04:30 PM", 
-      vehicleNumber: null,
-      numberOfOthers: 3,
-    },
-    { 
-      id: 6, 
-      fullName: "Mahesh Jayawardena", 
-      idNumber: "198044332V", 
-      phone: "0771122334",
-      email: "mahesh@cricket.lk",
-      visitorType: "regular", 
-      dateFrom: "2026-01-15",
-      dateTo: "2026-02-15",
-      visitDate: "2026-02-11",
-      entryTime: "09:00 AM", 
-      vehicleNumber: "KJ-0001",
-      numberOfOthers: 1,
+  
+
+  useEffect(() => {
+  const fetchVisitors = async () => {
+    try {
+      setLoading(true);
+
+      const response = await visitorService.getVisitorInfoByResidentId();
+      setVisitors(response.data);
+      
+    } catch (error) {
+      console.error("Error fetching visitors:", error);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  fetchVisitors();
+}, []);
+
 
   // --- FILTERING LOGIC ---
   const filteredVisitors = visitors.filter((v) => {
     const matchesSearch = (v.fullName || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
                           (v.idNumber || "").toLowerCase().includes(searchQuery.toLowerCase());
-    
     if (activeTab === "today") {
-      return matchesSearch && v.visitDate === getTodayStr();
+      const visitorDate = v.visitDate.split("T")[0];
+      return matchesSearch && visitorDate === getTodayStr();
     }
     return matchesSearch;
-  }).sort((a, b) => b.id - a.id);
+  }).sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
 
-  // --- STATS CALCULATION ---
+  console.log("Today:", getTodayStr());
+  visitors.forEach(v => console.log("Visitor Date:", v.visitDate));
+  visitors.forEach(v => console.log("Is Pre-Registered:", v.isPreRegistered));
+
   const stats = {
-    today: visitors.filter(v => v.visitDate === getTodayStr()).length,
-    onSite: visitors.filter(v => v.visitDate === getTodayStr() && v.entryTime).length,
-    preRegistered: visitors.filter(v => v.visitDate === getTodayStr() && !v.entryTime).length,
+    today: visitors.filter(v => {
+      const visitorDate = v.visitDate.split("T")[0];
+      return visitorDate === getTodayStr();
+    }).length,
+
+    onSite: visitors.filter(v => {
+      const visitorDate = v.visitDate.split("T")[0];
+      return visitorDate === getTodayStr() && !v.isPreRegistered;
+    }).length,
+
+    preRegistered: visitors.filter(v => {
+      const visitorDate = v.visitDate.split("T")[0];
+      return visitorDate === getTodayStr() && v.isPreRegistered;
+    }).length,
+
     total: visitors.length
   };
+  console.log("Stats:", stats);
 
   const today = new Date();
   const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
