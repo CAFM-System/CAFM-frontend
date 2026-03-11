@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, ShieldCheck, ScanLine, X } from "lucide-react";
 import { useTheme } from "../../hooks/useTheme"; 
 import FrontDeskHeader from "../../components/frontDesk/FrontDeskHeader"; 
@@ -6,6 +6,7 @@ import VisitorRegForm from "./VisitorRegForm";
 import VisitorStats  from "../../components/frontDesk/VisitorStats";
 import QuickActions  from "../../components/frontDesk/QuickActions";
 import VisitorList  from "../../components/frontDesk/VisitorList";
+import visitorService from "../../services/visitor.service";
 
 export default function FDeskDashBoard() {
   const { isDarkMode } = useTheme();
@@ -19,95 +20,96 @@ export default function FDeskDashBoard() {
   const [activeTab, setActiveTab] = useState("today"); 
   const [searchQuery, setSearchQuery] = useState("");
   const [userName] = useState("Officer Kamal"); 
+  const [visitors, setVisitors] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getTodayStr = () => {
+  const today = new Date();
+  return (
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0")
+  );
+};
 
-  // --- MOCK DATA ---
-  const [visitors, setVisitors] = useState([
-    { 
-      id: 1, 
-      name: "Kasun Perera", 
-      nic: "199856789V", 
-      phone: "0771234567",
-      email: "kasun@gmail.com",
-      visitorType: "normal", 
-      isPreRegistered: false, // On-Site
-      date: getTodayStr(), 
-      entryTime: "08:30 AM", 
-      hostName: "Mr. Amal Silva",
-      hostApartment: "102",
-      hostPhone: "0711112222",
-      vehicleNumber: "CAD-8899",
-      othersCount: 0,
-    },
-    { 
-      id: 2, 
-      name: "Saman Kumara", 
-      nic: "198545612V", 
-      phone: "0718889999",
-      email: "saman.k@company.lk",
-      visitorType: "regular", 
-      isPreRegistered: true, // Pre-Reg
-      date: getTodayStr(), 
-      fromDate: "2026-01-01",
-      toDate: "2026-03-31",
-      entryTime: "07:15 AM", 
-      hostName: "Facility Mgr",
-      hostApartment: "Office",
-      hostPhone: "0112345678",
-      vehicleNumber: "NB-1234",
-      othersCount: 2,
-    },
-    { 
-      id: 3, 
-      name: "Sarah De Alwis", 
-      nic: "200045612V", 
-      phone: "0701112223",
-      email: null,
-      visitorType: "normal", 
-      isPreRegistered: true, // Pre-Reg
-      date: getTodayStr(), 
-      entryTime: null, // Pending Arrival
-      hostName: "Ms. Perera",
-      hostApartment: "305",
-      hostPhone: "0777778888",
-      vehicleNumber: null,
-      othersCount: 1,
-    },
-  ]);
+
+  useEffect(() => {
+  const fetchVisitors = async () => {
+    try {
+      setLoading(true);
+
+      const response = await visitorService.getVisitorInfo();
+      console.log(response.data);
+      setVisitors(response.data);
+      console.log("check visitors variable:", visitors);
+    } catch (error) {
+      console.error("Error fetching visitors:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchVisitors();
+}, []);
+
+  
 
   // --- FILTERING LOGIC ---
-  const filteredVisitors = visitors
-    .filter((visitor) => {
-      // 1. Filter by Tab
-      if (activeTab === "today") {
-        if (visitor.date !== getTodayStr()) return false;
-      }
-      else if (activeTab === "pre_reg") {
-        // Must be Pre-Registered AND Today
-        if (!visitor.isPreRegistered || visitor.date !== getTodayStr()) return false;
-      }
-      else if (activeTab === "on_site") {
-        // Must be On-Site (Not Pre-Reg) AND Today
-        if (visitor.isPreRegistered || visitor.date !== getTodayStr()) return false;
-      }
-      
-      // 2. Search Filter
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return (
-          visitor.name.toLowerCase().includes(q) || 
-          visitor.nic.toLowerCase().includes(q) ||
-          (visitor.vehicleNumber && visitor.vehicleNumber.toLowerCase().includes(q))
-        );
-      }
-      return true;
-    })
-    .sort((a, b) => b.id - a.id);
 
-  // --- STATS CALCULATION ---
-  const todayCount = visitors.filter(v => v.date === getTodayStr()).length;
-  const preRegCount = visitors.filter(v => v.isPreRegistered && v.date === getTodayStr()).length;
+
+const todayStr = new Date().toLocaleDateString("en-CA");
+
+const filteredVisitors = visitors.filter(visitor => {
+  const visitorDate = visitor.date
+    ? new Date(visitor.date).toLocaleDateString("en-CA")
+    : null;
+
+  // Today tab
+  if (activeTab === "today") {
+    return visitorDate === todayStr;
+  }
+
+  // Pre-Registered tab
+  if (activeTab === "pre_reg") {
+    return visitor.isPreRegistered === true;
+  }
+
+  // On-Site tab
+  if (activeTab === "on_site") {
+    return visitor.isPreRegistered === false;
+  }
+
+  return true;
+});
+const todayCount = visitors.filter(v => {
+  if (!v.date) return false;
+
+  const d = new Date(v.date);
+  const localDate =
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(d.getDate()).padStart(2, "0");
+
+  return localDate === todayStr;
+}).length;
+
+const preRegCount = visitors.filter(v => {
+  if (!v.date) return false;
+
+  const d = new Date(v.date);
+  const localDate =
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(d.getDate()).padStart(2, "0");
+
+  return v.isPreRegistered && localDate === todayStr;
+}).length;
 
   const stats = {
     today: todayCount,

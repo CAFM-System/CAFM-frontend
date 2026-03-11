@@ -3,8 +3,11 @@ import { useTheme } from '../../hooks/useTheme';
 import { VisitorFillForm } from './VisitorFillForm';
 import { VisitorReviewForm } from '../frontDesk/VisitorReviewForm';
 import AuthService from "../../services/auth.service"; // Import your AuthService
+import visitorService from '../../services/visitor.service';
+import toast from 'react-hot-toast';
 
-export default function VisitorMainForm({ onCancel }) {
+
+export default function VisitorMainForm({ onCancel , onSuccess }) {
   const { cardBg, text, border, subText } = useTheme();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -56,14 +59,27 @@ export default function VisitorMainForm({ onCancel }) {
     }
   };
 
+  const payload = {
+    full_name: formData.fullName,
+    phone: formData.phone,
+    id_number: formData.idNumber,
+    email: formData.email,
+    vehicle_number: formData.vehicleNumber,
+    visitor_type: formData.visitorType.toUpperCase(),
+    valid_from: formData.dateFrom || formData.visitDate,
+    valid_until: formData.dateTo,
+    others_count: formData.numberOfOthers
+  };
+
   const handleSubmit = async () => {
     try {
       console.log("Submitting Invitation:", formData);
-      // Example: await axios.post('/api/visitors', formData);
-      alert("Invitation sent successfully!");
+      await visitorService.preRegisterVisitor(payload);
+      toast.success("Visitor pre-registered successfully!");
+      if (onSuccess) onSuccess();
       if (onCancel) onCancel();
     } catch (err) {
-      alert("Failed to register visitor.");
+      toast.error("Failed to register visitor.");
     }
   };
 
