@@ -1,27 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-
-// ─── MOCK useTheme (replace with: import { useTheme } from "../hooks/useTheme") ───
-function useTheme() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    try { return localStorage.getItem("theme") === "dark"; } catch { return false; }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("theme", isDarkMode ? "dark" : "light"); } catch {}
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, [isDarkMode]);
-  const toggleTheme = () => setIsDarkMode(p => !p);
-  return {
-    isDarkMode, toggleTheme,
-    bg:      isDarkMode ? "bg-[#18181B]"                        : "bg-[#F4F4F5]",
-    cardBg:  isDarkMode ? "bg-[#27272A] border-white/8"         : "bg-white border-zinc-200",
-    text:    isDarkMode ? "text-white"                          : "text-[#18181B]",
-    subText: isDarkMode ? "text-white/50"                       : "text-zinc-500",
-    border:  isDarkMode ? "border-white/10"                     : "border-zinc-200",
-    input:   isDarkMode
-      ? "bg-[#18181B] text-white border-white/10 placeholder:text-white/25"
-      : "bg-zinc-50  text-[#18181B] border-zinc-200 placeholder:text-zinc-400",
-  };
-}
+import { useTheme } from "../../hooks/useTheme";
 
 // ─── DB / SERVICE ─────────────────────────────────────────────────────────────
 const DB_KEY = "umgmt_v2";
@@ -112,12 +90,12 @@ function ThemeToggle({ isDarkMode, toggleTheme, border, subText }) {
 const EMPTY_FORM = { name: "", email: "", nic: "", phone: "", role: "Resident", techType: "", apartmentNumber: "", status: "active" };
 
 function UserFormModal({ initial, onSave, onCancel, error, theme }) {
-  const { cardBg, text, subText, border, input, isDarkMode } = theme;
+  const { cardBg, text, subText, border, inputBg, isDarkMode } = theme;
   const [form, setForm] = useState(initial ? { ...EMPTY_FORM, ...initial } : EMPTY_FORM);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const iCls = `w-full px-3 py-2.5 rounded-xl border text-sm outline-none
-    focus:border-[#EAB308] transition-colors duration-150 ${input}`;
+    focus:border-[#EAB308] transition-colors duration-150 ${inputBg}`;
   const lCls = `block text-[11px] font-bold uppercase tracking-widest mb-1.5 ${subText}`;
 
   const submit = () => {
@@ -307,7 +285,7 @@ function UserCard({ u, onEdit, onDelete, onUnregister, theme }) {
 // ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function UserManagement() {
   const theme = useTheme();
-  const { isDarkMode, toggleTheme, bg, cardBg, text, subText, border, input } = theme;
+  const { isDarkMode, toggleTheme, bg, cardBg, text, subText, border, inputBg } = theme;
 
   const [users,       setUsers]       = useState([]);
   const [search,      setSearch]      = useState("");
@@ -414,7 +392,7 @@ export default function UserManagement() {
               value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search name, email, NIC, apartment…"
               className={`w-full pl-9 pr-4 py-2.5 rounded-xl border text-sm outline-none
-                focus:border-[#EAB308] transition-colors ${input}`}
+                focus:border-[#EAB308] transition-colors ${inputBg}`}
             />
           </div>
 

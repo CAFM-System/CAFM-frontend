@@ -3,8 +3,10 @@ import {
   Phone, Mail, CreditCard, Car, Users, 
   Clock, AlertCircle, CalendarDays, Edit3, Trash2 
 } from 'lucide-react';
+import { useTheme } from '../../hooks/useTheme';
 
-export function VisitorRecordForResident({ visitor, isSelected, onSelect, onEdit, onDelete, isDarkMode }) {
+export function VisitorRecordForResident({ visitor, isSelected, onSelect, onEdit, onDelete }) {
+  const { isDarkMode } = useTheme();
   
   const isRegular = visitor.visitorType === 'regular';
   const isCheckedIn = !!visitor.entryTime; 

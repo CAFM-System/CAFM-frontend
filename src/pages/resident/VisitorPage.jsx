@@ -114,7 +114,7 @@ useEffect(() => {
         </div>
 
         {/* 1. Statistics Section */}
-        <VisitorStats stats={stats} isDarkMode={isDarkMode} />
+        <VisitorStats stats={stats} />
 
         {/* 2. Action & List Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -126,7 +126,6 @@ useEffect(() => {
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               stats={stats}
-              isDarkMode={isDarkMode}
             />
           </div>
 

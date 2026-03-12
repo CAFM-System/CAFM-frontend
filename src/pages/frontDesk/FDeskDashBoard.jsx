@@ -152,7 +152,7 @@ const preRegCount = visitors.filter(v => {
   const handleCheckOut = (id) => console.log("Check out:", id);
 
   const mainBg = isDarkMode 
-    ? "bg-[#18181B] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/20 via-[#18181B] to-[#18181B]" 
+    ? "bg-secondary bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/20 via-secondary to-secondary" 
     : "bg-[#F9F6EB]";
 
   return (
@@ -168,7 +168,7 @@ const preRegCount = visitors.filter(v => {
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3 border ${isDarkMode ? "bg-zinc-800/50 border-[#EAB308]/20 text-[#EAB308]" : "bg-white border-[#EAB308]/30 text-amber-700"}`}>
                <ShieldCheck size={14} /> Security Dashboard
             </div>
-            <h1 className={`text-3xl md:text-4xl font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-[#18181B]"}`}>
+            <h1 className={`text-3xl md:text-4xl font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-secondary"}`}>
               Welcome back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#EAB308] to-orange-500">{userName}</span>
             </h1>
             <p className={`mt-2 text-base ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
@@ -177,7 +177,7 @@ const preRegCount = visitors.filter(v => {
           </div>
 
           <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl shadow-sm border backdrop-blur-md transition-all
-            ${isDarkMode ? "bg-zinc-900/50 border-white/5 text-gray-200" : "bg-white/80 border-[#EAB308]/20 text-[#18181B]"}`}>
+            ${isDarkMode ? "bg-zinc-900/50 border-white/5 text-gray-200" : "bg-white/80 border-accent/20 text-secondary"}`}>
             <div className={`p-1.5 rounded-lg ${isDarkMode ? "bg-[#EAB308]/10 text-[#EAB308]" : "bg-[#F9F6EB] text-amber-600"}`}>
               <Calendar className="h-4 w-4" />
             </div>
@@ -190,7 +190,6 @@ const preRegCount = visitors.filter(v => {
         {/* 2. VISITOR STATS */}
         <VisitorStats 
           stats={stats} 
-          isDarkMode={isDarkMode} 
         />
 
         {/* 3. QUICK ACTIONS */}
@@ -198,7 +197,6 @@ const preRegCount = visitors.filter(v => {
           onRegisterClick={handleRegisterClick} 
           onScanClick={handleScanClick}
           activeAction={activeAction}
-          isDarkMode={isDarkMode}
         />
 
         {/* 4. VISITOR LIST */}
@@ -211,7 +209,6 @@ const preRegCount = visitors.filter(v => {
           stats={stats}
           onCheckIn={handleCheckIn}
           onCheckOut={handleCheckOut}
-          isDarkMode={isDarkMode}
         />
 
       </main>
@@ -223,7 +220,7 @@ const preRegCount = visitors.filter(v => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsRegModalOpen(false)}></div>
           <div className={`relative z-10 w-full max-w-4xl max-h-[95vh] overflow-y-auto rounded-3xl animate-in fade-in zoom-in duration-300 shadow-2xl border 
-            ${isDarkMode ? "border-white/10 bg-[#18181B]" : "bg-[#F9F6EB] border-[#EAB308]/20"}`}>
+            ${isDarkMode ? "border-white/10 bg-secondary" : "bg-[#F9F6EB] border-accent/20"}`}>
              <button onClick={() => setIsRegModalOpen(false)} className={`absolute top-5 right-5 z-50 p-2 rounded-full transition-colors ${isDarkMode ? "bg-zinc-800 text-white hover:bg-zinc-700" : "bg-white text-gray-600 hover:bg-gray-100 shadow-sm"}`}>
                <X size={18} />
              </button>
@@ -237,18 +234,18 @@ const preRegCount = visitors.filter(v => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity" onClick={() => setIsQrModalOpen(false)}></div>
           <div className={`relative z-10 w-full max-w-md p-8 rounded-3xl animate-in fade-in zoom-in duration-300 shadow-2xl text-center border
-             ${isDarkMode ? "bg-[#18181B] border-white/10" : "bg-white border-[#EAB308]/20"}`}>
+             ${isDarkMode ? "bg-secondary border-white/10" : "bg-white border-accent/20"}`}>
              <div className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6 
                 ${isDarkMode ? "bg-zinc-800 text-[#EAB308]" : "bg-[#F9F6EB] text-amber-600"}`}>
                 <ScanLine size={40} className="animate-pulse" />
              </div>
-             <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-[#18181B]"}`}>
+             <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-secondary"}`}>
                Scan QR Code
              </h2>
              <p className={`text-sm mb-8 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
                Please use your handheld device or phone to scan the visitor's pass to verify entry.
              </p>
-             <button onClick={() => setIsQrModalOpen(false)} className={`w-full py-3 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] ${isDarkMode ? "bg-[#EAB308] text-black hover:bg-amber-400" : "bg-[#18181B] text-white hover:bg-zinc-800"}`}>
+             <button onClick={() => setIsQrModalOpen(false)} className={`w-full py-3 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] ${isDarkMode ? "bg-accent text-black hover:bg-amber-400" : "bg-secondary text-white hover:bg-zinc-800"}`}>
                Close Scanner
              </button>
           </div>

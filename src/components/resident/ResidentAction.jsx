@@ -2,8 +2,10 @@ import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResidentService from "../../services/resident.service";
 import toast from "react-hot-toast";
+import { useTheme } from "../../hooks/useTheme";
 
 export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose }) {
+    const { isDarkMode, cardBg, text, subText, inputBg, border, buttonPrimary, buttonSecondary } = useTheme();
     const [showRatings, setShowRatings] =  useState(null);
     const [showFeedback, setShowFeedback] = useState();
     const [reloadkey, setReloadKey] = useState(0);
@@ -58,8 +60,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
 
             {
                  showRatings !== null && showRatings !== undefined && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h4 className="text-sm mb-2">Your Feedback</h4>
+                <div className={`rounded-lg p-4 border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
+                    <h4 className={`text-sm mb-2 ${text}`}>Your Feedback</h4>
                     <div className="flex items-center gap-1 mb-2">
                         {[1, 2, 3, 4, 5].map((star) => (
                         <Star
@@ -69,7 +71,7 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                         ))}
                     </div>
                     {showFeedback && (
-                        <p className="text-sm text-gray-600">{showFeedback}</p>
+                        <p className={`text-sm ${subText}`}>{showFeedback}</p>
                     )}
                 </div>
                 )
@@ -77,8 +79,8 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
 
             {/* ⭐ Rating UI */}
             {data.canRate && data.showRatingTab && (
-                <div className="space-y-4 bg-gray-50 p-4 rounded-xl border">
-                    <h4 className="text-sm font-medium">Rate this service</h4>
+                <div className={`space-y-4 p-4 rounded-xl border ${cardBg}`}>
+                    <h4 className={`text-sm font-medium ${text}`}>Rate this service</h4>
 
                     <div className="flex items-center gap-2">
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -103,16 +105,12 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                         value={data.feedback}
                         onChange={(e) => data.setFeedback(e.target.value)}
                         rows={3}
-                        className="
-                            w-full rounded-lg border border-gray-300 
-                            p-3 outline-none resize-none 
-                            focus:ring-2 focus:ring-blue-500 bg-white
-                        "
+                        className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
                     />
 
                     <div className="flex gap-3">
                         <button 
-                            className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800"
+                            className={`flex-1 py-2 rounded-lg ${buttonPrimary}`}
                             onClick={async () => {
                                 await sendFeedback();
                                 setShowRatings(data.rating);
@@ -126,7 +124,7 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
 
                         <button
                             onClick={() => data.setShowRatingTab(false)}
-                            className="flex-1 border border-gray-400 py-2 rounded-lg hover:bg-gray-100"
+                            className={`flex-1 border py-2 rounded-lg ${buttonSecondary}`}
                         >
                             Cancel
                         </button>
@@ -141,25 +139,21 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                     {showRatings === null &&
                     <button
                         onClick={() => data.setShowRatingTab(true)}
-                        className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800"
+                        className={`w-full py-3 rounded-lg font-medium ${buttonPrimary}`}
                     >
                         Rate This Service
                     </button>}
 
                     {/* Close Ticket */}
-                    <div className="space-y-3 bg-green-50 p-4 rounded-xl border border-green-200">
-                        <h4 className="text-sm font-medium">Satisfied with the resolution?</h4>
+                    <div className={`space-y-3 p-4 rounded-xl border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
+                        <h4 className={`text-sm font-medium ${text}`}>Satisfied with the resolution?</h4>
 
                         <textarea
                             placeholder="Add a closing comment (optional)..."
                             value={data.closeComment}
                             onChange={(e) => data.setCloseComment(e.target.value)}
                             rows={2}
-                            className="
-                                w-full rounded-lg border border-gray-300 
-                                p-3 outline-none resize-none 
-                                focus:ring-2 focus:ring-green-500 bg-white
-                            "
+                            className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-green-500 ${inputBg}`}
                         />
 
                         <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-medium"
@@ -169,22 +163,18 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                     </div>
 
                     {/* Reopen Ticket */}
-                    <div className="space-y-3 p-4 rounded-xl border">
-                        <h4 className="text-sm font-medium">Issue not resolved?</h4>
+                    <div className={`space-y-3 p-4 rounded-xl border ${cardBg}`}>
+                        <h4 className={`text-sm font-medium ${text}`}>Issue not resolved?</h4>
 
                         <textarea
                             placeholder="Please explain why you're reopening this ticket..."
                             value={data.reOpenComment}
                             onChange={(e) => data.setReopenComment(e.target.value)}
                             rows={2}
-                            className="
-                                w-full rounded-lg border border-gray-300 
-                                p-3 outline-none resize-none 
-                                focus:ring-2 focus:ring-black bg-white
-                            "
+                            className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
                         />
 
-                        <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium"
+                        <button className={`w-full border py-2 rounded-lg font-medium ${buttonSecondary}`}
                             onClick={() => handleReopenTicket()}>
                             Reopen Ticket
                         </button>
@@ -195,22 +185,18 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
 
             {/* ⭐ CLOSED VIEW — ONLY REOPEN */}
             {data.status === "closed" && !data.showRatingTab && (
-                <div className="space-y-3 p-4 rounded-xl border bg-gray-50">
-                    <h4 className="text-sm font-medium">Issue not resolved?</h4>
+                <div className={`space-y-3 p-4 rounded-xl border ${cardBg}`}>
+                    <h4 className={`text-sm font-medium ${text}`}>Issue not resolved?</h4>
 
                     <textarea
                         placeholder="Please explain why you're reopening this ticket..."
                         value={data.reOpenComment}
                         onChange={(e) => data.setReopenComment(e.target.value)}
                         rows={2}
-                        className="
-                            w-full rounded-lg border border-gray-300 
-                            p-3 outline-none resize-none 
-                            focus:ring-2 focus:ring-black bg-white
-                        "
+                        className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
                     />
 
-                    <button className="w-full border text-black py-2 rounded-lg hover:bg-black hover:text-white font-medium"
+                    <button className={`w-full border py-2 rounded-lg font-medium ${buttonSecondary}`}
                         onClick={() => handleReopenTicket()}>
                         Reopen Ticket
                     </button>

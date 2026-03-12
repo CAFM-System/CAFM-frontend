@@ -7,8 +7,10 @@ import apiClient from "../services/apiclient";
 import Footer  from "../components/resident/Footer";
 import ResidentCard from "../components/resident/ResidentCard";
 import { Ticket, Clock, CheckCircle, TrendingUp, Award  } from "lucide-react";
+import { useTheme } from "../hooks/useTheme";
 
 export function ResidentDashboad() {
+    const { isDarkMode, bg, glassBg, text, subText, divider, border, hover } = useTheme();
     const [openCreateTicketDialog, setOpenCreateTicketDialog] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -59,7 +61,7 @@ export function ResidentDashboad() {
     });
 
     return (
-        <div className="w-full min-h-screen flex flex-col gap-4 overflow-y-auto">
+        <div className={`w-full min-h-screen flex flex-col gap-4 overflow-y-auto ${bg}`}>
             
 
             {openCreateTicketDialog && (
@@ -111,15 +113,15 @@ export function ResidentDashboad() {
             </div>
 
             <div className="px-[100px]">
-                <div className="w-full rounded-2xl border border-gray-500/50 shadow-lg bg-white/50 backdrop-blur-lg flex flex-col gap-4">  
-                    <div className="w-full h-[80px] border-b border-gray-300 flex items-center px-4 gap-4">
+                <div className={`w-full rounded-2xl border shadow-lg flex flex-col gap-4 ${glassBg}`}>  
+                    <div className={`w-full h-[80px] border-b flex items-center px-4 gap-4 ${divider}`}>
                         {["All", "active", "resolved"].map(type => (
                             <button key={type}>
                                 <span
                                     className={`px-4 py-4 rounded-2xl cursor-pointer ${
                                         filter === type
                                             ? "bg-accent text-secondary"
-                                            : "text-gray-700 hover:bg-[#D3E0EA]"
+                                            : `${text} ${hover}`
                                     }`}
                                     onClick={() => setFilter(type)}
                                 >

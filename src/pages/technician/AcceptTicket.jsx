@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import apiClient from "../../services/apiclient";
+import { useTheme } from "../../hooks/useTheme";
 
 const AcceptTicket = () => {
   const [params] = useSearchParams();
   const ticketId = params.get("ticket");
   const navigate = useNavigate();
+  const { bg, cardBg, text } = useTheme();
 
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("processing");
@@ -45,16 +47,16 @@ const AcceptTicket = () => {
   }, [navigate, ticketId]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-(--color-primary)">
-      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
-        <h2 className="text-2xl font-bold text-(--color-secondary) mb-4">
+    <div className={`min-h-screen flex items-center justify-center ${bg}`}>
+      <div className={`p-8 rounded-xl shadow-lg max-w-md w-full text-center border ${cardBg}`}>
+        <h2 className={`text-2xl font-bold mb-4 ${text}`}>
           Ticket Acceptance
         </h2>
 
-        {loading && <p>Processing your request...</p>}
+        {loading && <p className={text}>Processing your request...</p>}
 
         {status === "success" && (
-          <p className="text-(--color-accent) font-semibold">
+          <p className="text-accent font-semibold">
             ✅ Ticket accepted successfully!
           </p>
         )}
