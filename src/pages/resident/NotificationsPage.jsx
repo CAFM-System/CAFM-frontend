@@ -9,10 +9,11 @@ import {
   NotificationItem,
 } from '../../components/resident/NotificationsComponents';
 import NotificationService from '../../services/notification.service';
+import { useTheme } from '../../hooks/useTheme';
 
 export function NotificationsPage({ tickets = [], user = {}, onViewTicket }) {
   const [filter, setFilter] = useState('all');
-  const [theme, setTheme] = useState('light');
+  const { isDarkMode, bg, cardBg, text, subText, border } = useTheme();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -94,24 +95,24 @@ const fetchNotifications = async () => {
 
   // Theme classes
   const themeClasses = {
-    page: theme === 'light' ? 'bg-[#F6F5F5]' : 'bg-slate-900',
-    header: theme === 'light' ? 'bg-[#1687A7]' : 'bg-gradient-to-br from-slate-800 to-slate-900',
-    card: theme === 'light' ? 'bg-white' : 'bg-slate-800',
+    page: bg,
+    header: isDarkMode ? 'bg-gradient-to-br from-secondary to-secondary/80' : 'bg-accent',
+    card: isDarkMode ? 'bg-secondary/50' : 'bg-white',
     text: {
-      primary: theme === 'light' ? 'text-gray-900' : 'text-gray-100',
-      secondary: theme === 'light' ? 'text-gray-600' : 'text-gray-400',
-      tertiary: theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+      primary: text,
+      secondary: subText,
+      tertiary: isDarkMode ? 'text-primary/80' : 'text-gray-700'
     },
-    hover: theme === 'light' ? 'hover:bg-[#F6F5F5]' : 'hover:bg-slate-700',
-    unreadBg: theme === 'light' ? 'bg-[#D3E0EA]/30' : 'bg-slate-700/50',
-    divider: theme === 'light' ? 'divide-[#D3E0EA]' : 'divide-slate-700',
-    badge: theme === 'light' ? 'bg-white text-[#1687A7]' : 'bg-slate-700 text-cyan-400',
-    emptyStateBg: theme === 'light' ? 'bg-[#D3E0EA]' : 'bg-slate-700',
-    emptyStateIcon: theme === 'light' ? 'text-[#1687A7]' : 'text-cyan-400',
+    hover: isDarkMode ? 'hover:bg-primary/10' : 'hover:bg-gray-50',
+    unreadBg: isDarkMode ? 'bg-primary/5' : 'bg-accent/5',
+    divider: isDarkMode ? 'divide-primary/10' : 'divide-gray-200',
+    badge: isDarkMode ? 'bg-primary/10 text-accent' : 'bg-white text-accent',
+    emptyStateBg: isDarkMode ? 'bg-primary/10' : 'bg-accent/10',
+    emptyStateIcon: 'text-accent',
     buttonActive:
-      theme === 'light'
-        ? 'bg-transparent text-white border border-white hover:bg-white hover:text-[#1687A7]'
-        : 'bg-transparent text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-slate-900'
+      isDarkMode
+        ? 'bg-transparent text-accent border border-accent hover:bg-accent hover:text-secondary'
+        : 'bg-transparent text-secondary border border-white hover:bg-white hover:text-accent'
   };
 
    if (loading) {
@@ -227,7 +228,7 @@ const fetchNotifications = async () => {
                       <NotificationItem
                         key={notification.id}
                         notification={notification}
-                        theme={theme}
+                        isDarkMode={isDarkMode}
                         onNotificationClick={handleNotificationClick}
                       />
                     ))}
@@ -239,7 +240,7 @@ const fetchNotifications = async () => {
         </div>
       </main>
 
-      <Footer theme={theme} />
+      <Footer />
     </div>
   );
 }

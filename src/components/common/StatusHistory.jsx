@@ -1,6 +1,9 @@
 import { Circle } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 
 const StatusHistory = ({ data }) => {
+    const { text, subText, divider } = useTheme();
+
     const getStatusColor = (status) => {
         const colors = {
             open: 'bg-blue-100 text-blue-700',
@@ -39,7 +42,7 @@ const StatusHistory = ({ data }) => {
                         <div className="flex flex-col items-center">
                             <Circle size={16} strokeWidth={5} className={getStatusDotColor(item.status)} />
                             {index < data.length - 1 && (
-                                <div className="w-0-5 h-full bg-gray-200 mt-1"></div>
+                                <div className={`w-0-5 h-full mt-1 border-l ${divider}`}></div>
                             )}
                         </div>
                         <div className="flex-1 pb-6">
@@ -47,10 +50,10 @@ const StatusHistory = ({ data }) => {
                                 <span className={`px-2 py-1 text-xs rounded ${getStatusColor(item.status)}`}>
                                     {getProgressString(item.status)}
                                 </span>
-                                <span className="text-sm text-gray-500">{item.created_at}</span>
+                                <span className={`text-sm ${subText}`}>{item.created_at}</span>
                             </div>
-                            <p className="text-gray-900 mb-1">{item.message}</p>
-                            <p className="text-sm text-gray-500">by {item.updated_by}</p>
+                            <p className={`mb-1 ${text}`}>{item.message}</p>
+                            <p className={`text-sm ${subText}`}>by {item.updated_by}</p>
                         </div>
                     </div>
                 ))}

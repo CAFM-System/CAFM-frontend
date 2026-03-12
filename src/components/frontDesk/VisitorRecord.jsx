@@ -3,8 +3,10 @@ import {
   User, MapPin, Phone, Mail, CreditCard, Car, Users, 
   CheckCircle2, ScanLine, Clock, LogIn
 } from 'lucide-react';
+import { useTheme } from '../../hooks/useTheme';
 
-export function VisitorRecord({ visitor, isSelected, onSelect, onCheckIn, isDarkMode }) {
+export function VisitorRecord({ visitor, isSelected, onSelect, onCheckIn }) {
+  const { isDarkMode } = useTheme();
   
   // --- Logic Helpers ---
   const isRegular = visitor.visitorType === 'regular';

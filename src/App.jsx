@@ -15,6 +15,7 @@ import ResetPasswordPage from './pages/auth/Reset-Password';
 import AcceptTicket from './pages/technician/AcceptTicket';
 import TechnicianReports from './pages/technician/TechnicianReports';
 import TechnicianNotification from './pages/technician/TechnicianNotification';
+import UserManagement from './components/admin/AdminUsers';
 
 // Pages - Front Desk
 import VisitorRegForm from './pages/frontDesk/VisitorRegForm';
@@ -56,6 +57,7 @@ function App() {
 
           {/* Admin Dashboard */}
           <Route path='/admin' element={<AdminDashboard user={user} />} />
+          <Route path='/admin/AdminUsers' element={<UserManagement />} />
 
           {/* FRONT DESK ROUTES */}
           {/* We group them under /frontdesk */}

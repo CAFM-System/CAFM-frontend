@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service.js";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function RegisterPage() {
+  const { isDarkMode } = useTheme();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -77,7 +79,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen overflow-hidden relative">
+    <div className={`flex items-center justify-center min-h-screen overflow-hidden relative ${isDarkMode ? 'bg-zinc-950' : 'bg-slate-100'}`}>
         {/* Background Image with Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -85,14 +87,14 @@ export default function RegisterPage() {
           backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1687A7]/90 via-[#1687A7]/85 to-[#0d5f7a]/90"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDarkMode ? 'from-zinc-900/95 via-zinc-900/90 to-zinc-950/95' : 'from-[#1687A7]/90 via-[#1687A7]/85 to-[#0d5f7a]/90'}`}></div>
       </div>
 
-      <div className="w-full max-w-6xl h-[90vh] bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#1687A7]/40 overflow-hidden">
+      <div className={`w-full max-w-6xl h-[90vh] backdrop-blur-xl rounded-3xl shadow-2xl border overflow-hidden ${isDarkMode ? 'bg-zinc-900/30 border-zinc-700/40' : 'bg-white/10 border-[#1687A7]/40'}`}>
         <div className="grid md:grid-cols-2 h-full">
 
           {/* LEFT */}
-          <div className="bg-gradient-to-br from-[#1fa2c9] via-[#1687A7] to-[#0b4f63] p-12 flex flex-col justify-center text-white">
+          <div className={`p-12 flex flex-col justify-center text-white ${isDarkMode ? 'bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950' : 'bg-gradient-to-br from-[#1fa2c9] via-[#1687A7] to-[#0b4f63]'}`}>
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-lg">
@@ -126,7 +128,7 @@ export default function RegisterPage() {
           </div>
 
           {/* RIGHT – SCROLLABLE */}
-          <div className="bg-[#0b3c49]/60 p-10 overflow-y-auto">
+          <div className={`p-10 overflow-y-auto ${isDarkMode ? 'bg-zinc-950/60' : 'bg-[#0b3c49]/60'}`}>
             <div className="max-w-md mx-auto space-y-5">
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-white">Register</h2>

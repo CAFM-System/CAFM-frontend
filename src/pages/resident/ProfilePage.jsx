@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../components/resident/Footer";
 import AuthService from "../../services/auth.service";
+import ProfileCard from "../resident/ProfileCard";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function UserProfileCard() {
+  const navigate = useNavigate();
+  const { isDarkMode, bg, cardBg, text, subText, inputBg, modalBg, buttonSecondary } = useTheme();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [formData, setFormData] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     fetchUserProfile();
@@ -15,15 +25,11 @@ export default function UserProfileCard() {
     try {
       setLoading(true);
       setError(null);
-      
-      // Simulate API call with mock data
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const response = await AuthService.getuser();
 
-      
+      const response = await AuthService.getuser();
       setUserData(response.data.user);
-      
+      setFormData(buildFormData(response.data.user));
+
     } catch (err) {
       console.error("Error fetching profile:", err);
       setError(err.response?.data?.message || "Failed to load profile");
@@ -32,160 +38,434 @@ export default function UserProfileCard() {
     }
   };
 
-  // Get first letter for avatar
   const getInitial = (name) => {
-    return name ? name.charAt(0).toUpperCase() : 'U';
+    return name ? name.charAt(0).toUpperCase() : "U";
   };
 
-  // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+  const toInputDate = (dateString) => {
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toISOString().split("T")[0];
   };
 
-  // Loading state
+  const buildFormData = (user) => ({
+    firstName: user?.profile?.firstName || "",
+    lastName: user?.profile?.lastName || "",
+    dob: toInputDate(user?.profile?.dob),
+    gender: user?.profile?.gender || "",
+    maritalStatus: user?.profile?.maritalStatus || "",
+    phone: user?.profile?.phone || "",
+    apartmentNo: user?.profile?.apartmentNo || "",
+    noOfResidents: user?.profile?.noOfResidents || "",
+    email: user?.email || "",
+    nic: user?.profile?.nic || "",
+  });
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const handleEditClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleCancelEdit = () => {
+    setSaveError(null);
+    setFormData(buildFormData(userData));
+    setIsEditing(false);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      setSaveError(null);
+
+      const payload = {
+        profile: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          dob: formData.dob || null,
+          gender: formData.gender,
+          maritalStatus: formData.maritalStatus,
+          phone: formData.phone,
+          apartmentNo: formData.apartmentNo,
+          noOfResidents: formData.noOfResidents,
+        },
+      };
+
+      const response = await AuthService.updateProfile(payload);
+      const updatedUser = response?.data?.user || response?.data || null;
+
+      if (updatedUser) {
+        setUserData((prev) => ({
+          ...prev,
+          ...updatedUser,
+          profile: {
+            ...(prev?.profile || {}),
+            ...(updatedUser?.profile || {}),
+          },
+        }));
+      } else {
+        setUserData((prev) => ({
+          ...prev,
+          profile: {
+            ...(prev?.profile || {}),
+            ...payload.profile,
+          },
+        }));
+      }
+
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      setSaveError(err.response?.data?.message || "Failed to update profile");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /* =======================
+      LOADING STATE
+  ======================== */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4 md:p-8 flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#1687A7] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 font-medium">Loading profile...</p>
-          </div>
+      <div className={`min-h-screen flex items-center justify-center ${bg}`}>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className={`font-medium ${subText}`}>
+            Loading profile...
+          </p>
         </div>
-        <Footer />
       </div>
     );
   }
 
-  // Error state
+  /* =======================
+      ERROR STATE
+  ======================== */
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4 md:p-8 flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md text-center border border-red-100">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">Error Loading Profile</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <button
-              onClick={fetchUserProfile}
-              className="px-8 py-3 bg-gradient-to-r from-[#1687A7] to-[#126b8a] text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium"
-            >
-              Try Again
-            </button>
-          </div>
+      <div className={`min-h-screen flex items-center justify-center ${bg}`}>
+        <div className={`rounded-3xl shadow-xl p-8 text-center border ${modalBg}`}>
+          <h2 className={`text-xl font-bold mb-2 ${text}`}>
+            Error Loading Profile
+          </h2>
+          <p className={`mb-6 ${subText}`}>{error}</p>
+          <button
+            onClick={fetchUserProfile}
+            className="px-6 py-2 bg-accent text-secondary rounded-xl hover:opacity-90"
+          >
+            Try Again
+          </button>
         </div>
-        <Footer />
       </div>
     );
   }
 
+  /* =======================
+      MAIN UI
+  ======================== */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4 md:p-8 flex flex-col">
-      <div className="flex-1 p-4 md:p-5 flex items-center justify-center">
-        <div className="w-full max-w-lg">
-          {/* Main Profile Card */}
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-            {/* Header Background with Gradient */}
-            <div className="h-20 bg-gradient-to-r from-[#1687A7] via-[#1a9aba] to-[#126b8a] relative">
-              <div className="absolute inset-0 bg-black opacity-5"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white opacity-20"></div>
+    <div className={`min-h-screen p-4 md:p-8 flex flex-col ${bg}`}>
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className={`rounded-2xl shadow-xl w-[90%] max-w-md p-6 animate-fadeIn border ${modalBg}`}>
+
+            <h2 className={`text-lg font-semibold mb-3 ${text}`}>
+              Confirm Edit
+            </h2>
+
+            <p className={`text-sm mb-6 ${subText}`}>
+              Do you want to edit your profile?
+              <br />
+              <span className="text-red-500">
+                Email and NIC/Passport cannot be changed.
+              </span>
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className={`px-4 py-2 rounded-lg transition border ${buttonSecondary}`}
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setSaveError(null);
+                  setFormData(buildFormData(userData));
+                  setIsEditing(true);
+                }}
+                className="px-4 py-2 rounded-lg bg-accent text-secondary hover:opacity-90 transition"
+              >
+                Yes, Edit
+              </button>
             </div>
+          </div>
+        </div>
+      )}
 
-            {/* Profile Content */}
-            <div className="px-5 md:px-7 pb-7">
-              {/* Avatar Section - Centered */}
-              <div className="flex flex-col items-center -mt-10 mb-4">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#1687A7] to-[#126b8a] rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-2xl ring-6 ring-white">
-                    {getInitial(userData.profile.firstName)}
-                  </div>
-                </div>
+
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-lg">
+
+          <div className={`rounded-3xl shadow-2xl overflow-hidden border mb-8 ${cardBg}`}>
+
+            {/* HEADER */}
+            <div className="h-20 bg-gradient-to-r from-accent to-accent/80" />
+
+
+            {/* CONTENT */}
+            <div className="px-6 pb-7">
+
+              {/* AVATAR */}
+              <div className={`w-20 h-20 rounded-full
+  bg-gradient-to-br from-accent to-accent/80
+  flex items-center justify-center
+  text-primary text-2xl font-bold
+  ring-4 ${isDarkMode ? "ring-secondary" : "ring-primary"}`}>
+                {getInitial(userData?.profile?.firstName)}
               </div>
-              
-              {/* User Info - Centered */}
-              <div className="text-center mb-5">
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-1.5">
-                  {`${userData.profile.firstName} ${userData.profile.lastName}` || 'N/A'}
-                </h1>
-                <p className="text-gray-600 text-base mb-2.5">{userData?.email || 'N/A'}</p>
-                <div className="inline-flex items-center gap-2 text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full">
-                  <svg 
-                    className="w-4 h-4 text-[#1687A7]" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
+
+
+              {/* NAME */}
+              <h1 className={`text-xl font-bold ${text}`}>
+                {userData.profile.firstName} {userData.profile.lastName}
+              </h1>
+
+              <p className={subText}>
+                {userData.email}
+              </p>
+
+              {/* Edit profile button */}
+
+              <div className="mt-4 flex flex-wrap gap-3 mb-2">
+                {!isEditing && (
+                  <>
+                    <button
+                      onClick={handleEditClick}
+                      className="px-4 py-2 bg-accent text-white rounded-lg
+  hover:bg-accent/90 transition-colors text-sm font-medium"
+                    >
+                      Edit Profile
+                    </button>
+
+                    {/* Family Profile button */}
+
+                  <button
+                    onClick={() => navigate("/family-profile")}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg
+    hover:bg-indigo-700 transition-colors text-sm font-medium"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
-                    />
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
-                    />
-                  </svg>
-                  <span className="text-sm font-medium">Apartment {userData.profile.apartmentNo || 'N/A'}</span>
-                </div>
+                    Family Profile
+                  </button>
+                  </>
+                )}
+
+                {isEditing && (
+                  <>
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg
+  hover:bg-emerald-700 transition-colors text-sm font-medium disabled:opacity-60"
+                    >
+                      {isSaving ? "Saving..." : "Save Changes"}
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      disabled={isSaving}
+                      className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium disabled:opacity-60 border ${buttonSecondary}`}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </div>
 
-              {/* Resident Details Card - Centered */}
-              <div className="max-w-md mx-auto">
-                <div className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-100 rounded-2xl p-5 shadow-lg">
-                  <div className="space-y-3.5">
-                    <div className="flex items-center justify-between p-3.5 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                      <div>
-                        <p className="text-sm text-gray-500 mb-1 font-medium">Role</p>
-                        <p className="text-lg font-semibold text-gray-800">
-                          {userData?.role || 'N/A'}
-                        </p>
-                      </div>
-                      <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
-                        <svg className="w-5 h-5 text-[#1687A7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </div>
+              {saveError && (
+                <p className="mt-3 text-sm text-red-600">{saveError}</p>
+              )}
+
+
+              {/* DETAILS */}
+              <div className={`rounded-2xl p-5 space-y-3 border ${isDarkMode ? "bg-secondary/70 border-primary/10" : "bg-primary/70 border-secondary/10"}`}>
+
+                {!isEditing && (
+                  <>
+                    <ProfileCard heading="Full Name"
+                      data={`${userData.profile.firstName} ${userData.profile.lastName}`}
+                      icon={<FullNameIcon />} />
+
+                    <ProfileCard heading="Date of Birth"
+                      data={formatDate(userData.profile.dob)}
+                      icon={<DateOfBirthIcon />} />
+                    <ProfileCard heading="NIC / Passport"
+                      data={userData.profile.nic}
+                      icon={<IdIcon />} />
+
+                    <ProfileCard heading="Gender"
+                      data={userData.profile.gender}
+                      icon={<GenderIcon />} />
+
+                    <ProfileCard heading="Marital Status"
+                      data={userData.profile.maritalStatus}
+                      icon={<HeartIcon />} />
+
+                    <ProfileCard heading="Email"
+                      data={userData.email}
+                      icon={<MailIcon />} />
+
+                    <ProfileCard heading="Phone"
+                      data={userData.profile.phone}
+                      icon={<PhoneIcon />} />
+
+                    <ProfileCard heading="Apartment Number"
+                      data={userData.profile.apartmentNo}
+                      icon={<HomeIcon />} />
+
+                    <ProfileCard heading="No. of Residents"
+                      data={userData.profile.noOfResidents}
+                      icon={<UsersIcon />} />
+                  </>
+                )}
+
+                {isEditing && formData && (
+                  <form className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>First Name</span>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Last Name</span>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Date of Birth</span>
+                        <input
+                          type="date"
+                          name="dob"
+                          value={formData.dob}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Gender</span>
+                        <select
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        >
+                          <option value="">Select gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>
+                          Marital Status
+                        </span>
+
+                        <select
+                          name="maritalStatus"
+                          value={formData.maritalStatus}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        >
+                          <option value="">Select status</option>
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                        </select>
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Phone</span>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Apartment Number</span>
+                        <input
+                          type="text"
+                          name="apartmentNo"
+                          value={formData.apartmentNo}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>No. of Residents</span>
+                        <input
+                          type="number"
+                          name="noOfResidents"
+                          value={formData.noOfResidents}
+                          onChange={handleChange}
+                          className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
+                        />
+                      </label>
                     </div>
-                    
-                    <div className="flex items-center justify-between p-3.5 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                      <div>
-                        <p className="text-sm text-gray-500 mb-1 font-medium">Member Since</p>
-                        <p className="text-lg font-semibold text-gray-800">
-                          {formatDate(userData?.profile?.dateOfEntry)}
-                        </p>
-                      </div>
-                      <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>Email (read-only)</span>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          disabled
+                          className={`w-full rounded-lg border px-3 py-2 text-sm opacity-60 ${inputBg}`}
+                        />
+                      </label>
+                      <label className="space-y-1">
+                        <span className={`text-sm ${subText}`}>NIC / Passport (read-only)</span>
+                        <input
+                          type="text"
+                          name="nic"
+                          value={formData.nic}
+                          disabled
+                          className={`w-full rounded-lg border px-3 py-2 text-sm opacity-60 ${inputBg}`}
+                        />
+                      </label>
                     </div>
-                    
-                    <div className="flex items-center justify-between p-3.5 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                      <div>
-                        <p className="text-sm text-gray-500 mb-1 font-medium">Status</p>
-                        <div className="flex items-center gap-3">
-                          <span className={`w-3 h-3 rounded-full ${
-                            userData?.status === 'Active' ? 'bg-green-500 shadow-lg shadow-green-200' : 'bg-gray-400'
-                          }`}></span>
-                          <p className="text-lg font-semibold text-gray-800">
-                            {userData?.status || 'N/A'}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
-                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
@@ -195,3 +475,42 @@ export default function UserProfileCard() {
     </div>
   );
 }
+
+/* ICONS */
+const IconBase = ({ children }) => (
+  <div className="w-10 h-10 rounded-full
+    bg-accent/15
+    flex items-center justify-center
+    text-accent">
+    {children}
+  </div>
+);
+
+
+const UserIcon = () => (
+  <IconBase>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        d="M5.121 17.804A9 9 0 1118.879 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </IconBase>
+);
+
+const CalendarIcon = () => (
+  <IconBase>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        d="M8 7V3m8 4V3m-9 8h10" />
+    </svg>
+  </IconBase>
+);
+
+const FullNameIcon = () => <IconBase>👤</IconBase>;
+const DateOfBirthIcon = () => <IconBase>🎂</IconBase>;
+const IdIcon = () => <IconBase>🪪</IconBase>;
+const GenderIcon = () => <IconBase>⚧️</IconBase>;
+const HeartIcon = () => <IconBase>❤️</IconBase>;
+const MailIcon = () => <IconBase>📧</IconBase>;
+const PhoneIcon = () => <IconBase>📞</IconBase>;
+const HomeIcon = () => <IconBase>🏠</IconBase>;
+const UsersIcon = () => <IconBase>👨‍👩‍👧‍👦</IconBase>;

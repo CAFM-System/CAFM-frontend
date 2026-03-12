@@ -1,7 +1,9 @@
 import React from "react";
 import { UserPlus, QrCode, ArrowRight } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 
-export default function QuickActions({ onRegisterClick, onScanClick, activeAction, isDarkMode }) {
+export default function QuickActions({ onRegisterClick, onScanClick, activeAction }) {
+  const { isDarkMode } = useTheme();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
       <ActionButton 

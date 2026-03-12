@@ -7,11 +7,13 @@ import { tickets } from '../../services/newTicketData';
 import TicketService from '../../services/ticket.service';
 import ResidentService from '../../services/resident.service';
 import toast from 'react-hot-toast';
+import { useTheme } from '../../hooks/useTheme';
 
 
 
 
 export function ResidentTicketDialog(props){
+    const { modalBg, text, subText, divider, isDarkMode } = useTheme();
     const [rating, setRating] = useState(0);
     const [showRatingTab, setShowRatingTab] = useState(false);
     const [feedback, setFeedback] = useState("");
@@ -88,10 +90,10 @@ export function ResidentTicketDialog(props){
                 onClick={() => onClose?.()}
             >
                 {/* stop clicks inside modal from closing */}
-                <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh]">
+                <div onClick={(e) => e.stopPropagation()} className={`rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] border ${modalBg}`}>
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-300">
-                        <h2 className="text-xl font-semibold">Ticket Details</h2>
+                    <div className={`flex items-center justify-between p-6 border-b ${divider}`}>
+                        <h2 className={`text-xl font-semibold ${text}`}>Ticket Details</h2>
                         <div className="flex items-center gap-2">
 
                             {/* status badge */}
@@ -143,52 +145,52 @@ export function ResidentTicketDialog(props){
 
                     {/* Description */}
                     <div className="p-6 overflow-y-scroll max-h-[75vh]">
-                        <h3 className="text-sm text-gray-500 mb-2">{data.ticket_id}</h3>
-                        <h2 className="text-2xl font-semibold mb-3">{data.title}</h2>
-                        <p className="text-gray-600 mb-6">{data.complaint}</p>
+                        <h3 className={`text-sm mb-2 ${subText}`}>{data.ticket_id}</h3>
+                        <h2 className={`text-2xl font-semibold mb-3 ${text}`}>{data.title}</h2>
+                        <p className={`mb-6 ${subText}`}>{data.complaint}</p>
 
                         <div className="grid grid-cols-2 gap-6 pb-3 mb-6">
                             <div>
-                                <p className="text-sm text-gray-500 mb-2">Category</p>
+                                <p className={`text-sm mb-2 ${subText}`}>Category</p>
                                 <div className="flex items-center gap-2">
-                                    <CircleAlert size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.job_type}</span>
+                                    <CircleAlert size={18} className={subText} />
+                                    <span className={text}>{data.job_type}</span>
                                 </div>
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-500 mb-2">Location</p>
+                                <p className={`text-sm mb-2 ${subText}`}>Location</p>
                                 <div className="flex items-center gap-2">
-                                    <MapPin size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.location}</span>
+                                    <MapPin size={18} className={subText} />
+                                    <span className={text}>{data.location}</span>
                                 </div>
                             </div>
                             
                             
                             
                             <div>
-                                <p className="text-sm text-gray-500 mb-2">Assigned To</p>
+                                <p className={`text-sm mb-2 ${subText}`}>Assigned To</p>
                                 <div className="flex items-center gap-2">
-                                    <User size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.complaintRecievdBy}</span>
+                                    <User size={18} className={subText} />
+                                    <span className={text}>{data.complaintRecievdBy}</span>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 mb-2">Created</p>
+                                <p className={`text-sm mb-2 ${subText}`}>Created</p>
                                 <div className="flex items-center gap-2">
-                                    <Clock size={18} className="text-gray-400" />
-                                    <span className="text-gray-700">{data.created_at}</span>
+                                    <Clock size={18} className={subText} />
+                                    <span className={text}>{data.created_at}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="border-t pt-6 border-gray-300">
+                        <div className={`border-t pt-6 ${divider}`}>
                             {
                                 isLoading ? <p>Loading status history...</p> :
                                 <StatusHistory data={statusHistory} refresh={() => setIsLoading(true)} />
                             }
                         </div>
-                        <div className="border-t pt-6 border-gray-300">
+                        <div className={`border-t pt-6 ${divider}`}>
                         <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId = {data.id} refresh={() => {setIsLoading(true);props.refresh();}} onClose={onClose} />
                         </div>
 
