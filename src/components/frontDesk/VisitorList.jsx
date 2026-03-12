@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search } from "lucide-react";
 import { VisitorRecord } from "./VisitorRecord";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function VisitorList({ 
   visitors, 
@@ -10,9 +11,9 @@ export default function VisitorList({
   setSearchQuery, 
   stats, 
   onCheckIn,
-  onCheckOut,
-  isDarkMode 
+  onCheckOut
 }) {
+  const { isDarkMode } = useTheme();
   const [selectedVisitorId, setSelectedVisitorId] = useState(null);
 
   const handleSelect = (id) => {
@@ -113,7 +114,6 @@ export default function VisitorList({
                   isSelected={selectedVisitorId === visitor.id}
                   onSelect={() => handleSelect(visitor.id)}
                   onCheckIn={() => onCheckIn(visitor.id)}
-                  isDarkMode={isDarkMode} 
                 />
               </div>
             ))}

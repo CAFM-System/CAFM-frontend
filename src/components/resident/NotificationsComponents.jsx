@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Clock
 } from 'lucide-react';
+import { useTheme } from '../../hooks/useTheme';
 
 //UI COMPONENTS FOR NOTIFICATIONS PAGE
 
@@ -23,7 +24,7 @@ export const Button = ({
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 
   const variants = {
-    default: 'bg-[#1687A7] text-white hover:bg-[#1687A7]/90 focus:ring-[#1687A7]',
+    default: 'bg-accent text-secondary hover:bg-accent/90 focus:ring-accent',
     outline: 'border border-gray-300 bg-transparent hover:bg-gray-100',
     ghost: 'hover:bg-gray-100'
   };
@@ -139,18 +140,17 @@ export const formatTimestamp = (timestamp) => {
 
 export const NotificationItem = ({
   notification,
-  theme,
+  isDarkMode,
   onNotificationClick
 }) => {
   const themeClasses = {
     text: {
-      primary: theme === "light" ? "text-gray-900" : "text-gray-100",
-      secondary: theme === "light" ? "text-gray-600" : "text-gray-400",
-      tertiary: theme === "light" ? "text-gray-700" : "text-gray-300"
+      primary: isDarkMode ? "text-primary" : "text-secondary",
+      secondary: isDarkMode ? "text-primary/70" : "text-gray-500",
+      tertiary: isDarkMode ? "text-primary/80" : "text-gray-700"
     },
-    hover: theme === "light" ? "hover:bg-[#F6F5F5]" : "hover:bg-slate-700",
-    unreadBg:
-      theme === "light" ? "bg-[#D3E0EA]/30" : "bg-slate-700/50"
+    hover: isDarkMode ? "hover:bg-primary/10" : "hover:bg-gray-50",
+    unreadBg: isDarkMode ? "bg-primary/5" : "bg-accent/5"
   };
 
   return (
@@ -214,8 +214,8 @@ export const NotificationItem = ({
 
           {/* 🔴 CHANGED: ALWAYS show "New" (backend returns unread only) */}
           <div className="mt-2">
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-[#1687A7] font-medium">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#1687A7] rounded-full"></span>
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-accent font-medium">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent rounded-full"></span>
               New
             </span>
           </div>

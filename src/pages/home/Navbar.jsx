@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Sun, Moon, LogIn } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const handleNavigateToLogin = () => navigate("/login");
 
@@ -14,17 +16,7 @@ export default function Navbar() {
     }
   };
 
-  const [darkMode, setDarkMode] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  /* ===== DARK MODE ===== */
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
 
   /* ===== SCROLL DETECTION ===== */
   useEffect(() => {
@@ -38,13 +30,13 @@ export default function Navbar() {
 
   /* ===== TEXT COLOR LOGIC ===== */
   const navTextColor = isScrolled
-    ? darkMode
+    ? isDarkMode
       ? "text-white"
       : "text-slate-900"
     : "text-white";
 
   const themeBtnBg = isScrolled
-    ? darkMode
+    ? isDarkMode
       ? "bg-white/10 hover:bg-white/20"
       : "bg-black/10 hover:bg-black/20"
     : "bg-white/10 hover:bg-white/20";
@@ -99,10 +91,10 @@ export default function Navbar() {
 
             {/* THEME TOGGLE */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleTheme}
               className={`p-2 rounded-full transition ${themeBtnBg}`}
             >
-              {darkMode ? (
+              {isDarkMode ? (
                 <Sun className="w-5 h-5 text-yellow-400" />
               ) : (
                 <Moon className="w-5 h-5 text-slate-900" />

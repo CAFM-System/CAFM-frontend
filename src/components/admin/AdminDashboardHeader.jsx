@@ -1,6 +1,7 @@
-import { LogOut, Sun, Moon } from "lucide-react"; 
+import { LogOut, Sun, Moon, User } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../hooks/useTheme"; 
+import { useTheme } from "../../hooks/useTheme";
+import AdminUsers from "./AdminUsers";
 
 export default function AdminDashboardHeader({ title, name, department }) {
   const navigate = useNavigate();
@@ -11,6 +12,10 @@ export default function AdminDashboardHeader({ title, name, department }) {
   const onLogout = () => {
     localStorage.removeItem("access_token");
     navigate("/login");
+  };
+
+  const onUserManagement = () => {
+    navigate("/admin/AdminUsers");
   };
 
   // Theme-aware classes
@@ -61,6 +66,13 @@ export default function AdminDashboardHeader({ title, name, department }) {
           >
             <LogOut size={18} />
             Logout
+          </button>
+          <button
+            onClick={onUserManagement}
+            className={`flex items-center justify-center gap-2 border px-4 py-2 rounded-md w-full sm:w-auto transition-all ${buttonClasses}`}
+          >
+            <User size={18} />
+            User Management
           </button>
         </div>
 

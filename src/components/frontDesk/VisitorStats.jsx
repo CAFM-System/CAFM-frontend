@@ -1,7 +1,9 @@
 import React from "react";
 import { Users, CalendarCheck, UserPlus } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 
-export default function VisitorStats({ stats, isDarkMode }) {
+export default function VisitorStats({ stats }) {
+  const { isDarkMode } = useTheme();
   
   // Safe defaults
   const todayTotal = stats.today || 0;
