@@ -5,6 +5,7 @@ import ResidentSideVisitorForm from "../../components/resident/VisitorMainForm";
 import VisitorStats from "../../components/frontDesk/VisitorStats"; 
 import VisitorListForResident from "../../components/resident/VisitorListForResident";
 import visitorService from '../../services/visitor.service';
+import toast from 'react-hot-toast';
 
 export default function VisitorPage() {
   const { text, cardBg, subText, border, isDarkMode } = useTheme();
@@ -15,6 +16,8 @@ export default function VisitorPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [visitors, setVisitors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [deleteVisitorId, setDeleteVisitorId] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   //const getTodayStr = () => new Date().toISOString().split('T')[0];
   const getTodayStr = () => {
@@ -46,9 +49,30 @@ export default function VisitorPage() {
       setLoading(false);
     }
   };
+
 useEffect(() => {
   fetchVisitors();
 }, []);
+
+    const handleDeleteClick = (id) => {
+      setDeleteVisitorId(id);
+      setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await visitorService.deleteVisitor(deleteVisitorId);
+
+      setVisitors(prev => prev.filter(v => v.visitorId !== deleteVisitorId));
+      toast.success("Visitor invitation deleted");
+
+    } catch (err) {
+      console.error("Delete failed:", err);
+    } finally {
+      setShowDeleteDialog(false);
+      setDeleteVisitorId(null);
+    }
+  };
 
 
   // --- FILTERING LOGIC ---
@@ -98,6 +122,7 @@ useEffect(() => {
   const mainBgColor = isDarkMode ? "bg-[#18181B]" : "bg-[#F9F6EB]";
 
   return (
+    
     <div className={`min-h-screen transition-colors duration-300 ${mainBgColor} ${text} p-4 md:p-10 relative`}>
       <div className="max-w-7xl mx-auto space-y-10">
         
@@ -132,6 +157,7 @@ useEffect(() => {
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               stats={stats}
+              onDelete={handleDeleteClick}
             />
           </div>
 
@@ -170,6 +196,41 @@ useEffect(() => {
                 <X size={24} className={text} />
               </button>
               <ResidentSideVisitorForm onCancel={() => setIsModalOpen(false)} onSuccess={fetchVisitors} />
+            </div>
+          </div>
+        )}
+        {showDeleteDialog && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            
+            <div className={`w-full max-w-md p-6 rounded-2xl shadow-xl ${cardBg}`}>
+              
+              <h3 className="text-lg font-bold mb-3">
+                Delete Visitor
+              </h3>
+
+              <p className="text-sm opacity-80 mb-6">
+                Are you sure you want to delete this visitor invitation?
+                This action cannot be undone.
+              </p>
+
+              <div className="flex justify-end gap-3">
+                
+                <button
+                  onClick={() => setShowDeleteDialog(false)}
+                  className="px-4 py-2 rounded-lg border"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={confirmDelete}
+                  className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete
+                </button>
+
+              </div>
+
             </div>
           </div>
         )}
