@@ -52,7 +52,7 @@ export default function Ticketcard({ ticket, onClick }) {
   // Theme-aware styling
   const cardBase = isDarkMode 
     ? "bg-secondary/40 border-primary/20 hover:bg-secondary/60" 
-    : "bg-white border-gray-300 shadow-sm hover:shadow-md";
+    : "bg-white border-gray-200 shadow-sm hover:shadow-md";
 
   const textColor = isDarkMode 
     ? "text-primary" 

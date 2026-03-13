@@ -2,8 +2,10 @@ import { Upload } from "lucide-react";
 import { useState } from "react";
 import TicketService from "../../services/ticket.service";
 import toast from "react-hot-toast";
+import { useTheme } from "../../hooks/useTheme";
 
 export function CreateTicketDialog(props) {
+    const { modalBg, text, subText, inputBg, buttonPrimary, buttonSecondary } = useTheme();
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [specialNote, setSpecialNote] = useState("");
@@ -34,9 +36,9 @@ export function CreateTicketDialog(props) {
     return(
         <div className="fixed inset-0 bg-black/50 z-[100] flex justify-center items-center p-4">
       
-      <div className="w-full max-w-[520px] max-h-[90vh] bg-white rounded-2xl shadow-xl p-6 overflow-y-auto">
+      <div className={`w-full max-w-[520px] max-h-[90vh] rounded-2xl shadow-xl p-6 overflow-y-auto border ${modalBg}`}>
         
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <h2 className={`text-xl font-semibold mb-4 ${text}`}>
           Create New Ticket
         </h2>
 
@@ -44,7 +46,7 @@ export function CreateTicketDialog(props) {
 
           {/* Title */}
           <div className="space-y-1">
-            <label htmlFor="title" className="font-medium text-gray-700">
+            <label htmlFor="title" className={`font-medium ${subText}`}>
               Title *
             </label>
             <input
@@ -52,7 +54,7 @@ export function CreateTicketDialog(props) {
               placeholder="Brief description of the issue"
               required
               value={title}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
               onChange={(e)=>{setTitle(e.target.value)}}
             />
           </div>
@@ -60,8 +62,8 @@ export function CreateTicketDialog(props) {
           {/* Category + Priority */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="font-medium text-gray-700">Category *</label>
-              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+              <label className={`font-medium ${subText}`}>Category *</label>
+              <select className={`w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
                 value={category}
                 onChange={(e)=>{setCategory(e.target.value)}}
                 placeholder="Select category"
@@ -78,7 +80,7 @@ export function CreateTicketDialog(props) {
 
           {/* Location */}
           <div className="space-y-1">
-            <label htmlFor="location" className="font-medium text-gray-700">
+            <label htmlFor="location" className={`font-medium ${subText}`}>
               Location *
             </label>
             <input
@@ -87,13 +89,13 @@ export function CreateTicketDialog(props) {
               required
               value={location}
               onChange={(e)=>{setLocation(e.target.value)}}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
             />
           </div>
 
           {/* Description */}
           <div className="space-y-1">
-            <label htmlFor="description" className="font-medium text-gray-700">
+            <label htmlFor="description" className={`font-medium ${subText}`}>
               Description *
             </label>
             <textarea
@@ -103,12 +105,12 @@ export function CreateTicketDialog(props) {
               required
               value={description}
               onChange={(e)=>{setDescription(e.target.value)}}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full border rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
             />
           </div>
           {/* Special Note */}
           <div className="space-y-1">
-            <label htmlFor="specialNote" className="font-medium text-gray-700">
+            <label htmlFor="specialNote" className={`font-medium ${subText}`}>
               Special Note *
             </label>
             <textarea
@@ -117,7 +119,7 @@ export function CreateTicketDialog(props) {
               rows={4}
               value={specialNote}
               onChange={(e)=>{setSpecialNote(e.target.value)}}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full border rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
             />
           </div>
 
@@ -129,7 +131,7 @@ export function CreateTicketDialog(props) {
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border border-gray-300 text-black hover:bg-black hover:text-white transition"
+              className={`px-4 py-2 rounded-lg border transition ${buttonSecondary}`}
               onClick={()=>{close()}}
             >
               Cancel
@@ -137,7 +139,7 @@ export function CreateTicketDialog(props) {
 
             <button
               
-              className="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800 transition"
+              className={`px-4 py-2 rounded-lg transition ${buttonPrimary}`}
               onClick={()=>{handleSubmit()}}
             >
               Create Ticket
