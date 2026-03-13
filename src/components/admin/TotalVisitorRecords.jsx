@@ -4,7 +4,8 @@ import {
   Loader2, FileDown, CheckCircle2, X 
 } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme'; 
-import { AdminVisitorCard } from './AdminVisitorCard';
+import { AdminVisitorTable } from './AdminVisitorTable';
+import visitorService from '../../services/visitor.service';
 
 export default function TotalVisitorRecords() {
   const theme = useTheme();
@@ -21,45 +22,43 @@ export default function TotalVisitorRecords() {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
+  
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisitors([
-        { 
-          id: 'VIS-101', fullName: 'Arjun Jayawardena', hostApartment: 'B-201', hostName: 'S. Perera', 
-          entryTime: '08:35 AM', visitorType: 'regular', registrationType: 'on_site',
-          vehicleNumber: 'WP CAS-1234', phone: '0771234567', email: 'arjun@example.com', 
-          idNumber: '199245678V', numberOfOthers: 2, dateFrom: '2026-03-10', dateTo: '2026-03-20'
-        },
-        { 
-          id: 'VIS-102', fullName: 'Sarah Mitchell', hostApartment: 'A-404', hostName: 'Nilanthi Silva', 
-          entryTime: null, visitorType: 'once', registrationType: 'pre_registered',
-          vehicleNumber: null, phone: '0719876543', email: 'sarah@example.com', 
-          idNumber: 'N4455667', numberOfOthers: 0, visitDate: '2026-03-12'
-        },
-        { 
-          id: 'VIS-103', fullName: 'Kamal Gunaratne', hostApartment: 'C-102', hostName: 'P. Perera', 
-          entryTime: '10:00 AM', visitorType: 'once', registrationType: 'on_site',
-          vehicleNumber: 'WP BAA-5566', phone: '0771112233', email: 'kamal@gmail.com', 
-          idNumber: '198567234V', numberOfOthers: 1, visitDate: '2026-03-05'
-        },
-        { 
-          id: 'VIS-104', fullName: 'John Doe', hostApartment: 'D-505', hostName: 'S. Perera', 
-          entryTime: null, visitorType: 'regular', registrationType: 'pre_registered',
-          vehicleNumber: 'WP KY-9988', phone: '0774445566', email: 'john@doe.com', 
-          idNumber: '990011223V', numberOfOthers: 0, dateFrom: '2026-03-01', dateTo: '2026-03-15'
-        }
-      ]);
+
+  const fetchVisitors = async () => {
+    try {
+
+      setLoading(true);
+
+      const response = await visitorService.getVisitorInfo();
+
+      // axios usually returns data inside response.data
+      const data = response.data;
+
+      setVisitors(data);
+
+    } catch (error) {
+
+      console.error("Failed to fetch visitors:", error);
+
+    } finally {
+
       setLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
+
+    }
+  };
+
+  fetchVisitors();
+
   }, []);
 
   const filteredVisitors = useMemo(() => {
     return visitors.filter(v => {
       const query = searchQuery.toLowerCase();
-      const matchesSearch = v.fullName.toLowerCase().includes(query) || 
-                            v.hostName.toLowerCase().includes(query) ||
-                            v.id.toLowerCase().includes(query);
+      const matchesSearch =
+  (v.name?.toLowerCase().includes(query) || false) ||
+  (v.hostName?.toLowerCase().includes(query) || false) ||
+  (String(v.id).toLowerCase().includes(query));
 
       const isCheckedIn = !!v.entryTime;
       const matchesStatus = statusFilter === 'All Status' || 
@@ -80,8 +79,8 @@ export default function TotalVisitorRecords() {
 
   const stats = {
     total: filteredVisitors.length,
-    preReg: filteredVisitors.filter(v => v.registrationType === 'pre_registered').length,
-    onSite: filteredVisitors.filter(v => v.registrationType === 'on_site').length
+    preReg: filteredVisitors.filter(v => v.isPreRegistered == true).length,
+    onSite: filteredVisitors.filter(v => v.isPreRegistered == false).length
   };
 
   // --- MOCK NOTIFICATION HANDLER ---
@@ -163,11 +162,7 @@ export default function TotalVisitorRecords() {
       </div>
 
       {/* --- LIST --- */}
-      <div className="grid grid-cols-1 gap-4">
-        {filteredVisitors.map(v => (
-          <AdminVisitorCard key={v.id} visitor={v} isDarkMode={isDarkMode} isSelected={selectedId === v.id} onSelect={() => setSelectedId(selectedId === v.id ? null : v.id)} />
-        ))}
-      </div>
+      <AdminVisitorTable visitors={filteredVisitors} isDarkMode={isDarkMode} />
     </div>
   );
 }
