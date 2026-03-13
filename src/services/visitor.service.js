@@ -24,7 +24,10 @@ const visitorService = {
         });
         return response;
     },
-    
+    async updateVisitor(visitorData) {
+        const response = await apiClient.put("/visitors", visitorData);
+        return response;
+    }
         
 }
 

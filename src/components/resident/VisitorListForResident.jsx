@@ -10,7 +10,8 @@ export default function VisitorListForResident({
   searchQuery, 
   setSearchQuery, 
   stats,
-  onDelete
+  onDelete,
+  onEdit
 }) {
   const { isDarkMode } = useTheme();
   const [selectedVisitorId, setSelectedVisitorId] = useState(null);
@@ -109,6 +110,7 @@ export default function VisitorListForResident({
                   isSelected={selectedVisitorId === visitor.id}
                   onSelect={() => handleSelect(visitor.id)}
                   onDelete={onDelete}
+                  onEdit={onEdit}
                 />
               </div>
             ))}

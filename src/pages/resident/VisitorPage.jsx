@@ -6,6 +6,7 @@ import VisitorStats from "../../components/frontDesk/VisitorStats";
 import VisitorListForResident from "../../components/resident/VisitorListForResident";
 import visitorService from '../../services/visitor.service';
 import toast from 'react-hot-toast';
+import VisitorEditForm from '../../components/resident/VisitorEditForm';
 
 export default function VisitorPage() {
   const { text, cardBg, subText, border, isDarkMode } = useTheme();
@@ -18,6 +19,8 @@ export default function VisitorPage() {
   const [loading, setLoading] = useState(false);
   const [deleteVisitorId, setDeleteVisitorId] = useState(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingVisitor, setEditingVisitor] = useState(null);
 
   //const getTodayStr = () => new Date().toISOString().split('T')[0];
   const getTodayStr = () => {
@@ -72,6 +75,11 @@ useEffect(() => {
       setShowDeleteDialog(false);
       setDeleteVisitorId(null);
     }
+  };
+
+  const handleEditClick = (visitor) => {
+    setEditingVisitor(visitor);
+    setIsEditModalOpen(true);
   };
 
 
@@ -158,6 +166,7 @@ useEffect(() => {
               setSearchQuery={setSearchQuery}
               stats={stats}
               onDelete={handleDeleteClick}
+              onEdit={handleEditClick}
             />
           </div>
 
@@ -232,6 +241,28 @@ useEffect(() => {
               </div>
 
             </div>
+          </div>
+        )}
+        {isEditModalOpen && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+
+            <div className={`relative w-full max-w-2xl p-8 rounded-3xl ${cardBg}`}>
+
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="absolute top-4 right-4"
+              >
+                <X size={22} />
+              </button>
+
+              <VisitorEditForm
+                visitor={editingVisitor}
+                onClose={() => setIsEditModalOpen(false)}
+                onSuccess={fetchVisitors}
+              />
+
+            </div>
+
           </div>
         )}
       </div>
