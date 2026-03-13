@@ -67,7 +67,7 @@ export default function VisitorMainForm({ onCancel , onSuccess }) {
     vehicle_number: formData.vehicleNumber,
     visitor_type: formData.visitorType.toUpperCase(),
     valid_from: formData.dateFrom || formData.visitDate,
-    valid_until: formData.dateTo,
+    valid_until: formData.dateTo || null,
     others_count: formData.numberOfOthers
   };
 

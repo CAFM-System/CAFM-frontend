@@ -28,6 +28,8 @@ export default function VisitorPage() {
   );
 };
 
+  const getDateOnly = (date) => date?.split("T")[0];
+
   
 
   
@@ -54,29 +56,33 @@ useEffect(() => {
     const matchesSearch = (v.fullName || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
                           (v.idNumber || "").toLowerCase().includes(searchQuery.toLowerCase());
     if (activeTab === "today") {
-      const visitorDate = v.visitDate.split("T")[0];
+      const visitorDate = getDateOnly(v.visitDate);
       return matchesSearch && visitorDate === getTodayStr();
     }
     return matchesSearch;
-  }).sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
+  }).sort((a, b) => {
+  const dateA = a.visitDate ? new Date(a.visitDate) : 0;
+  const dateB = b.visitDate ? new Date(b.visitDate) : 0;
+  return dateB - dateA;
+});
 
   console.log("Today:", getTodayStr());
   visitors.forEach(v => console.log("Visitor Date:", v.visitDate));
   visitors.forEach(v => console.log("Is Pre-Registered:", v.isPreRegistered));
-
+  
   const stats = {
     today: visitors.filter(v => {
-      const visitorDate = v.visitDate.split("T")[0];
+      const visitorDate = getDateOnly(v.visitDate);
       return visitorDate === getTodayStr();
     }).length,
 
     onSite: visitors.filter(v => {
-      const visitorDate = v.visitDate.split("T")[0];
+      const visitorDate = getDateOnly(v.visitDate);
       return visitorDate === getTodayStr() && !v.isPreRegistered;
     }).length,
 
     preRegistered: visitors.filter(v => {
-      const visitorDate = v.visitDate.split("T")[0];
+      const visitorDate = getDateOnly(v.visitDate);
       return visitorDate === getTodayStr() && v.isPreRegistered;
     }).length,
 

@@ -13,6 +13,10 @@ const visitorService = {
     async preRegisterVisitor(visitorData) {
         const response = await apiClient.post("/visitors/pre-register", visitorData);
         return response;
+    },
+    async onsiteRegisterVisitor(visitorData) {
+        const response = await apiClient.post("/visitors/onsite-register", visitorData);
+        return response;
     }
         
 }

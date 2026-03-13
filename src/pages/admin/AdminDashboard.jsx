@@ -4,9 +4,10 @@ import AdminDashboardCard from "../../components/admin/AdminDashboardCard";
 import { Ticket, Clock4, CheckCircle, AlertTriangle, Search, Funnel } from "lucide-react";
 import TicketCard from "../../components/common/ticketCard";
 import ReportsAnalytics from "../../components/admin/ReportsAnalytics";
+import TotalVisitorRecords from "../../components/admin/TotalVisitorRecords";
 import TicketDetails from "../../components/admin/TicketDetails";
 import TicketService from "../../services/ticket.service";
-import { useTheme } from "../../hooks/useTheme"; 
+import { useTheme } from "../../hooks/useTheme";
 
 export default function AdminDashboard() {
 
@@ -27,22 +28,21 @@ export default function AdminDashboard() {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isTicketOpen, setIsTicketOpen] = useState(false);
 
-    useEffect(
-        () => {
+    useEffect(() => {
+        const fetchTickets = async () => {
             try {
                 if (isLoading) {
-                    TicketService.getTicket().then(
-                        (response) => {
-                            console.log(response.data.tickets);
-                            setTicketList(response.data.tickets);
-                            setIsLoading(false);
-                        }
-                    )
+                    const response = await TicketService.getTicket();
+                    setTicketList(response.data.tickets || []);
+                    setIsLoading(false);
                 }
             } catch (error) {
                 console.error("Error fetching tickets:", error);
+                setIsLoading(false);
             }
-        }, [isLoading]);
+        };
+        fetchTickets();
+    }, [isLoading]);
 
     const openTicketDetails = (ticket) => {
         setSelectedTicket(ticket);
@@ -75,7 +75,6 @@ export default function AdminDashboard() {
     });
 
     return (
-        // Theme-aware background
         <div className={`min-h-screen transition-colors duration-300 ${theme.bg}`}>
             <AdminDashboardHeader
                 title="Admin Dashboard"
@@ -83,9 +82,9 @@ export default function AdminDashboard() {
                 department="administration"
             />
 
-            {/* Tabs */}
+            {/* Tabs - Reordered Visitor Records to 4th position */}
             <div className={`flex gap-6 border-b px-4 sm:px-6 mt-10 overflow-x-auto whitespace-nowrap sm:justify-start ${theme.border}`}>
-                {["overview", "all", "reports"].map((tab) => (
+                {["overview", "all", "reports", "visitors"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -97,10 +96,12 @@ export default function AdminDashboard() {
                         {tab === "overview" && "Overview"}
                         {tab === "all" && "All Tickets"}
                         {tab === "reports" && "Reports & Analytics"}
+                        {tab === "visitors" && "Visitor Records"}
                     </button>
                 ))}
             </div>
 
+            {/* --- OVERVIEW TAB --- */}
             {activeTab === "overview" && (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-4 sm:px-6">
@@ -110,9 +111,8 @@ export default function AdminDashboard() {
                             icon={<Ticket size={25} />}
                             description="All tickets"
                             accentColor="bg-yellow-500"
-                            iconBgColor= "bg-yellow-50"
+                            iconBgColor="bg-yellow-50"
                             iconColor="text-yellow-500"
-                            onClick={() => console.log("Clicked Completed Tasks")}
                         />
                         <AdminDashboardCard
                             title="Active Tickets"
@@ -122,8 +122,6 @@ export default function AdminDashboard() {
                             accentColor="bg-green-500"
                             iconBgColor="bg-green-50"
                             iconColor="text-green-500"
-                            onClick={() => console.log("Clicked Pending Issues")}
-                            
                         />
                         <AdminDashboardCard
                             title="Resolved"
@@ -133,8 +131,6 @@ export default function AdminDashboard() {
                             accentColor="bg-blue-500"
                             iconBgColor="bg-blue-50"
                             iconColor="text-blue-500"
-                            onClick={() => console.log("Clicked Pending Issues")}
-                           
                         />
                         <AdminDashboardCard
                             title="Urgent"
@@ -144,18 +140,14 @@ export default function AdminDashboard() {
                             accentColor="bg-red-500"
                             iconBgColor="bg-red-50"
                             iconColor="text-red-500"
-                            onClick={() => console.log("Clicked Pending Issues")}
-                        
                         />
                     </div>
 
-                    {/* Urgent Tickets Section */}
                     {urgentTickets.length > 0 && (
                         <div className="mt-8 px-4 sm:px-6">
                             <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 ${theme.text}`}>
                                 Urgent Tickets
                             </h2>
-
                             <div className="flex flex-col gap-6">
                                 {urgentTickets.map(ticket => (
                                     <TicketCard
@@ -172,7 +164,6 @@ export default function AdminDashboard() {
                         <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 ${theme.text}`}>
                             Unassigned Tickets
                         </h2>
-
                         <div className="flex flex-col gap-6 mb-4">
                             {unassignedTickets.length > 0
                                 ? unassignedTickets.map(ticket => (
@@ -194,115 +185,120 @@ export default function AdminDashboard() {
                 </>
             )}
 
+            {/* --- ALL TICKETS TAB --- */}
             {activeTab === "all" && (
-                <>
-                    <div className="w-full space-y-4 mt-8">
-                        {/* Search */}
-                        <div className={`flex items-center rounded-xl px-4 py-2 shadow-sm transition-all focus-within:border-3 focus-within:ring-2 focus-within:ring-accent ml-4 ${theme.cardBg}`}>
-                            <Search className={`mr-3 ${theme.subText}`} size={20} />
-                            <input
-                                type="text"
-                                placeholder="Search by ticket ID, title, resident, apartment..."
-                                className={`w-full outline-none bg-transparent ${theme.text} placeholder:${theme.subText}`}
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                            />
+                <div className="w-full space-y-4 mt-8 px-4 sm:px-6">
+                    <div className={`flex items-center rounded-xl px-4 py-2 shadow-sm transition-all focus-within:ring-2 focus-within:ring-accent ${theme.cardBg}`}>
+                        <Search className={`mr-3 ${theme.subText}`} size={20} />
+                        <input
+                            type="text"
+                            placeholder="Search by ticket ID, title, resident, apartment..."
+                            className={`w-full outline-none bg-transparent ${theme.text} placeholder:${theme.subText}`}
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
+                        >
+                            <option value="">All Statuses</option>
+                            <option value="Open">Open</option>
+                            <option value="Assigned">Assigned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                            <option value="Reopened">Reopened</option>
+                        </select>
+
+                        <select
+                            value={priorityFilter}
+                            onChange={(e) => setPriorityFilter(e.target.value)}
+                            className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
+                        >
+                            <option value="">All Priorities</option>
+                            <option value="Urgent">Urgent</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
+                        >
+                            <option value="">All Categories</option>
+                            <option value="HVAC">HVAC</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Cleaning">Cleaning</option>
+                            <option value="Security">Security</option>
+                            <option value="Pest Control">Pest Control</option>
+                            <option value="General Maintenance">General Maintenance</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    {(searchText || statusFilter || priorityFilter || categoryFilter) && (
+                        <div className="flex items-center mt-4 gap-2">
+                            <span className={theme.subText}>
+                                <Funnel className="inline-block mr-2" size={18} />
+                                Showing {filteredTickets.length} of {ticketList.length} tickets
+                            </span>
+                            <button
+                                className="text-accent font-semibold hover:underline"
+                                onClick={() => {
+                                    setSearchText("");
+                                    setStatusFilter("");
+                                    setPriorityFilter(""); // Fixed: used setter instead of direct call
+                                    setCategoryFilter("");
+                                }}
+                            >
+                                Clear filters
+                            </button>
                         </div>
+                    )}
 
-                        {/* Filters */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 ml-4">
-                            <select
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
-                            >
-                                <option value="">All Statuses</option>
-                                <option value="Open">Open</option>
-                                <option value="Assigned">Assigned</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Resolved">Resolved</option>
-                                <option value="Closed">Closed</option>
-                                <option value="Reopened">Reopened</option>
-                            </select>
-
-                            <select
-                                value={priorityFilter}
-                                onChange={(e) => setPriorityFilter(e.target.value)}
-                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
-                            >
-                                <option value="">All Priorities</option>
-                                <option value="Urgent">Urgent</option>
-                                <option value="High">High</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Low">Low</option>
-                            </select>
-
-                            <select
-                                value={categoryFilter}
-                                onChange={(e) => setCategoryFilter(e.target.value)}
-                                className={`rounded-xl px-4 py-3 shadow-sm cursor-pointer ${theme.cardBg} ${theme.text}`}
-                            >
-                                <option value="">All Categories</option>
-                                <option value="HVAC">HVAC</option>
-                                <option value="Plumbing">Plumbing</option>
-                                <option value="Electrical">Electrical</option>
-                                <option value="Cleaning">Cleaning</option>
-                                <option value="Security">Security</option>
-                                <option value="Pest Control">Pest Control</option>
-                                <option value="General Maintenance">General Maintenance</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        {/* Show filtered info & Clear filters */}
-                        {(searchText || statusFilter || priorityFilter || categoryFilter) && (
-                            <div className="flex items-center mt-4 ml-4 gap-2">
-                                <span className={theme.subText}>
-                                    <Funnel className="inline-block mr-2" size={18} />
-                                    Showing {filteredTickets.length} of {ticketList.length} tickets
-                                </span>
-                                <button
-                                    className="text-accent font-semibold hover:underline"
-                                    onClick={() => {
-                                        setSearchText("");
-                                        setStatusFilter("");
-                                        setPriorityFilter("");
-                                        setCategoryFilter("");
-                                    }}
-                                >
-                                    Clear filters
-                                </button>
+                    <div className="flex flex-col gap-6 mt-6">
+                        {filteredTickets.length > 0 ? (
+                            filteredTickets.map(ticket => (
+                                <TicketCard
+                                    key={ticket.ticketId}
+                                    ticket={ticket}
+                                    onClick={() => openTicketDetails(ticket)}
+                                />
+                            ))
+                        ) : (
+                            <div className={`p-6 border rounded-xl flex flex-col items-center justify-center ${theme.cardBg}`}>
+                                <Ticket className={`mb-4 ${theme.subText}`} size={60} />
+                                <p className={`text-lg text-center ${theme.subText}`}>
+                                    No tickets found matching your criteria
+                                </p>
                             </div>
                         )}
-
-                        {/* Tickets */}
-                        <div className="flex flex-col gap-6 mt-6 ml-4">
-                            {filteredTickets.length > 0 ? (
-                                filteredTickets.map(ticket => (
-                                    <TicketCard
-                                        key={ticket.ticketId}
-                                        ticket={ticket}
-                                        onClick={() => openTicketDetails(ticket)}
-                                    />
-                                ))
-                            ) : (
-                                <div className={`p-6 border rounded-xl flex flex-col items-center justify-center ${theme.cardBg}`}>
-                                    <Ticket className={`mb-4 ${theme.subText}`} size={60} />
-                                    <p className={`text-lg text-center ${theme.subText}`}>
-                                        No tickets found matching your criteria
-                                    </p>
-                                </div>
-                            )}
-                        </div>
                     </div>
-                </>
+                </div>
             )}
 
+            {/* --- REPORTS TAB (Now 3rd) --- */}
             {activeTab === "reports" && (
-                <ReportsAnalytics data={ticketList} />
+                <div className="mt-8 px-4 sm:px-6">
+                    <ReportsAnalytics data={ticketList} />
+                </div>
             )}
 
-            {/* Ticket Details Popup*/}
+            {/* --- VISITOR RECORDS TAB (Now 4th) --- */}
+            {activeTab === "visitors" && (
+                <div className="mt-8 px-4 sm:px-6">
+                    <TotalVisitorRecords />
+                </div>
+            )}
+
+            {/* Ticket Details Popup */}
             {isTicketOpen && (
                 <TicketDetails
                     data={selectedTicket}

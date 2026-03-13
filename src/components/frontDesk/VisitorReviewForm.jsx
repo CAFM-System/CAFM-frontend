@@ -16,6 +16,8 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
     </div>
   );
 
+  const todayStr = new Date().toISOString().split('T')[0];
+
   return (
     <div className="space-y-6">
       <div className={`p-6 rounded-xl border-2 border-accent ${isDarkMode ? "bg-zinc-900" : "bg-yellow-50"}`}>
@@ -31,7 +33,7 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
                 <ReviewItem label="Resident" value={formData.hostName} />
               </div>
           </div>
-
+    
           <ReviewItem label="Full Name" value={formData.fullName} />
           <ReviewItem label="Phone" value={formData.phone} />
           <ReviewItem label="Email" value={formData.email} />
@@ -39,15 +41,15 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
           <ReviewItem label="Vehicle No" value={formData.vehicleNumber} />
           <ReviewItem label="Others Count" value={formData.numberOfOthers || '0'} />
           <ReviewItem label="Type" value={formData.visitorType} />
-          
-          {formData.visitorType === 'normal' ? (
+          <ReviewItem label="Visit Date" value={todayStr} />
+          {/* {formData.visitorType === 'normal' ? (
               <ReviewItem label="Visit Date" value={formData.visitDate} />
           ) : (
               <>
                 <ReviewItem label="Access From" value={formData.dateFrom} />
                 <ReviewItem label="Access To" value={formData.dateTo} />
               </>
-          )}
+          )} */}
         </div>
       </div>
 
