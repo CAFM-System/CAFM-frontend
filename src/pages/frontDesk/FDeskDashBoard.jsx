@@ -7,6 +7,7 @@ import VisitorStats  from "../../components/frontDesk/VisitorStats";
 import QuickActions  from "../../components/frontDesk/QuickActions";
 import VisitorList  from "../../components/frontDesk/VisitorList";
 import visitorService from "../../services/visitor.service";
+import toast from "react-hot-toast";
 
 export default function FDeskDashBoard() {
   const { isDarkMode } = useTheme();
@@ -34,14 +35,22 @@ export default function FDeskDashBoard() {
   );
 };
 
+  const formatDate = (date) => {
+  if (!date) return null;
 
-  useEffect(() => {
+  return date.split("T")[0];
+};
+
+
+  const todayStr = getTodayStr();
+
+  
   const fetchVisitors = async () => {
     try {
       setLoading(true);
 
       const response = await visitorService.getVisitorInfo();
-      console.log(response.data);
+      console.log(response.data[10])
       setVisitors(response.data);
       console.log("check visitors variable:", visitors);
     } catch (error) {
@@ -50,65 +59,55 @@ export default function FDeskDashBoard() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    fetchVisitors();
+  }, []);
 
-  fetchVisitors();
-}, []);
+  const isTodayVisitor = (v) => {
 
-  
+    if (!v.validFrom && !v.date) return false;
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const start = new Date(v.validFrom || v.date);
+    start.setHours(0,0,0,0);
+
+    if (!v.validUntil) {
+      return start.getTime() === today.getTime();
+    }
+
+    const end = new Date(v.validUntil);
+    end.setHours(23,59,59,999);
+
+    return today >= start && today <= end;
+};
 
   // --- FILTERING LOGIC ---
 
 
-const todayStr = new Date().toLocaleDateString("en-CA");
 
-const filteredVisitors = visitors.filter(visitor => {
-  const visitorDate = visitor.date
-    ? new Date(visitor.date).toLocaleDateString("en-CA")
-    : null;
+const filteredVisitors = visitors.filter((visitor) => {
 
-  // Today tab
   if (activeTab === "today") {
-    return visitorDate === todayStr;
+    return isTodayVisitor(visitor);
   }
 
-  // Pre-Registered tab
   if (activeTab === "pre_reg") {
     return visitor.isPreRegistered === true;
   }
 
-  // On-Site tab
   if (activeTab === "on_site") {
     return visitor.isPreRegistered === false;
   }
 
   return true;
 });
-const todayCount = visitors.filter(v => {
-  if (!v.date) return false;
 
-  const d = new Date(v.date);
-  const localDate =
-    d.getFullYear() +
-    "-" +
-    String(d.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(d.getDate()).padStart(2, "0");
-
-  return localDate === todayStr;
-}).length;
+const todayCount = visitors.filter(v => isTodayVisitor(v)).length;
 
 const preRegCount = visitors.filter(v => {
-  if (!v.date) return false;
-
-  const d = new Date(v.date);
-  const localDate =
-    d.getFullYear() +
-    "-" +
-    String(d.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(d.getDate()).padStart(2, "0");
-
-  return v.isPreRegistered && localDate === todayStr;
+  return v.isPreRegistered && isTodayVisitor(v);
 }).length;
 
   const stats = {
@@ -118,30 +117,38 @@ const preRegCount = visitors.filter(v => {
     total: visitors.length,
   };
 
+  console.log("Stats:", stats);
+
   // --- HANDLERS ---
   const handleRegisterClick = () => { setActiveAction("register"); setIsRegModalOpen(true); };
   const handleScanClick = () => { setActiveAction("scan"); setIsQrModalOpen(true); };
 
-  const handleNewVisitor = (formData) => {
-    const newEntry = {
-      id: Date.now(),
-      name: formData.fullName,
-      nic: formData.idNumber || "N/A",
-      phone: formData.phoneNumber || "",
-      email: formData.email || null,
-      visitorType: formData.visitorType || "normal",
-      isPreRegistered: false, // Walk-in is always On-Site
-      date: getTodayStr(),
-      entryTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      hostName: formData.residentName || "Unknown Host",
-      hostApartment: formData.apartmentNo || "General",
-      hostPhone: "N/A",
-      vehicleNumber: formData.vehicleNumber || null,
-      othersCount: formData.othersCount || 0,
+  const handleNewVisitor = async (formData) => {
+    try {
+      const newEntry = {
+       resident_id: formData.residentId,   
+
+        visitor_name: formData.fullName,
+        nic: formData.idNumber,
+        phone: formData.phone,
+        email: formData.email || null,
+
+        vehicle_number: formData.vehicleNumber || null,
+        others_count: formData.numberOfOthers || 0,
+
     };
-    setVisitors([newEntry, ...visitors]);
+    await visitorService.onsiteRegisterVisitor(newEntry);
+    await fetchVisitors(); 
+
+
     setIsRegModalOpen(false);
     setActiveTab("on_site"); // Switch to On-Site tab to show the new entry
+    toast.success("Visitor registered successfully!");
+    } catch (error) {
+      console.error("Error registering visitor:", error);
+      toast.error("Failed to register visitor. Please try again.");
+    }
+    
   };
 
   const handleCheckIn = (id) => {

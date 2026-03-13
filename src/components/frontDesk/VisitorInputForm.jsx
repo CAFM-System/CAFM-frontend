@@ -57,18 +57,18 @@ export const VisitorInputForm = ({ formData, onChange, onNext, onCancel }) => {
     }
 
     // 7. Dates
-    const today = new Date(getTodayString());
-    if (formData.visitorType === 'normal') {
-      if (!formData.visitDate) { setErrorMsg("Visit Date is mandatory."); return; }
-      if (new Date(formData.visitDate) < today) { setErrorMsg("Visit Date cannot be in the past."); return; }
-    }
-    if (formData.visitorType === 'regular') {
-      if (!formData.dateFrom || !formData.dateTo) { setErrorMsg("Select both 'From' and 'To' dates."); return; }
-      const startDate = new Date(formData.dateFrom);
-      const endDate = new Date(formData.dateTo);
-      if (startDate < today) { setErrorMsg("'Access From' date cannot be in the past."); return; }
-      if (endDate < startDate) { setErrorMsg("'Access To' cannot be earlier than 'Access From'."); return; }
-    }
+    // const today = new Date(getTodayString());
+    // if (formData.visitorType === 'normal') {
+    //   if (!formData.visitDate) { setErrorMsg("Visit Date is mandatory."); return; }
+    //   if (new Date(formData.visitDate) < today) { setErrorMsg("Visit Date cannot be in the past."); return; }
+    // }
+    // if (formData.visitorType === 'regular') {
+    //   if (!formData.dateFrom || !formData.dateTo) { setErrorMsg("Select both 'From' and 'To' dates."); return; }
+    //   const startDate = new Date(formData.dateFrom);
+    //   const endDate = new Date(formData.dateTo);
+    //   if (startDate < today) { setErrorMsg("'Access From' date cannot be in the past."); return; }
+    //   if (endDate < startDate) { setErrorMsg("'Access To' cannot be earlier than 'Access From'."); return; }
+    // }
 
     onNext();
   };
@@ -102,7 +102,7 @@ export const VisitorInputForm = ({ formData, onChange, onNext, onCancel }) => {
       </div>
 
       {/* Type Selection */}
-      <div className={`pt-2 border-t ${border} mt-4`}>
+      {/* <div className={`pt-2 border-t ${border} mt-4`}>
         <label className={`text-sm font-bold mb-3 block ${text}`}>Visitor Type *</label>
         <div className="flex flex-wrap gap-8">
           <label className="flex items-center space-x-2 cursor-pointer group">
@@ -114,9 +114,9 @@ export const VisitorInputForm = ({ formData, onChange, onNext, onCancel }) => {
             <span className={`font-medium text-sm ${text}`}>Regular Visitor (Multiple)</span>
           </label>
         </div>
-      </div>
+      </div> */}
 
-      <div className="mt-6">
+      {/* <div className="mt-6">
         {formData.visitorType === 'normal' ? (
           <div className="w-full">
             <InputField id="visitDate" label="Visit Date *" type="date" value={formData.visitDate} min={getTodayString()} onChange={(e) => onChange('visitDate', e.target.value)} />
@@ -127,7 +127,7 @@ export const VisitorInputForm = ({ formData, onChange, onNext, onCancel }) => {
             <InputField id="dateTo" label="Access To *" type="date" value={formData.dateTo} min={formData.dateFrom || getTodayString()} onChange={(e) => onChange('dateTo', e.target.value)} />
           </div>
         )}
-      </div>
+      </div> */}
 
       <div className={`flex justify-end gap-4 pt-8 mt-2 border-t ${border}`}>
         <button onClick={onCancel} className={`px-6 py-2.5 rounded-xl border-2 text-sm font-semibold transition-colors ${border} ${text} hover:opacity-70`}>Cancel</button>

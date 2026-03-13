@@ -72,14 +72,14 @@ export function VisitorRecord({ visitor, isSelected, onSelect, onCheckIn }) {
           <div className="text-right hidden sm:block">
              {isRegular ? (
                <div className="flex flex-col items-end gap-1">
-                 <DatePill label="From" date={visitor.fromDate || visitor.date} isDarkMode={isDarkMode} />
-                 <DatePill label="To" date={visitor.toDate} isDarkMode={isDarkMode} />
+                 <DatePill label="From" date={visitor.validFrom || visitor.date} isDarkMode={isDarkMode} />
+                 <DatePill label="To" date={visitor.validUntil} isDarkMode={isDarkMode} />
                </div>
              ) : (
                <div className={`flex flex-col items-center px-3 py-1.5 rounded-lg border ${isDarkMode ? "bg-white/5 border-white/10" : "bg-gray-100 border-gray-200"}`}>
                   <span className={`text-[10px] uppercase font-bold mb-0.5 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Visit Date</span>
                   <span className={`text-sm font-bold ${isDarkMode ? "text-[#EAB308]" : "text-zinc-800"}`}>
-                    {formatDate(visitor.date)}
+                    {formatDate(visitor.validFrom || visitor.date)}
                   </span>
                </div>
              )}

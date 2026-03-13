@@ -1,38 +1,77 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import { VisitorInputForm } from '../../components/frontDesk/VisitorInputForm';
 import { VisitorReviewForm } from '../../components/frontDesk/VisitorReviewForm';
+import UserService from '../../services/user.service';
+
+
+
 
 // MOCK DB
-const MOCK_RESIDENTS = {
-  '101': { name: 'Dr. Kasun Perera', phone: '0771112233' },
-  '102': { name: 'Mr. Amal Silva', phone: '0712223344' },
-  '103': { name: 'Mrs. Nimali Fernando', phone: '0763334455' },
-  'A1':  { name: 'Eng. Dilan Jayasooriya', phone: '0778889900' },
-  'B2':  { name: 'Ms. Hashini Bandara', phone: '0705556677' }
-};
+// const MOCK_RESIDENTS = {
+//   '101': { name: 'Dr. Kasun Perera', phone: '0771112233' },
+//   '102': { name: 'Mr. Amal Silva', phone: '0712223344' },
+//   '103': { name: 'Mrs. Nimali Fernando', phone: '0763334455' },
+//   'A1':  { name: 'Eng. Dilan Jayasooriya', phone: '0778889900' },
+//   'B2':  { name: 'Ms. Hashini Bandara', phone: '0705556677' }
+// };
+
+
 
 export default function VisitorRegForm({ onAddVisitor, onCancel }) {
   const [step, setStep] = useState(1);
   // Using theme hook for the main container
   const { cardBg, text, border } = useTheme();
+  const [residents, setResidents] = useState({});
 
   const [formData, setFormData] = useState({
     apartmentNo: '', hostName: '', 
     fullName: '', phone: '', idNumber: '', email: '',
     vehicleNumber: '', numberOfOthers: '', 
-    visitorType: 'normal', visitDate: '', dateFrom: '', dateTo: ''
+    visitorType: 'normal', visitDate: '', dateFrom: '', dateTo: '',
+    residentId: null,     
   });
+
+  useEffect(() => {
+
+  const fetchResidents = async () => {
+    try {
+
+      const response = await UserService.getResidents();
+
+      const map = {};
+
+      response.data.forEach(r => {
+        const name = `${r.profiles.first_name} ${r.profiles.last_name}`;
+
+        map[r.apartment_no.toUpperCase()] = {
+          id: r.user_id, 
+          name,
+          phone: r.profiles.phone
+        };
+      });
+
+      setResidents(map);
+
+    } catch (err) {
+      console.error("Failed to fetch residents", err);
+    }
+  };
+
+  fetchResidents();
+
+}, []);
 
   const handleInputChange = (field, value) => {
     // 1. Apartment Lookup
     if (field === 'apartmentNo') {
       const aptKey = value.trim().toUpperCase();
-      const resident = MOCK_RESIDENTS[aptKey];
+      const resident = residents[aptKey];
       setFormData(prev => ({ 
         ...prev, 
         apartmentNo: value, 
-        hostName: resident ? resident.name : '' 
+        hostName: resident ? resident.name : '' ,
+        residentId: resident ? resident.id : null
       }));
     } 
     // 2. Auto Uppercase (Vehicle & ID)
@@ -47,7 +86,6 @@ export default function VisitorRegForm({ onAddVisitor, onCancel }) {
 
   const handleSubmit = () => {
     if (onAddVisitor) onAddVisitor(formData);
-    alert("Visitor Registered Successfully!");
   };
 
   return (
