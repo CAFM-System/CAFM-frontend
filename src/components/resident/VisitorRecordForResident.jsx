@@ -109,7 +109,7 @@ export function VisitorRecordForResident({ visitor, isSelected, onSelect, onEdit
                   <Edit3 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); onDelete(visitor.id); }}
+                  onClick={(e) => { e.stopPropagation();  onDelete(visitor.visitorId);; }}
                   className="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-colors"
                 >
                   <Trash2 size={16} />
