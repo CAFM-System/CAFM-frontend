@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/resident/Footer";
-import AuthService from "../../services/auth.service";
+import ResidentProfileService from "../../services/residentProfile.service";
 import ProfileCard from "../resident/ProfileCard";
 import { useTheme } from "../../hooks/useTheme";
 
 export default function UserProfileCard() {
   const navigate = useNavigate();
   const { isDarkMode, bg, cardBg, text, subText, inputBg, modalBg, buttonSecondary } = useTheme();
-  const [userData, setUserData] = useState(null);
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -21,15 +21,20 @@ export default function UserProfileCard() {
     fetchUserProfile();
   }, []);
 
+  const getSaveErrorMessage = (err) => {
+    const responseData = err.response?.data;
+    return responseData?.message || responseData?.errors?.[0]?.msg || "Failed to update profile";
+  };
+
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await AuthService.getuser();
-      setUserData(response.data.user);
-      setFormData(buildFormData(response.data.user));
-
+      const response = await ResidentProfileService.getProfile();
+      const profile = response.data.profile;
+      setProfileData(profile);
+      setFormData(buildFormData(profile));
     } catch (err) {
       console.error("Error fetching profile:", err);
       setError(err.response?.data?.message || "Failed to load profile");
@@ -49,18 +54,27 @@ export default function UserProfileCard() {
     return date.toISOString().split("T")[0];
   };
 
-  const buildFormData = (user) => ({
-    firstName: user?.profile?.firstName || "",
-    lastName: user?.profile?.lastName || "",
-    dob: toInputDate(user?.profile?.dob),
-    gender: user?.profile?.gender || "",
-    maritalStatus: user?.profile?.maritalStatus || "",
-    phone: user?.profile?.phone || "",
-    apartmentNo: user?.profile?.apartmentNo || "",
-    noOfResidents: user?.profile?.noOfResidents || "",
-    email: user?.email || "",
-    nic: user?.profile?.nic || "",
+  const buildFormData = (profile) => ({
+    firstName: profile?.first_name || "",
+    lastName: profile?.last_name || "",
+    dob: toInputDate(profile?.date_of_birth),
+    gender: profile?.gender || "",
+    maritalStatus: profile?.marital_status || "",
+    phone: profile?.phone || "",
+    apartmentNo: profile?.apartment_no || "",
+    noOfResidents: profile?.resident_count ?? "",
+    email: profile?.email || "",
+    nic: profile?.nic_passport || "",
   });
+
+  const toDisplayLabel = (value) => {
+    if (!value) return "N/A";
+    return value
+      .toString()
+      .split("_")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -77,7 +91,7 @@ export default function UserProfileCard() {
 
   const handleCancelEdit = () => {
     setSaveError(null);
-    setFormData(buildFormData(userData));
+    setFormData(buildFormData(profileData));
     setIsEditing(false);
   };
 
@@ -94,45 +108,47 @@ export default function UserProfileCard() {
       setIsSaving(true);
       setSaveError(null);
 
+      const parsedResidentCount = Number.parseInt(formData.noOfResidents, 10);
+      const currentResidentCount = Number(profileData?.resident_count ?? 0);
+
       const payload = {
-        profile: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          dob: formData.dob || null,
-          gender: formData.gender,
-          maritalStatus: formData.maritalStatus,
-          phone: formData.phone,
-          apartmentNo: formData.apartmentNo,
-          noOfResidents: formData.noOfResidents,
-        },
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phone,
+        ...(formData.dob ? { date_of_birth: formData.dob } : {}),
+        ...(formData.gender ? { gender: formData.gender.toLowerCase() } : {}),
+        ...(formData.maritalStatus ? { marital_status: formData.maritalStatus.toLowerCase() } : {}),
+        ...(formData.apartmentNo ? { apartment_no: formData.apartmentNo } : {}),
+        ...(formData.noOfResidents !== "" && !Number.isNaN(parsedResidentCount) && parsedResidentCount !== currentResidentCount
+          ? { resident_count: parsedResidentCount }
+          : {}),
       };
 
-      const response = await AuthService.updateProfile(payload);
-      const updatedUser = response?.data?.user || response?.data || null;
+      const response = await ResidentProfileService.updateProfile(payload);
+      const updatedProfile = response?.data?.profile;
 
-      if (updatedUser) {
-        setUserData((prev) => ({
-          ...prev,
-          ...updatedUser,
-          profile: {
-            ...(prev?.profile || {}),
-            ...(updatedUser?.profile || {}),
-          },
-        }));
+      if (updatedProfile) {
+        setProfileData(updatedProfile);
+        setFormData(buildFormData(updatedProfile));
       } else {
-        setUserData((prev) => ({
+        // Apply locally if backend didn't return updated profile
+        setProfileData((prev) => ({
           ...prev,
-          profile: {
-            ...(prev?.profile || {}),
-            ...payload.profile,
-          },
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone,
+          date_of_birth: formData.dob,
+          gender: formData.gender,
+          marital_status: formData.maritalStatus,
+          apartment_no: formData.apartmentNo,
+          resident_count: formData.noOfResidents ? parseInt(formData.noOfResidents) : 0,
         }));
       }
 
       setIsEditing(false);
     } catch (err) {
       console.error("Error updating profile:", err);
-      setSaveError(err.response?.data?.message || "Failed to update profile");
+      setSaveError(getSaveErrorMessage(err));
     } finally {
       setIsSaving(false);
     }
@@ -210,7 +226,7 @@ export default function UserProfileCard() {
                 onClick={() => {
                   setShowConfirmModal(false);
                   setSaveError(null);
-                  setFormData(buildFormData(userData));
+                  setFormData(buildFormData(profileData));
                   setIsEditing(true);
                 }}
                 className="px-4 py-2 rounded-lg bg-accent text-secondary hover:opacity-90 transition"
@@ -241,17 +257,17 @@ export default function UserProfileCard() {
   flex items-center justify-center
   text-primary text-2xl font-bold
   ring-4 ${isDarkMode ? "ring-secondary" : "ring-primary"}`}>
-                {getInitial(userData?.profile?.firstName)}
+                {getInitial(profileData?.first_name)}
               </div>
 
 
               {/* NAME */}
               <h1 className={`text-xl font-bold ${text}`}>
-                {userData.profile.firstName} {userData.profile.lastName}
+                {profileData.first_name} {profileData.last_name}
               </h1>
 
               <p className={subText}>
-                {userData.email}
+                {profileData.email}
               </p>
 
               {/* Edit profile button */}
@@ -311,38 +327,38 @@ export default function UserProfileCard() {
                 {!isEditing && (
                   <>
                     <ProfileCard heading="Full Name"
-                      data={`${userData.profile.firstName} ${userData.profile.lastName}`}
+                      data={`${profileData.first_name} ${profileData.last_name}`}
                       icon={<FullNameIcon />} />
 
                     <ProfileCard heading="Date of Birth"
-                      data={formatDate(userData.profile.dob)}
+                      data={formatDate(profileData.date_of_birth)}
                       icon={<DateOfBirthIcon />} />
                     <ProfileCard heading="NIC / Passport"
-                      data={userData.profile.nic}
+                      data={profileData.nic_passport}
                       icon={<IdIcon />} />
 
                     <ProfileCard heading="Gender"
-                      data={userData.profile.gender}
+                      data={toDisplayLabel(profileData.gender)}
                       icon={<GenderIcon />} />
 
                     <ProfileCard heading="Marital Status"
-                      data={userData.profile.maritalStatus}
+                      data={toDisplayLabel(profileData.marital_status)}
                       icon={<HeartIcon />} />
 
                     <ProfileCard heading="Email"
-                      data={userData.email}
+                      data={profileData.email}
                       icon={<MailIcon />} />
 
                     <ProfileCard heading="Phone"
-                      data={userData.profile.phone}
+                      data={profileData.phone}
                       icon={<PhoneIcon />} />
 
                     <ProfileCard heading="Apartment Number"
-                      data={userData.profile.apartmentNo}
+                      data={profileData.apartment_no}
                       icon={<HomeIcon />} />
 
                     <ProfileCard heading="No. of Residents"
-                      data={userData.profile.noOfResidents}
+                      data={profileData.resident_count}
                       icon={<UsersIcon />} />
                   </>
                 )}
@@ -389,9 +405,9 @@ export default function UserProfileCard() {
                           className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
                         >
                           <option value="">Select gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
                         </select>
                       </label>
                       <label className="space-y-1">
@@ -406,8 +422,10 @@ export default function UserProfileCard() {
                           className={`w-full rounded-lg border px-3 py-2 text-sm ${inputBg}`}
                         >
                           <option value="">Select status</option>
-                          <option value="Single">Single</option>
-                          <option value="Married">Married</option>
+                          <option value="single">Single</option>
+                          <option value="married">Married</option>
+                          <option value="divorced">Divorced</option>
+                          <option value="widowed">Widowed</option>
                         </select>
                       </label>
                       <label className="space-y-1">
@@ -484,25 +502,6 @@ const IconBase = ({ children }) => (
     text-accent">
     {children}
   </div>
-);
-
-
-const UserIcon = () => (
-  <IconBase>
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        d="M5.121 17.804A9 9 0 1118.879 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  </IconBase>
-);
-
-const CalendarIcon = () => (
-  <IconBase>
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        d="M8 7V3m8 4V3m-9 8h10" />
-    </svg>
-  </IconBase>
 );
 
 const FullNameIcon = () => <IconBase>👤</IconBase>;
