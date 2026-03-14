@@ -1,4 +1,4 @@
-import { pre } from "motion/react-client";
+//import { pre } from "motion/react-client";
 import apiClient from "./apiclient"
 
 const visitorService = {
