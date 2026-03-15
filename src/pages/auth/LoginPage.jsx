@@ -56,7 +56,7 @@ export default function LoginPage() {
   };
 
   const handleForgotPassword = () => navigate("/forgot-password");
-  const handleCreateAccount = () => navigate("/register");
+  
 
   // Theme Classes
   const theme = {
@@ -148,8 +148,12 @@ export default function LoginPage() {
             {/* Header */}
             <div className="text-center mb-6">
               <div className="flex justify-center mb-3">
-                <img src="/images/logo_withoutBG.png" alt="Facilitron Logo" className="h-30 w-auto object-contain drop-shadow-lg" />
+                <img src="/images/logo_withoutBG1.png" alt="Facilitron Logo" className="h-30 w-auto object-contain drop-shadow-lg" />
               </div>
+              {/* Logo Title */}
+              <h1 className="text-2xl font-bold tracking-wide text-accent drop-shadow-md">
+                FACILITRON
+              </h1>
               <h2 className={`text-lg mb-1 drop-shadow-md font-semibold ${theme.textPrimary}`}>Welcome Back</h2>
               <p className={`text-xs drop-shadow ${theme.textMuted}`}>Computer Aided Facility Management</p>
             </div>
@@ -228,10 +232,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Register */}
-            <button onClick={handleCreateAccount} className={`w-full font-semibold py-2.5 rounded-xl backdrop-blur-sm border transition-all duration-300 shadow-lg ${isDarkMode?"bg-primary/5 hover:bg-primary/10 text-primary border-primary/20":"bg-gray-100/5 hover:bg-gray-100/10 text-secondary border-gray-300"}`}>
-              Create Account
-            </button>
+            
 
           </div>
         </div>
