@@ -172,7 +172,7 @@ export function ResidentTicketDialog(props){
                                 <p className={`text-sm mb-2 ${subText}`}>Assigned To</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className={subText} />
-                                    <span className={text}>{data.complaintRecievdBy}</span>
+                                    <span className={text}>{`${data.technicians.profiles.first_name} ${data.technicians.profiles.last_name}`}</span>
                                 </div>
                             </div>
                             <div>

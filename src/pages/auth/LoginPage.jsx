@@ -23,6 +23,8 @@ export default function LoginPage() {
     ? decodeURIComponent(searchParams.get("redirect"))
     : null;
 
+    console.log("Redirect To:", redirectTo);
+
   const handleLogin = async () => {
     if (!email || !password) return;
 
@@ -39,7 +41,7 @@ export default function LoginPage() {
       const role = res.data.user.role;
 
       setTimeout(() => {
-        if (redirectTo) navigate(redirectTo, { replace: true });
+        if (redirectTo) navigate(`/technician${redirectTo}`, { replace: true });
         else if (role === "admin") navigate("/admin");
         else if (role === "technician") navigate("/technician");
         else if (role === "frontdesk") navigate("/frontdesk");
