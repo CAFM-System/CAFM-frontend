@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Users, History } from "lucide-react";
+import { Search, Users, History, CalendarClock } from "lucide-react";
 import { VisitorRecordForResident } from "./VisitorRecordForResident";
 import { useTheme } from "../../hooks/useTheme";
 
@@ -50,7 +50,19 @@ export default function VisitorListForResident({
             setActiveTab={setActiveTab} 
             isDarkMode={isDarkMode}
           />
-          
+          <TabButton 
+            label="upcoming" 
+            display="Upcoming Visitors" 
+            icon={CalendarClock}
+            count={visitors.filter(v => {
+              const today = new Date().toISOString().split("T")[0];
+              const visitorDate = (v.visitDate || "").split("T")[0];
+              return visitorDate > today;
+            }).length}
+            activeTab={activeTab} 
+            setActiveTab={setActiveTab} 
+            isDarkMode={isDarkMode}
+          />
           <TabButton 
             label="all" 
             display="Invitation History" 
@@ -60,6 +72,7 @@ export default function VisitorListForResident({
             setActiveTab={setActiveTab} 
             isDarkMode={isDarkMode}
           />
+          
         </div>
 
         {/* Search Bar */}
