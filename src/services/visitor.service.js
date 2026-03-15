@@ -1,4 +1,4 @@
-import { pre } from "motion/react-client";
+//import { pre } from "motion/react-client";
 import apiClient from "./apiclient"
 
 const visitorService = {
@@ -16,6 +16,16 @@ const visitorService = {
     },
     async onsiteRegisterVisitor(visitorData) {
         const response = await apiClient.post("/visitors/onsite-register", visitorData);
+        return response;
+    },
+    async deleteVisitor(visitorId) {
+        const response = await apiClient.delete("/visitors", {
+            data: { visitorId }
+        });
+        return response;
+    },
+    async updateVisitor(visitorData) {
+        const response = await apiClient.put("/visitors", visitorData);
         return response;
     }
         

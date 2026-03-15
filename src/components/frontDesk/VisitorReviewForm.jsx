@@ -41,7 +41,7 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
           <ReviewItem label="Vehicle No" value={formData.vehicleNumber} />
           <ReviewItem label="Others Count" value={formData.numberOfOthers || '0'} />
           <ReviewItem label="Type" value={formData.visitorType} />
-          <ReviewItem label="Visit Date" value={todayStr} />
+          <ReviewItem label="Visit Date" value={formData.visitDate || todayStr} />
           {/* {formData.visitorType === 'normal' ? (
               <ReviewItem label="Visit Date" value={formData.visitDate} />
           ) : (
