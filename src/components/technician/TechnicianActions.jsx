@@ -1,16 +1,29 @@
 import { useState, useEffect } from "react";
 import TechnicianService from "../../services/technician.service";
 import toast from "react-hot-toast";
-import { Upload } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import mediaUpload from "../../../util/MediaUploader";
+import { useTheme } from "../../hooks/useTheme";
 
 const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) => {
+    const { text, subText, inputBg, divider, buttonPrimary, buttonSecondary } = useTheme();
 
     const [updateComment, setUpdateComment] = useState("");
     const [resolutionComment, setResolutionComment] = useState("");
     const [attachments, setAttachments] = useState([]); // new files
     const [existingAttachments, setExistingAttachments] = useState([]); // urls from backend
     const [sparepartsUsed, setSparepartsUsed] = useState("");
+    const [isStartingWork, setIsStartingWork] = useState(false);
+
+    const handleStartWork = async () => {
+        if (isStartingWork) return;
+        setIsStartingWork(true);
+        try {
+            await workStart?.();
+        } finally {
+            setIsStartingWork(false);
+        }
+    };
 
     // fetch existing attachments
     useEffect(() => {
@@ -84,20 +97,29 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
 
     return (
-        <div className="border-t pt-6 border-gray-300">
+        <div className={`border-t pt-6 ${divider}`}>
 
             {status === "assigned" ? (
 
                 <>
-                    <h2 className="font-semibold mb-4">Action Required</h2>
+                    <h2 className={`font-semibold mb-4 ${text}`}>Action Required</h2>
 
                     <div className="w-full flex gap-4 justify-center">
 
                         <button
-                            className="px-6 py-3 w-1/2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                            onClick={() => workStart()}
+                            type="button"
+                            disabled={isStartingWork}
+                            className={`px-6 py-3 w-full rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed ${buttonPrimary}`}
+                            onClick={handleStartWork}
                         >
-                            Accept & Start Work
+                            {isStartingWork ? (
+                                <span className="inline-flex items-center gap-2">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    Starting...
+                                </span>
+                            ) : (
+                                "Accept & Start Work"
+                            )}
                         </button>
 
                     </div>
@@ -108,7 +130,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
                             value={updateComment}
                             onChange={(e) => setUpdateComment(e.target.value)}
                             placeholder="Add comment..."
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`w-full px-4 py-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
                             rows={3}
                         />
 
@@ -120,17 +142,17 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                 <>
 
-                    <h2 className="font-semibold mb-2">Mark as Resolved</h2>
+                    <h2 className={`font-semibold mb-2 ${text}`}>Mark as Resolved</h2>
 
                     <textarea
                         value={resolutionComment}
                         onChange={(e) => setResolutionComment(e.target.value)}
                         placeholder="Add resolution comment..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`w-full px-4 py-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
                         rows={3}
                     />
 
-                    <h2 className="font-semibold mt-4 mb-2">
+                    <h2 className={`font-semibold mt-4 mb-2 ${text}`}>
                         Add a list of additional spare parts if used
                     </h2>
 
@@ -138,7 +160,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
                         value={sparepartsUsed}
                         onChange={(e) => setSparepartsUsed(e.target.value)}
                         placeholder="List spare parts..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`w-full px-4 py-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
                         rows={3}
                     />
 
@@ -148,11 +170,11 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                     <div className="space-y-1">
 
-                        <label className="font-semibold mt-4 mb-2">
+                        <label className={`font-semibold mt-4 mb-2 ${text}`}>
                             Attachments (Optional)
                         </label>
 
-                        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                        <div className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer ${divider} hover:border-accent`}>
 
                             <input
                                 id="attachments"
@@ -164,13 +186,13 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                             <label htmlFor="attachments" className="cursor-pointer block">
 
-                                <Upload className="mx-auto h-10 w-10 text-gray-400 mb-3" />
+                                <Upload className={`mx-auto h-10 w-10 mb-3 ${subText}`} />
 
-                                <p className="text-sm text-gray-600">
+                                <p className={`text-sm ${subText}`}>
                                     Click to upload images or videos
                                 </p>
 
-                                <p className="text-xs text-gray-400 mt-1">
+                                <p className={`text-xs mt-1 ${subText}`}>
                                     PNG, JPG, MP4 up to 10MB
                                 </p>
 
@@ -188,7 +210,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                         <div className="mt-6">
 
-                            <h3 className="font-semibold mb-2">
+                            <h3 className={`font-semibold mb-2 ${text}`}>
                                 Existing Attachments
                             </h3>
 
@@ -200,7 +222,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                                     return (
 
-                                        <div key={index} className="border rounded-lg overflow-hidden">
+                                        <div key={index} className={`border rounded-lg overflow-hidden ${divider}`}>
 
                                             {isVideo ? (
 
@@ -241,7 +263,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                         <div className="mt-6">
 
-                            <h3 className="font-semibold mb-2">
+                            <h3 className={`font-semibold mb-2 ${text}`}>
                                 New Attachments
                             </h3>
 
@@ -255,7 +277,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
                                     return (
 
-                                        <div key={index} className="border rounded-lg overflow-hidden">
+                                        <div key={index} className={`border rounded-lg overflow-hidden ${divider}`}>
 
                                             {isVideo ? (
 
@@ -290,7 +312,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
 
                     <button
-                        className="mt-6 px-6 py-3 w-full bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                        className={`mt-6 px-6 py-3 w-full rounded-lg transition-colors ${buttonPrimary}`}
                         onClick={handleresolveTicket}
                     >
                         Mark as Resolved
