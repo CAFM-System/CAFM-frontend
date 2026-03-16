@@ -1,31 +1,36 @@
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResidentService from "../../services/resident.service";
 import toast from "react-hot-toast";
 import { useTheme } from "../../hooks/useTheme";
 
-export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose }) {
+export function ResidentAction({ data, sendFeedback, ticketId, refresh, onClose }) {
     const { isDarkMode, cardBg, text, subText, inputBg, border, buttonPrimary, buttonSecondary } = useTheme();
-    const [showRatings, setShowRatings] =  useState(null);
+    const [showRatings, setShowRatings] = useState(null);
     const [showFeedback, setShowFeedback] = useState();
     const [reloadkey, setReloadKey] = useState(0);
-    
-    useEffect(() =>{
+    const [isSubmittingRating, setIsSubmittingRating] = useState(false);
+    const [isClosingTicket, setIsClosingTicket] = useState(false);
+    const [isReopeningTicket, setIsReopeningTicket] = useState(false);
+
+    useEffect(() => {
         const fetchRatingWithFeedback = async () => {
-            try{
+            try {
                 const response = await ResidentService.getRatingWithFeedback(ticketId);
                 console.log("Fetched rating and feedback:", response.data);
                 setShowRatings(response.data.rating);
                 setShowFeedback(response.data.review);
-            } catch (error){
+            } catch (error) {
                 console.error("Error fetching rating and feedback:", error);
             }
         }
         fetchRatingWithFeedback();
     }, [reloadkey, ticketId]);
 
-    
+
     const handleCloseTicket = async () => {
+        if (isClosingTicket) return;
+        setIsClosingTicket(true);
         try {
             const payload = {
                 message: data.closeComment
@@ -34,14 +39,18 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
             toast.success("Ticket closed successfully.");
             onClose();
             refresh();
-            
+
         } catch (error) {
             toast.error("Failed to close the ticket. Please try again.");
             console.error("Error closing ticket:", error);
+        } finally {
+            setIsClosingTicket(false);
         }
     }
 
     const handleReopenTicket = async () => {
+        if (isReopeningTicket) return;
+        setIsReopeningTicket(true);
         try {
             const payload = {
                 message: data.reOpenComment
@@ -53,27 +62,29 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
         } catch (error) {
             toast.error("Failed to reopen the ticket. Please try again.");
             console.error("Error reopening ticket:", error);
+        } finally {
+            setIsReopeningTicket(false);
         }
     }
     return (
         <div className="space-y-6">
 
             {
-                 showRatings !== null && showRatings !== undefined && (
-                <div className={`rounded-lg p-4 border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
-                    <h4 className={`text-sm mb-2 ${text}`}>Your Feedback</h4>
-                    <div className="flex items-center gap-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                            key={star}
-                            className={`h-5 w-5 ${star <= showRatings ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                        />
-                        ))}
+                showRatings !== null && showRatings !== undefined && (
+                    <div className={`rounded-lg p-4 border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
+                        <h4 className={`text-sm mb-2 ${text}`}>Your Feedback</h4>
+                        <div className="flex items-center gap-1 mb-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                    key={star}
+                                    className={`h-5 w-5 ${star <= showRatings ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                                />
+                            ))}
+                        </div>
+                        {showFeedback && (
+                            <p className={`text-sm ${subText}`}>{showFeedback}</p>
+                        )}
                     </div>
-                    {showFeedback && (
-                        <p className={`text-sm ${subText}`}>{showFeedback}</p>
-                    )}
-                </div>
                 )
             }
 
@@ -90,11 +101,10 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                                 className="focus:outline-none"
                             >
                                 <Star
-                                    className={`h-8 w-8 cursor-pointer transition-all ${
-                                        star <= data.rating
-                                            ? "fill-yellow-400 text-yellow-400"
-                                            : "text-gray-300 hover:text-yellow-300"
-                                    }`}
+                                    className={`h-8 w-8 cursor-pointer transition-all ${star <= data.rating
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "text-gray-300 hover:text-yellow-300"
+                                        }`}
                                 />
                             </button>
                         ))}
@@ -109,17 +119,32 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                     />
 
                     <div className="flex gap-3">
-                        <button 
-                            className={`flex-1 py-2 rounded-lg ${buttonPrimary}`}
+                        <button
+                            type="button"
+                            disabled={isSubmittingRating}
+                            className={`flex-1 py-2 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed ${buttonPrimary}`}
                             onClick={async () => {
-                                await sendFeedback();
-                                setShowRatings(data.rating);
-                                setShowFeedback(data.feedback);
-                                data.setShowRatingTab(false);
-                                setReloadKey(prev => prev + 1);
+                                if (isSubmittingRating) return;
+                                setIsSubmittingRating(true);
+                                try {
+                                    await sendFeedback();
+                                    setShowRatings(data.rating);
+                                    setShowFeedback(data.feedback);
+                                    data.setShowRatingTab(false);
+                                    setReloadKey(prev => prev + 1);
+                                } finally {
+                                    setIsSubmittingRating(false);
+                                }
                             }}
                         >
-                            Submit Rating
+                            {isSubmittingRating ? (
+                                <span className="inline-flex items-center gap-2">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    Submitting...
+                                </span>
+                            ) : (
+                                "Submit Rating"
+                            )}
                         </button>
 
                         <button
@@ -132,17 +157,17 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                 </div>
             )}
 
-            {data.status === "resolved" && !data.showRatingTab &&  (
+            {data.status === "resolved" && !data.showRatingTab && (
                 <div className="space-y-6">
 
                     {/* Rate Button */}
                     {showRatings === null &&
-                    <button
-                        onClick={() => data.setShowRatingTab(true)}
-                        className={`w-full py-3 rounded-lg font-medium ${buttonPrimary}`}
-                    >
-                        Rate This Service
-                    </button>}
+                        <button
+                            onClick={() => data.setShowRatingTab(true)}
+                            className={`w-full py-3 rounded-lg font-medium ${buttonPrimary}`}
+                        >
+                            Rate This Service
+                        </button>}
 
                     {/* Close Ticket */}
                     <div className={`space-y-3 p-4 rounded-xl border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
@@ -156,9 +181,20 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                             className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-green-500 ${inputBg}`}
                         />
 
-                        <button className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-medium"
-                            onClick={() => handleCloseTicket()}>
-                            Close Ticket
+                        <button
+                            type="button"
+                            disabled={isClosingTicket}
+                            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-medium disabled:opacity-70 disabled:cursor-not-allowed"
+                            onClick={() => handleCloseTicket()}
+                        >
+                            {isClosingTicket ? (
+                                <span className="inline-flex items-center gap-2">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    Closing...
+                                </span>
+                            ) : (
+                                "Close Ticket"
+                            )}
                         </button>
                     </div>
 
@@ -174,9 +210,20 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                             className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
                         />
 
-                        <button className={`w-full border py-2 rounded-lg font-medium ${buttonSecondary}`}
-                            onClick={() => handleReopenTicket()}>
-                            Reopen Ticket
+                        <button
+                            type="button"
+                            disabled={isReopeningTicket}
+                            className={`w-full border py-2 rounded-lg font-medium disabled:opacity-70 disabled:cursor-not-allowed ${buttonSecondary}`}
+                            onClick={() => handleReopenTicket()}
+                        >
+                            {isReopeningTicket ? (
+                                <span className="inline-flex items-center gap-2">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    Reopening...
+                                </span>
+                            ) : (
+                                "Reopen Ticket"
+                            )}
                         </button>
                     </div>
 
@@ -196,9 +243,20 @@ export function ResidentAction({ data, sendFeedback,ticketId,refresh, onClose })
                         className={`w-full rounded-lg border p-3 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
                     />
 
-                    <button className={`w-full border py-2 rounded-lg font-medium ${buttonSecondary}`}
-                        onClick={() => handleReopenTicket()}>
-                        Reopen Ticket
+                    <button
+                        type="button"
+                        disabled={isReopeningTicket}
+                        className={`w-full border py-2 rounded-lg font-medium disabled:opacity-70 disabled:cursor-not-allowed ${buttonSecondary}`}
+                        onClick={() => handleReopenTicket()}
+                    >
+                        {isReopeningTicket ? (
+                            <span className="inline-flex items-center gap-2">
+                                <Loader2 size={16} className="animate-spin" />
+                                Reopening...
+                            </span>
+                        ) : (
+                            "Reopen Ticket"
+                        )}
                     </button>
                 </div>
             )}

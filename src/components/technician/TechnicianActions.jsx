@@ -14,6 +14,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
     const [existingAttachments, setExistingAttachments] = useState([]); // urls from backend
     const [sparepartsUsed, setSparepartsUsed] = useState("");
     const [isStartingWork, setIsStartingWork] = useState(false);
+    const [isResolving, setIsResolving] = useState(false);
 
     const handleStartWork = async () => {
         if (isStartingWork) return;
@@ -52,6 +53,8 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
 
     const handleresolveTicket = async () => {
+        if (isResolving) return;
+        setIsResolving(true);
 
         const promises = [];
 
@@ -81,6 +84,8 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
             console.error("Error resolving ticket:", error);
             toast.error("Failed to resolve ticket");
 
+        } finally {
+            setIsResolving(false);
         }
     };
 
@@ -312,10 +317,19 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
 
 
                     <button
-                        className={`mt-6 px-6 py-3 w-full rounded-lg transition-colors ${buttonPrimary}`}
+                        type="button"
+                        disabled={isResolving}
+                        className={`mt-6 px-6 py-3 w-full rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed ${buttonPrimary}`}
                         onClick={handleresolveTicket}
                     >
-                        Mark as Resolved
+                        {isResolving ? (
+                            <span className="inline-flex items-center gap-2">
+                                <Loader2 size={16} className="animate-spin" />
+                                Resolving...
+                            </span>
+                        ) : (
+                            "Mark as Resolved"
+                        )}
                     </button>
 
                 </>
