@@ -27,6 +27,10 @@ const visitorService = {
     async updateVisitor(visitorData) {
         const response = await apiClient.put("/visitors", visitorData);
         return response;
+    },
+    async checkInVisitor(visitorId) {
+        const response = await apiClient.put("/visitors/check-in/" + visitorId);
+        return response;
     }
         
 }

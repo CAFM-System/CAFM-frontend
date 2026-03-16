@@ -10,6 +10,7 @@ import { useTheme } from "../../hooks/useTheme";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isInvalidCredentials, setIsInvalidCredentials] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -29,6 +30,7 @@ export default function LoginPage() {
     if (!email || !password) return;
 
     try {
+      setIsInvalidCredentials(false);
       setIsLoggingIn(true);
 
       const res = await AuthService.login({ email, password });
@@ -50,8 +52,8 @@ export default function LoginPage() {
 
     } catch (error) {
       setIsLoggingIn(false);
+      setIsInvalidCredentials(true);
       console.error("Login failed", error);
-      alert("Invalid email or password");
     }
   };
 
@@ -166,11 +168,14 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (isInvalidCredentials) setIsInvalidCredentials(false);
+                  }}
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                  className={`w-full rounded-xl border-2 px-4 py-3 shadow-lg outline-none transition-all duration-300 ${theme.input} ${focusedField === 'email' ? 'border-accent' : ''}`}
+                  className={`w-full rounded-xl border-2 px-4 py-3 shadow-lg outline-none transition-all duration-300 ${theme.input} ${isInvalidCredentials ? 'border-red-500' : focusedField === 'email' ? 'border-accent' : ''}`}
                 />
                 {email && <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-accent" />}
               </div>
@@ -186,17 +191,24 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (isInvalidCredentials) setIsInvalidCredentials(false);
+                  }}
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                   onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                  className={`w-full rounded-xl border-2 px-4 py-3 pr-12 shadow-lg outline-none transition-all duration-300 ${theme.input} ${focusedField === 'password' ? 'border-accent' : ''}`}
+                  className={`w-full rounded-xl border-2 px-4 py-3 pr-12 shadow-lg outline-none transition-all duration-300 ${theme.input} ${isInvalidCredentials ? 'border-red-500' : focusedField === 'password' ? 'border-accent' : ''}`}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${isDarkMode ? "text-primary/60 hover:text-accent" : "text-gray-500 hover:text-accent"}`}>
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
+
+            {isInvalidCredentials && (
+              <p className="mb-3 text-sm text-red-500">Invalid email or password.</p>
+            )}
 
             {/* Forgot Password */}
             <div className="mb-4 text-right">
