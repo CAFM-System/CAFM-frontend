@@ -15,7 +15,7 @@ export default function VisitorList({
 }) {
   const { isDarkMode } = useTheme();
   const [selectedVisitorId, setSelectedVisitorId] = useState(null);
-
+  console.log("VisitorList Rendered with visitors:", visitors);
   const handleSelect = (id) => {
     setSelectedVisitorId(prevId => (prevId === id ? null : id));
   };
@@ -113,7 +113,7 @@ export default function VisitorList({
                   visitor={visitor}
                   isSelected={selectedVisitorId === visitor.id}
                   onSelect={() => handleSelect(visitor.id)}
-                  onCheckIn={() => onCheckIn(visitor.id)}
+                  onCheckIn={() => onCheckIn(visitor.visitor_id)}
                 />
               </div>
             ))}
