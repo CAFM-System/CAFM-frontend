@@ -12,7 +12,7 @@ import { useTheme } from '../../hooks/useTheme';
 
 
 
-export function ResidentTicketDialog(props){
+export function ResidentTicketDialog(props) {
     const { modalBg, text, subText, divider, isDarkMode } = useTheme();
     const [rating, setRating] = useState(0);
     const [showRatingTab, setShowRatingTab] = useState(false);
@@ -24,10 +24,10 @@ export function ResidentTicketDialog(props){
     const data = props.data;
     const onClose = props.onClose;
     const updateData = ticketsUpdates
-    const canRate = data.status === 'resolved' ;
+    const canRate = data.status === 'resolved';
     const canReopen = data.status === 'resolved' || data.status === 'closed';
     const canClose = data.status === 'resolved';
-   
+
     const residentAction = {
         rating: rating,
         showRatingTab: showRatingTab,
@@ -38,7 +38,7 @@ export function ResidentTicketDialog(props){
         status: data.status,
         closeComment: closeComment,
         reOpenComment: reOpenComment,
-        
+
         setCloseComment: setCloseComment,
         setReopenComment: setReopenComment,
         setFeedback: setFeedback,
@@ -54,21 +54,21 @@ export function ResidentTicketDialog(props){
         return () => window.removeEventListener('keydown', handleKey);
     }, [onClose]);
 
-    useEffect(()=>{
-        if(isLoading){
+    useEffect(() => {
+        if (isLoading) {
             TicketService.updateStatusHistory(`/${data.id}`).then(
-                (response)=>{
+                (response) => {
                     console.log(response.data);
                     setStatusHistory(response.data);
                     setIsLoading(false);
                 }
             )
         }
-    },[isLoading])
+    }, [isLoading])
 
-    const handleRatingWithFeedback = async ()=>{
+    const handleRatingWithFeedback = async () => {
         try {
-            await ResidentService.addRatingWithFeedback(data.id,{
+            await ResidentService.addRatingWithFeedback(data.id, {
                 rating: rating,
                 review: feedback
             })
@@ -81,7 +81,7 @@ export function ResidentTicketDialog(props){
         }
     }
 
-    
+
     return (
         <>
             <div
@@ -165,14 +165,14 @@ export function ResidentTicketDialog(props){
                                     <span className={text}>{data.location}</span>
                                 </div>
                             </div>
-                            
-                            
-                            
+
+
+
                             <div>
                                 <p className={`text-sm mb-2 ${subText}`}>Assigned To</p>
                                 <div className="flex items-center gap-2">
                                     <User size={18} className={subText} />
-                                    <span className={text}>{`${data.technicians.profiles.first_name} ${data.technicians.profiles.last_name}`}</span>
+                                    <span className={text}>{`${data?.technicians?.profiles?.first_name ?? ''} ${data?.technicians?.profiles?.last_name ?? ''}`.trim() || 'N/A'}</span>
                                 </div>
                             </div>
                             <div>
@@ -187,11 +187,11 @@ export function ResidentTicketDialog(props){
                         <div className={`border-t pt-6 ${divider}`}>
                             {
                                 isLoading ? <p>Loading status history...</p> :
-                                <StatusHistory data={statusHistory} refresh={() => setIsLoading(true)} />
+                                    <StatusHistory data={statusHistory} refresh={() => setIsLoading(true)} />
                             }
                         </div>
                         <div className={`border-t pt-6 ${divider}`}>
-                        <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId = {data.id} refresh={() => {setIsLoading(true);props.refresh();}} onClose={onClose} />
+                            <ResidentAction data={residentAction} sendFeedback={handleRatingWithFeedback} ticketId={data.id} refresh={() => { setIsLoading(true); props.refresh(); }} onClose={onClose} />
                         </div>
 
 
