@@ -6,6 +6,9 @@ import {
 import { useTheme } from '../../hooks/useTheme'; 
 import { AdminVisitorTable } from './AdminVisitorTable';
 import visitorService from '../../services/visitor.service';
+import ReportService from '../../services/report.service';
+import toast from 'react-hot-toast';
+import downloadBlob from '../../../util/downloadFile.js';
 
 export default function TotalVisitorRecords() {
   const theme = useTheme();
@@ -51,6 +54,26 @@ export default function TotalVisitorRecords() {
   fetchVisitors();
 
   }, []);
+
+  const downloadExcel = async () => {
+    try {
+      const blob = await ReportService.downloadVisitorExcel();
+      downloadBlob(blob, 'visitors-report.xlsx');
+      toast.success("Excel report downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download Excel report.");
+    }
+  }
+
+  const downloadPDF = async () => {
+    try {
+      const blob = await ReportService.downloadVisitorPDF();
+      downloadBlob(blob, 'visitors-report.pdf');
+      toast.success("PDF report downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download PDF report.");
+    }
+  }
 
   const filteredVisitors = useMemo(() => {
     return visitors.filter(v => {
@@ -155,8 +178,8 @@ export default function TotalVisitorRecords() {
         <div className="pt-6 border-t border-dashed border-gray-100 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <p className={`text-xs font-medium ${theme.subText}`}>Matches: {filteredVisitors.length}</p>
             <div className="flex gap-3">
-                <button onClick={() => triggerNotification('Excel Spreadsheet')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-colors ${isDarkMode ? "bg-white/5 border-white/10 text-white hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}><FileDown size={16} className="text-emerald-500" /> Excel</button>
-                <button onClick={() => triggerNotification('PDF Report')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-colors ${isDarkMode ? "bg-white/5 border-white/10 text-white hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}><FileDown size={16} className="text-red-500" /> PDF</button>
+              <button onClick={downloadExcel} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-colors ${isDarkMode ? "bg-white/5 border-white/10 text-white hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}><FileDown size={16} className="text-emerald-500" /> Excel</button>
+              <button onClick={downloadPDF} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-colors ${isDarkMode ? "bg-white/5 border-white/10 text-white hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}><FileDown size={16} className="text-red-500" /> PDF</button>
             </div>
         </div>
       </div>
