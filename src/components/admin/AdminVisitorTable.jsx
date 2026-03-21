@@ -137,7 +137,7 @@ export function AdminVisitorTable({ visitors, isDarkMode }) {
                 {/* VEHICLE */}
 
                 <td className="px-4 py-3 whitespace-nowrap">
-                  {formatDate(v.validUntil || v.dateTo || v.visitDate || v.date)}
+                  {formatDate(v.validUntil || "-")}
                 </td>
 
                 {/* GROUP MEMBERS */}
