@@ -76,6 +76,19 @@ export default function TotalVisitorRecords() {
   }
 
   const filteredVisitors = useMemo(() => {
+    const toDateOnly = (value) => {
+      if (!value) return null;
+      const str = String(value);
+      // Handles ISO datetime strings and plain YYYY-MM-DD values safely.
+      return str.includes('T') ? str.split('T')[0] : str;
+    };
+
+    const getVisitorFilterDate = (visitor) => {
+      return toDateOnly(
+        visitor.validFrom || visitor.dateFrom || visitor.visitDate || visitor.date
+      );
+    };
+
     return visitors.filter(v => {
       const query = searchQuery.toLowerCase();
       const matchesSearch =
@@ -88,13 +101,13 @@ export default function TotalVisitorRecords() {
                            (statusFilter === 'Checked In' && isCheckedIn) || 
                            (statusFilter === 'Pending Entry' && !isCheckedIn);
 
-      const vDate = new Date(v.visitDate || v.dateFrom);
-      const start = dateFrom ? new Date(dateFrom) : null;
-      const end = dateTo ? new Date(dateTo) : null;
+      const visitorDate = getVisitorFilterDate(v);
+      const start = toDateOnly(dateFrom);
+      const end = toDateOnly(dateTo);
       
       let matchesDate = true;
-      if (start && vDate < start) matchesDate = false;
-      if (end && vDate > end) matchesDate = false;
+      if (start && (!visitorDate || visitorDate < start)) matchesDate = false;
+      if (end && (!visitorDate || visitorDate > end)) matchesDate = false;
 
       return matchesSearch && matchesStatus && matchesDate;
     });
