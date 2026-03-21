@@ -45,7 +45,8 @@ export default function TechnicianHeader() {
   // These must match your App.js routes exactly!
   const navItems = [
     { path: '/technician', label: 'Dashboard' },
-    { path: '/technician/reports', label: 'Reports' }
+    { path: '/technician/notifications', label: 'Notifications' },
+    { path: '/technician/reports', label: 'Reports' },
   ];
 
   // --- STYLES ---
