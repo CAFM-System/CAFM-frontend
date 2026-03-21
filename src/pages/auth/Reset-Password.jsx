@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
-import { 
-  Key, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  ArrowRight, 
-  ArrowLeft, 
-  CheckCircle2, 
-  AlertCircle 
+import {
+  Key,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
@@ -20,24 +20,42 @@ export default function ResetPasswordPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [accessToken, setAccessToken] = useState('');
-  
+
   // Track focus for interactive styling
   const [focusedField, setFocusedField] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { token: pathToken } = useParams();
 
   useEffect(() => {
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.substring(1));
-    const token = params.get('access_token');
-    const type = params.get('type');
+    const hashParams = new URLSearchParams(
+      location.hash.startsWith('#') ? location.hash.substring(1) : location.hash
+    );
+    const queryParams = new URLSearchParams(location.search);
 
-    if (token && type === 'recovery') {
+    const hashToken = hashParams.get('access_token');
+    const hashType = hashParams.get('type');
+    const queryToken = queryParams.get('token') || queryParams.get('access_token');
+    const token = hashToken || queryToken || pathToken;
+
+    console.log('Reset link parsed:', {
+      hash: location.hash,
+      search: location.search,
+      pathToken,
+      hashToken,
+      hashType,
+      queryToken,
+      finalToken: token
+    });
+
+    if (token && (!hashToken || hashType === 'recovery')) {
       setAccessToken(token);
+      setError('');
     } else {
-      setError('Invalid or expired reset link');
+      setError('');
     }
-  }, []);
+  }, [location.hash, location.search, pathToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,7 +84,7 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/reset-password', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +124,7 @@ export default function ResetPasswordPage() {
         {/* Gradient Overlay (Secondary Color) */}
         <div className="absolute inset-0 bg-gradient-to-br from-secondary/95 via-secondary/90 to-[#1F2B2A]/95"></div>
       </div>
-      
+
       {/* Ambient Glows */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-accent/10 rounded-full blur-[100px] pointer-events-none animate-pulse"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
@@ -121,7 +139,7 @@ export default function ResetPasswordPage() {
 
         <div className="relative z-10 w-full max-w-md">
           <div className="bg-secondary/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-primary/10 ring-1 ring-white/5 text-center">
-            
+
             <div className="mx-auto w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-6 ring-1 ring-accent/30 shadow-[0_0_15px_-3px_var(--color-accent)]">
               <CheckCircle2 className="w-10 h-10 text-accent" />
             </div>
@@ -153,7 +171,7 @@ export default function ResetPasswordPage() {
       {/* Card */}
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-secondary/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-primary/10 ring-1 ring-white/5">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="mx-auto w-20 h-20 bg-primary/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-primary/10 backdrop-blur-sm">
@@ -176,7 +194,7 @@ export default function ResetPasswordPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            
+
             {/* New Password */}
             <div className="group">
               <label className={`text-xs font-semibold uppercase tracking-wider mb-1.5 block transition-colors duration-300 ${focusedField === 'password' ? 'text-accent' : 'text-primary/60'}`}>
@@ -245,14 +263,14 @@ export default function ResetPasswordPage() {
                 className="w-full bg-accent hover:bg-[#d69200] text-secondary font-bold py-3.5 rounded-xl shadow-[0_0_20px_-5px_var(--color-accent)] hover:shadow-[0_0_25px_-5px_var(--color-accent)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transform hover:-translate-y-0.5 active:translate-y-0 disabled:transform-none disabled:shadow-none"
               >
                 {isLoading ? (
-                   <>
-                     <div className="w-5 h-5 border-2 border-secondary/30 border-t-secondary rounded-full animate-spin mr-2" />
-                     Resetting...
-                   </>
+                  <>
+                    <div className="w-5 h-5 border-2 border-secondary/30 border-t-secondary rounded-full animate-spin mr-2" />
+                    Resetting...
+                  </>
                 ) : (
-                   <>
-                     Reset Password <ArrowRight className="w-5 h-5 ml-2" />
-                   </>
+                  <>
+                    Reset Password <ArrowRight className="w-5 h-5 ml-2" />
+                  </>
                 )}
               </button>
 
