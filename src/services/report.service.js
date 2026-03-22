@@ -16,7 +16,24 @@ const ReportService = {
             { responseType: 'blob' }
         );
         return response.data;
-    }
+    },
+
+    async downloadVisitorExcel(filters = {}) {
+        const response = await apiClient.post("/utility/visitors/excel",
+            filters,
+            { responseType: 'blob' }
+        );
+        return response.data;
+    },
+        async downloadVisitorPDF(filters = {}) {
+        const response = await apiClient.post("/utility/visitors/pdf",
+            filters,
+            { responseType: 'blob' }
+        );
+        return response.data;
+        }
+    
+
 
 }
 

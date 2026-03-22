@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, Key, CheckCircle2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -11,9 +12,9 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      const response = await fetch('http://localhost:4000/api/auth/forgot-password', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,11 +27,11 @@ export default function ForgotPasswordPage() {
       if (data.success) {
         setIsSubmitted(true);
       } else {
-        alert(data.message || 'Failed to send reset email');
+        toast.error(data.message || 'Failed to send reset email');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred. Please try again.');
+      toast.error('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }

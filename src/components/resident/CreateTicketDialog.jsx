@@ -12,17 +12,27 @@ export function CreateTicketDialog(props) {
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isFormValid =
+      title.trim() &&
+      category.trim() &&
+      location.trim() &&
+      description.trim();
     
     async function handleSubmit(){
       if (isSubmitting) return;
+      if (!isFormValid) {
+        toast.error("Please fill all required fields.");
+        return;
+      }
+
       setIsSubmitting(true);
       try {
         const payload = {
-          title,
-          job_type: category,
-          location,
-          complaint: description,
-          special_note: specialNote
+          title: title.trim(),
+          job_type: category.trim(),
+          location: location.trim(),
+          complaint: description.trim(),
+          special_note: specialNote.trim()
         }
 
         await TicketService.createTicket(payload);
@@ -116,7 +126,7 @@ export function CreateTicketDialog(props) {
           {/* Special Note */}
           <div className="space-y-1">
             <label htmlFor="specialNote" className={`font-medium ${subText}`}>
-              Special Note *
+              Special Note
             </label>
             <textarea
               id="specialNote"
@@ -144,8 +154,8 @@ export function CreateTicketDialog(props) {
 
             <button
               type="button"
-              disabled={isSubmitting}
-              className={`px-4 py-2 rounded-lg transition ${buttonPrimary}`}
+              disabled={isSubmitting || !isFormValid}
+              className={`px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed ${buttonPrimary}`}
               onClick={()=>{handleSubmit()}}
             >
               {isSubmitting ? (

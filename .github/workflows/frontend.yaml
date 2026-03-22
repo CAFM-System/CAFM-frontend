@@ -142,7 +142,7 @@ jobs:
           path: dist
 
   # -----------------------------
-  # 6️⃣ Deploy to EC2          ← ONLY THIS IS NEW
+  # 6️⃣ Deploy to EC2
   # -----------------------------
   deploy:
     name: Deploy to EC2
@@ -181,16 +181,35 @@ jobs:
 
             sudo docker rm -f frontend 2>/dev/null || true
 
+            # Bound to localhost only — EC2 host Nginx handles public HTTPS traffic
             sudo docker run -d \
               --name frontend \
               --restart unless-stopped \
-              -p 80:80 \
+              -p 127.0.0.1:3000:3000 \
               frontend:latest
 
             sudo docker image prune -f
           EOF
 
-      - name: Verify deployment
+      - name: Verify Deployment
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "sudo docker ps | grep frontend && echo '✅ Container is running' || echo '❌ Container failed'"
+          sleep 10
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            # Auto-restart Nginx if stopped
+            if ! sudo systemctl is-active --quiet nginx; then
+              echo "⚠️ Nginx was stopped — restarting..."
+              sudo systemctl start nginx
+            else
+              echo "✅ Nginx is active"
+            fi
+
+            # Check container is running
+            sudo docker ps | grep frontend \
+              && echo "✅ Container is running" \
+              || echo "❌ Container not found"
+
+            # Check app responds on localhost
+            curl -sf http://localhost:3000 > /dev/null \
+              && echo "✅ App responding on localhost:3000" \
+              || echo "⚠️ App health check failed"
+          EOF

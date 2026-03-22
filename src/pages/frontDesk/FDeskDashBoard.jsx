@@ -50,7 +50,7 @@ export default function FDeskDashBoard() {
       setLoading(true);
 
       const response = await visitorService.getVisitorInfo();
-      console.log(response.data[10])
+      console.log(response.data)
       setVisitors(response.data);
       console.log("check visitors variable:", visitors);
     } catch (error) {
@@ -151,9 +151,36 @@ const preRegCount = visitors.filter(v => {
     
   };
 
-  const handleCheckIn = (id) => {
-    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setVisitors(visitors.map(v => v.id === id ? { ...v, entryTime: currentTime } : v));
+  const handleCheckIn = async (id) => {
+    try {
+      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const response = await visitorService.checkInVisitor(id);
+
+      const updated = response?.data?.visitor || response?.data || {};
+      const updatedEntryTime = updated.entryTime || updated.entry_time || currentTime;
+
+      setVisitors((prevVisitors) =>
+        prevVisitors.map((v) => {
+          const localId = v.id ?? v.visitorId ?? v.visitor_id;
+          if (localId !== id) return v;
+
+          return {
+            ...v,
+            entryTime: updatedEntryTime,
+            entry_time: updated.entry_time ?? v.entry_time,
+            entryDate: updated.entryDate ?? updated.entry_date ?? v.entryDate,
+            entry_date: updated.entry_date ?? v.entry_date,
+          };
+        })
+      );
+
+      // Keep UI fully in sync with backend-calculated values without page refresh.
+      await fetchVisitors();
+      toast.success("Visitor checked in successfully!");
+    } catch (error) {
+      toast.error("Failed to check in visitor. Please try again.");
+    }
+    
   };
 
   const handleCheckOut = (id) => console.log("Check out:", id);
