@@ -45,6 +45,8 @@ function App() {
           <Route path='/register' element={<RegisterPg />} />
           <Route path='/forgot-password' element={<ForgotPasswordPage />} />
           <Route path='/reset-password' element={<ResetPasswordPage />} />
+          <Route path='/auth/reset-password' element={<ResetPasswordPage />} />
+          <Route path='/reset-password/:token' element={<ResetPasswordPage />} />
           
           {/* TECHNICIAN ROUTES (Protected by Layout) */}
           <Route path='/technician' element={<TechnicianLayout />}>
