@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 
 const CheckCircleIcon = ({ className }) => (
@@ -7,6 +8,7 @@ const CheckCircleIcon = ({ className }) => (
 
 export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
   const { isDarkMode, text, subText, border } = useTheme();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Review Item Helper
   const ReviewItem = ({ label, value }) => (
@@ -18,6 +20,16 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
 
   const todayStr = new Date().toISOString().split('T')[0];
 
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await Promise.resolve(onSubmit?.());
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className={`p-6 rounded-xl border-2 border-accent ${isDarkMode ? "bg-zinc-900" : "bg-yellow-50"}`}>
@@ -25,15 +37,15 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
           <CheckCircleIcon className="w-5 h-5 text-accent" /> Visitor Summary
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 text-sm">
-          
+
           <div className={`md:col-span-2 border-b ${isDarkMode ? "border-zinc-700" : "border-gray-200"} pb-4 mb-2`}>
-              <p className="font-bold text-accent text-xs uppercase tracking-wider mb-3">Host Details</p>
-              <div className="flex justify-between md:justify-start gap-12">
-                <ReviewItem label="Apartment" value={formData.apartmentNo} />
-                <ReviewItem label="Resident" value={formData.hostName} />
-              </div>
+            <p className="font-bold text-accent text-xs uppercase tracking-wider mb-3">Host Details</p>
+            <div className="flex justify-between md:justify-start gap-12">
+              <ReviewItem label="Apartment" value={formData.apartmentNo} />
+              <ReviewItem label="Resident" value={formData.hostName} />
+            </div>
           </div>
-    
+
           <ReviewItem label="Full Name" value={formData.fullName} />
           <ReviewItem label="Phone" value={formData.phone} />
           <ReviewItem label="Email" value={formData.email} />
@@ -55,7 +67,21 @@ export const VisitorReviewForm = ({ formData, onBack, onSubmit }) => {
 
       <div className={`flex justify-end gap-4 pt-8 mt-2 border-t ${border}`}>
         <button onClick={onBack} className={`px-6 py-2.5 rounded-xl border-2 text-sm font-semibold transition-colors ${border} ${text} hover:opacity-70`}>Back to Edit</button>
-        <button onClick={onSubmit} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm shadow-sm transition-colors bg-accent hover:opacity-90 text-secondary">Confirm & Submit</button>
+        <button
+          type="button"
+          disabled={isSubmitting}
+          onClick={handleSubmit}
+          className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm shadow-sm transition-colors bg-accent hover:opacity-90 text-secondary disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? (
+            <span className="inline-flex items-center gap-2">
+              <Loader2 size={16} className="animate-spin" />
+              Submitting...
+            </span>
+          ) : (
+            'Confirm & Submit'
+          )}
+        </button>
       </div>
     </div>
   );
