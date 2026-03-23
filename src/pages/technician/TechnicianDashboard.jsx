@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TechnicianHeader from "../../components/technician/TechnicianHeader";
-import DashboardCard from "../../components/technician/dashboard/TechDashBoardCard"; 
-import TicketCard from "../../components/common/ticketCard"; 
+import DashboardCard from "../../components/technician/dashboard/TechDashBoardCard";
+import TicketCard from "../../components/common/ticketCard";
 import TicketDetails from "../../components/technician/TicketDetails";
 
 import {
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import TicketService from "../../services/ticket.service";
-import { useTheme } from "../../hooks/useTheme"; 
+import { useTheme } from "../../hooks/useTheme";
 
 export function TechnicianDashboard() {
   // 1. STATE MANAGEMENT
@@ -31,7 +31,7 @@ export function TechnicianDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   // CHANGED: Replaced hardcoded "John" with state
-  const [userName, setUserName] = useState("Technician"); 
+  const [userName, setUserName] = useState("Technician");
 
   // 2. API CALLS (Tickets + User Profile)
 
@@ -42,16 +42,16 @@ export function TechnicianDashboard() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        const response = await axios.get("http://localhost:4000/api/auth/me", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         const userData = response.data.user;
 
         // Logic to combine First + Last name or use 'name' field
-        let rawName = userData.name || 
-                      (userData.profile ? `${userData.profile.firstName} ${userData.profile.lastName}` : "Technician");
-        
+        let rawName = userData.name ||
+          (userData.profile ? `${userData.profile.firstName} ${userData.profile.lastName}` : "Technician");
+
         // Capitalize Name
         const formattedName = rawName
           .toLowerCase()
@@ -99,7 +99,7 @@ export function TechnicianDashboard() {
   const completedTickets = filteredTickets.filter((t) => t.status === "completed" || t.status === "resolved" || t.status === "closed");
 
   return (
-    
+
     <div className={`min-h-screen transition-colors duration-300 ${theme.bg} font-sans`}>
 
       {/* HEADER: Pass state and toggle function down */}
@@ -112,7 +112,7 @@ export function TechnicianDashboard() {
           <div>
             <h1 className={`text-3xl font-bold ${theme.text}`}>
               {/* DYNAMIC USER NAME DISPLAYED HERE */}
-              Welcome back, <span className="text-accent">{userName} 👋 </span> 
+              Welcome back, <span className="text-accent">{userName} 👋 </span>
             </h1>
             <p className={`${theme.subText} mt-1 text-sm`}>Maintenance Department</p>
           </div>
@@ -121,15 +121,15 @@ export function TechnicianDashboard() {
           <div className={`flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm border transition-colors ${theme.cardBg}`}>
             <Calendar className="h-4 w-4 text-accent" />
             <span className={`text-sm font-medium ${theme.text}`}>
-               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </span>
           </div>
         </div>
 
         {/* ---------------- OVERVIEW CARDS ---------------- */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          
-          <DashboardCard 
+
+          <DashboardCard
             title="Total Tickets"
             value={tickets.length}
             icon={ClipboardList}
@@ -138,7 +138,7 @@ export function TechnicianDashboard() {
             isDarkMode={isDarkMode}
           />
 
-          <DashboardCard 
+          <DashboardCard
             title="New Assigned"
             value={assignedTickets.length}
             icon={AlertCircle}
@@ -147,7 +147,7 @@ export function TechnicianDashboard() {
             isDarkMode={isDarkMode}
           />
 
-          <DashboardCard 
+          <DashboardCard
             title="In Progress"
             value={inProgressTickets.length}
             icon={Clock4}
@@ -156,7 +156,7 @@ export function TechnicianDashboard() {
             isDarkMode={isDarkMode}
           />
 
-          <DashboardCard 
+          <DashboardCard
             title="Completed"
             value={completedTickets.length}
             icon={CheckCircle}
@@ -171,35 +171,35 @@ export function TechnicianDashboard() {
         <div className="w-full mt-8 mb-6">
 
           <div className={`flex flex-col md:flex-row md:items-center md:justify-between border-b ${theme.border}`}>
-            
+
             {/* TABS */}
             <div className="flex gap-6 overflow-x-auto pb-[-1px]">
-              <TabButton 
-                label="all" 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                count={filteredTickets.length} 
+              <TabButton
+                label="all"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                count={filteredTickets.length}
                 isDarkMode={isDarkMode}
               />
-              <TabButton 
-                label="assigned" 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                count={assignedTickets.length} 
+              <TabButton
+                label="assigned"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                count={assignedTickets.length}
                 isDarkMode={isDarkMode}
               />
-              <TabButton 
-                label="in_progress" 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                count={inProgressTickets.length} 
+              <TabButton
+                label="in_progress"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                count={inProgressTickets.length}
                 isDarkMode={isDarkMode}
               />
-              <TabButton 
-                label="completed" 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                count={completedTickets.length} 
+              <TabButton
+                label="completed"
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                count={completedTickets.length}
                 isDarkMode={isDarkMode}
               />
             </div>
@@ -207,25 +207,25 @@ export function TechnicianDashboard() {
             {/* PRIORITY FILTER */}
             <div className="flex items-center gap-3 mt-4 md:mt-0 pb-2 md:pb-0">
               <div className="relative">
-                  <Filter className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${theme.subText}`} />
-                  <select
-                    value={priorityFilter}
-                    onChange={(e) => setPriorityFilter(e.target.value)}
-                    className={`
+                <Filter className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${theme.subText}`} />
+                <select
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value)}
+                  className={`
                       pl-9 pr-8 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2 focus:ring-accent appearance-none cursor-pointer shadow-sm transition-colors
-                      ${isDarkMode 
-                        ? "bg-secondary text-primary border-primary/20 focus:bg-secondary" 
-                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                      }
+                      ${isDarkMode
+                      ? "bg-secondary text-primary border-primary/20 focus:bg-secondary"
+                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    }
                     `}
-                  >
-                    <option value="all">All Priorities</option>
-                    <option value="urgent">🔴 Urgent</option>
-                    <option value="high">🟠 High</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="low">🟢 Low</option>
-                  </select>
-                  <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none ${theme.subText}`} />
+                >
+                  <option value="all">All Priorities</option>
+                  <option value="urgent">🔴 Urgent</option>
+                  <option value="high">🟠 High</option>
+                  <option value="medium">🟡 Medium</option>
+                  <option value="low">🟢 Low</option>
+                </select>
+                <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none ${theme.subText}`} />
               </div>
             </div>
           </div>
@@ -233,10 +233,10 @@ export function TechnicianDashboard() {
           {/* ACTIVE FILTER INDICATOR */}
           {priorityFilter !== "all" && (
             <div className={`mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border ${isDarkMode ? "bg-accent/20 text-accent border-accent/30" : "bg-yellow-50 text-yellow-700 border-yellow-100"}`}>
-               <span className="font-medium">Priority: {priorityFilter}</span>
-               <button onClick={() => setPriorityFilter("all")} className="hover:opacity-75 ml-1">
-                 <X className="h-3 w-3" />
-               </button>
+              <span className="font-medium">Priority: {priorityFilter}</span>
+              <button onClick={() => setPriorityFilter("all")} className="hover:opacity-75 ml-1">
+                <X className="h-3 w-3" />
+              </button>
             </div>
           )}
 
@@ -281,7 +281,7 @@ function TabButton({ label, activeTab, setActiveTab, count, isDarkMode }) {
   const isActive = activeTab === label;
 
   // Dynamic Text Colors
-  const activeColor = "text-accent"; 
+  const activeColor = "text-accent";
   const inactiveColor = isDarkMode ? "text-primary/60 hover:text-primary" : "text-gray-500 hover:text-gray-700";
 
   return (
@@ -293,7 +293,7 @@ function TabButton({ label, activeTab, setActiveTab, count, isDarkMode }) {
       `}
     >
       {titleMap[label]} <span className={`ml-1 font-normal ${isDarkMode ? "opacity-60" : "text-gray-400"}`}>({count})</span>
-      
+
       {/* Active Bottom Border Line (Always Accent) */}
       {isActive && (
         <div className="absolute bottom-0 left-0 w-full h-[2px] bg-accent rounded-t-full" />
