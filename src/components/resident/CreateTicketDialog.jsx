@@ -124,7 +124,7 @@ export function CreateTicketDialog(props) {
             />
           </div>
           {/* Special Note */}
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
             <label htmlFor="specialNote" className={`font-medium ${subText}`}>
               Special Note
             </label>
@@ -136,7 +136,7 @@ export function CreateTicketDialog(props) {
               onChange={(e)=>{setSpecialNote(e.target.value)}}
               className={`w-full border rounded-lg px-3 py-2 outline-none resize-none focus:ring-2 focus:ring-accent ${inputBg}`}
             />
-          </div>
+          </div> */}
 
 
         
