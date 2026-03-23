@@ -157,7 +157,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
                         rows={3}
                     />
 
-                    <h2 className={`font-semibold mt-4 mb-2 ${text}`}>
+                    {/* <h2 className={`font-semibold mt-4 mb-2 ${text}`}>
                         Add a list of additional spare parts if used
                     </h2>
 
@@ -167,7 +167,7 @@ const TechnicianActions = ({ status, workStart, ticketData, onClose, refresh }) 
                         placeholder="List spare parts..."
                         className={`w-full px-4 py-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-accent ${inputBg}`}
                         rows={3}
-                    />
+                    /> */}
 
 
 
